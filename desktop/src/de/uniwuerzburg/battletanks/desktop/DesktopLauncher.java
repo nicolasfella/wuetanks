@@ -10,6 +10,13 @@ public class DesktopLauncher {
 		System.out.println("Hallo von Nico");
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		
+		
+		//TODO decide on with and height, fullscreen?
+		config.width = 800;
+		config.height = 600;
+		
+		
 		new LwjglApplication(new BattleTanks(), config);
 	}
 }
