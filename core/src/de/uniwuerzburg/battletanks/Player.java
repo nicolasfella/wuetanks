@@ -60,28 +60,21 @@ public class Player extends Entity {
 			position.x = 0;
 			speed.x = 0;
 		}
-		
+
 		if (position.x + speed.x * Gdx.graphics.getDeltaTime() + width > GameScreen.width) {
-			position.x = GameScreen.width-width;
+			position.x = GameScreen.width - width;
 			speed.x = 0;
 		}
-		
+
 		if (position.y + speed.y * Gdx.graphics.getDeltaTime() < 0) {
 			position.y = 0;
 			speed.y = 0;
 		}
-		
+
 		if (position.y + speed.y * Gdx.graphics.getDeltaTime() + height > GameScreen.height) {
-			position.y = GameScreen.height-height;
+			position.y = GameScreen.height - height;
 			speed.y = 0;
 		}
-		
-		
-
-	}
-
-	public void setPosition(int x, int y) {
-		position.set(x, y);
 
 	}
 
