@@ -62,12 +62,18 @@ public class GameScreen implements Screen {
 		entities.add(player2);
 		player2.setPosition(150, 500);
 		players.add(player2);
-		
-		/*Player player3 = new Player(Input.Keys.U, Input.Keys.J, Input.Keys.H, Input.Keys.K, Input.Keys.E);
-		entities.add(player3);
-		player3.setPosition(400, 300);
-		players.add(player3);*/
 
+		/*
+		 * Player player3 = new Player(Input.Keys.U, Input.Keys.J, Input.Keys.H,
+		 * Input.Keys.K, Input.Keys.E); entities.add(player3);
+		 * player3.setPosition(400, 300); players.add(player3);
+		 */
+
+		Obstacle test = new Obstacle();
+		test.setPosition(300, 200);
+		test.setWidth(100);
+		test.setHeight(160);
+		entities.add(test);
 	}
 
 	@Override
@@ -84,52 +90,20 @@ public class GameScreen implements Screen {
 
 		// Player to player collision
 		// extend to player-obstacle?
-		for (int i = 0; i < players.size(); i++) {
-			for (int j = 0; j < players.size(); j++) {
+		for (int i = 0; i < entities.size(); i++) {
+			for (int j = 0; j < entities.size(); j++) {
 				if (i == j)
 					continue;
-				Player p1 = players.get(i);
-				Player p2 = players.get(j);
 
-				// p1 is left to p2
-				if (p1.getX() + p1.getWidth() >= p2.getX() && p1.getX() + p1.getWidth() < p2.getX() + p2.getWidth()) {
-					if (p1.getY() + p1.getHeight() > p2.getY() && p1.getY() < p2.getY() + p2.getHeight()) {
-						if (p1.getSpeed().x > 0) {
-							p1.setX(p2.getX() - p1.getWidth());
-							p1.getSpeed().x = 0;
-						}
-					}
-				}
+				Entity e1 = entities.get(i);
+				Entity e2 = entities.get(j);
 
-				// p1 is right to p2
-				if (p1.getX() >= p2.getX() && p1.getX() <= p2.getX() + p2.getWidth()) {
-					if (p1.getY() + p1.getHeight() > p2.getY() && p1.getY() < p2.getY() + p2.getHeight()) {
-						if (p1.getSpeed().x < 0) {
-							p1.setX(p2.getX() + p1.getWidth());
-							p1.getSpeed().x = 0;
-						}
-					}
-				}
+				if (e1 instanceof Player) {
 
-				// p1 is below p2
-				if (p1.getY() + p1.getHeight() >= p2.getY()
-						&& p1.getY() + p1.getHeight() < p2.getY() + p2.getHeight()) {
-					if (p1.getX() + p1.getWidth() > p2.getX() && p1.getX() < p2.getX() + p2.getWidth()) {
-						if (p1.getSpeed().y > 0) {
-							p1.setY(p2.getY() - p1.getHeight());
-							p1.getSpeed().y = 0;
-						}
+					if (e2 instanceof Player || e2 instanceof Obstacle) {
+						checkCollisionPlayerObstacle((Player) e1, e2);
 					}
-				}
 
-				// p1 is above p2
-				if (p1.getY() > p2.getY() && p1.getY() <= p2.getY() + p2.getHeight()) {
-					if (p1.getX() + p1.getWidth() > p2.getX() && p1.getX() < p2.getX() + p2.getWidth()) {
-						if (p1.getSpeed().y < 0) {
-							p1.setY(p2.getY() + p1.getHeight());
-							p1.getSpeed().y = 0;
-						}
-					}
 				}
 
 			}
@@ -143,9 +117,7 @@ public class GameScreen implements Screen {
 		batch.draw(img, 400, 0, 400, 400);
 		batch.draw(img, 400, 400, 400, 400);
 
-		for (
-
-		Entity entity : entities) {
+		for (Entity entity : entities) {
 			entity.render(batch);
 		}
 
@@ -160,6 +132,49 @@ public class GameScreen implements Screen {
 		 */
 
 		batch.end();
+
+	}
+
+	private void checkCollisionPlayerObstacle(Player p, Entity o) {
+		// p1 is left to p2
+		if (p.getX() + p.getWidth() >= o.getX() && p.getX() + p.getWidth() < o.getX() + o.getWidth()) {
+			if (p.getY() + p.getHeight() > o.getY() && p.getY() < o.getY() + o.getHeight()) {
+				if (p.getSpeed().x > 0) {
+					p.setX(o.getX() - p.getWidth());
+					p.getSpeed().x = 0;
+				}
+			}
+		}
+
+		// p1 is right to p2
+		if (p.getX() >= o.getX() && p.getX() <= o.getX() + o.getWidth()) {
+			if (p.getY() + p.getHeight() > o.getY() && p.getY() < o.getY() + o.getHeight()) {
+				if (p.getSpeed().x < 0) {
+					p.setX(o.getX() + o.getWidth());
+					p.getSpeed().x = 0;
+				}
+			}
+		}
+
+		// p1 is below p2
+		if (p.getY() + p.getHeight() >= o.getY() && p.getY() + p.getHeight() < o.getY() + o.getHeight()) {
+			if (p.getX() + p.getWidth() > o.getX() && p.getX() < o.getX() + o.getWidth()) {
+				if (p.getSpeed().y > 0) {
+					p.setY(o.getY() - p.getHeight());
+					p.getSpeed().y = 0;
+				}
+			}
+		}
+
+		// p1 is above p2
+		if (p.getY() > o.getY() && p.getY() <= o.getY() + o.getHeight()) {
+			if (p.getX() + p.getWidth() > o.getX() && p.getX() < o.getX() + o.getWidth()) {
+				if (p.getSpeed().y < 0) {
+					p.setY(o.getY() + o.getHeight());
+					p.getSpeed().y = 0;
+				}
+			}
+		}
 
 	}
 
