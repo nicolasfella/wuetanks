@@ -12,15 +12,23 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameScreen implements Screen {
 
+	final BattleTanks game;
+	
 	int width = 800;
 	int height = 600;
-
+	
+	
 	SpriteBatch batch;
 	Texture img;
 	BitmapFont font;
 
 	OrthographicCamera camera;
 	private GlyphLayout layout;
+	
+	
+	public GameScreen(final BattleTanks game){
+		this.game = game;
+	}
 
 	@Override
 	public void show() {
