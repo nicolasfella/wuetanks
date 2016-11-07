@@ -31,7 +31,6 @@ public class MenuScreen implements Screen {
 		mainTable.setFillParent(true);
 
 		createStartButton();
-
 	}
 
 	@Override
