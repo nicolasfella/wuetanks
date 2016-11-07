@@ -1,0 +1,88 @@
+package de.uniwuerzburg.battletanks;
+
+import com.badlogic.gdx.Gdx;
+
+public class Player extends Entity {
+
+	private static final int WIDTH = 50, HEIGHT = 50;
+
+	private int key_up, key_down, key_left, key_right, key_shoot;
+
+	private int movingSpeed = 150;
+
+	public Player(int key_up, int key_down, int key_left, int key_right, int key_shoot) {
+		super("player.png");
+
+		this.key_up = key_up;
+		this.key_down = key_down;
+		this.key_right = key_right;
+		this.key_left = key_left;
+		this.key_shoot = key_shoot;
+
+		width = WIDTH;
+		height = HEIGHT;
+
+	}
+
+	@Override
+	public void update() {
+		super.update();
+
+		speed.set(0, 0);
+
+		if (Gdx.input.isKeyPressed(key_up)) {
+			speed.y = 1;
+		}
+
+		if (Gdx.input.isKeyPressed(key_down)) {
+			speed.y = -1;
+		}
+
+		if (Gdx.input.isKeyPressed(key_left)) {
+			speed.x = -1;
+		}
+		if (Gdx.input.isKeyPressed(key_right)) {
+			speed.x = 1;
+		}
+
+		if (Gdx.input.isKeyPressed(key_up) && Gdx.input.isKeyPressed(key_down)) {
+			speed.y = 0;
+		}
+
+		if (Gdx.input.isKeyPressed(key_left) && Gdx.input.isKeyPressed(key_right)) {
+			speed.x = 0;
+		}
+
+		speed.nor();
+		speed.scl(movingSpeed);
+
+		if (position.x + speed.x * Gdx.graphics.getDeltaTime() < 0) {
+			position.x = 0;
+			speed.x = 0;
+		}
+		
+		if (position.x + speed.x * Gdx.graphics.getDeltaTime() + width > GameScreen.width) {
+			position.x = GameScreen.width-width;
+			speed.x = 0;
+		}
+		
+		if (position.y + speed.y * Gdx.graphics.getDeltaTime() < 0) {
+			position.y = 0;
+			speed.y = 0;
+		}
+		
+		if (position.y + speed.y * Gdx.graphics.getDeltaTime() + height > GameScreen.height) {
+			position.y = GameScreen.height-height;
+			speed.y = 0;
+		}
+		
+		
+
+	}
+
+	public void setPosition(int x, int y) {
+		position.set(x, y);
+
+	}
+
+}
