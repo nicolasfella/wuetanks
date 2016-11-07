@@ -85,4 +85,52 @@ public class Player extends Entity {
 
 	}
 
+	public int getKey_up() {
+		return key_up;
+	}
+
+	public void setKey_up(int key_up) {
+		this.key_up = key_up;
+	}
+
+	public int getKey_down() {
+		return key_down;
+	}
+
+	public void setKey_down(int key_down) {
+		this.key_down = key_down;
+	}
+
+	public int getKey_left() {
+		return key_left;
+	}
+
+	public void setKey_left(int key_left) {
+		this.key_left = key_left;
+	}
+
+	public int getKey_right() {
+		return key_right;
+	}
+
+	public void setKey_right(int key_right) {
+		this.key_right = key_right;
+	}
+
+	public int getKey_shoot() {
+		return key_shoot;
+	}
+
+	public void setKey_shoot(int key_shoot) {
+		this.key_shoot = key_shoot;
+	}
+
+	public int getMovingSpeed() {
+		return movingSpeed;
+	}
+
+	public void setMovingSpeed(int movingSpeed) {
+		this.movingSpeed = movingSpeed;
+	}
+
 }

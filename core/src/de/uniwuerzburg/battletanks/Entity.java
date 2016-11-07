@@ -74,5 +74,22 @@ public class Entity {
 	public void setSpeed(Vector2 speed) {
 		this.speed = speed;
 	}
+	
+	public int getX(){
+		return (int) position.x;
+	}
+	
+	public void setX(int x){
+		position.x=x;
+	}
+	
+	public int getY(){
+		return (int) position.y;
+	}
+	
+	public void setY(int y){
+		position.y=y;
+	}
+
 
 }
