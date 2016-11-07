@@ -12,8 +12,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameScreen implements Screen {
 
-	int width = 800;
-	int height = 600;
+	int width = 1200;
+	int height = 900;
 
 	SpriteBatch batch;
 	Texture img;
@@ -49,19 +49,22 @@ public class GameScreen implements Screen {
 
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		batch.draw(img, 0, 0, 400, 400);
-		batch.draw(img, 0, 400, 400, 400);
-		batch.draw(img, 400, 0, 400, 400);
-		batch.draw(img, 400, 400, 400, 400);
+
+		int tilesize = 300;
+
+		for (int i = 0; i < width / tilesize + 1; i++) {
+			for (int j = 0; j < height / tilesize + 1; j++) {
+				batch.draw(img, i * tilesize, j * tilesize, tilesize, tilesize);
+			}
+		}
 
 		// font.draw(batch, "Player 1: 7 hits 3 kills", 10, 20);
 		font.draw(batch, "Player 3: 3 hits 3 kills", 10, 25);
-		font.draw(batch, "Player 1: 5 hits 8 kills", 10, height-10);
+		font.draw(batch, "Player 1: 5 hits 8 kills", 10, height - 10);
 		layout.setText(font, "Player 2: 5 hits 8 kills");
-		font.draw(batch, "Player 2: 5 hits 8 kills", width-layout.width-10, height-10);
+		font.draw(batch, "Player 2: 5 hits 8 kills", width - layout.width - 10, height - 10);
 		layout.setText(font, "Player 4: 10 hits 6 kills");
-		font.draw(batch, "Player 4: 10 hits 6 kills", width-layout.width-10, 25);
-
+		font.draw(batch, "Player 4: 10 hits 6 kills", width - layout.width - 10, 25);
 
 		batch.end();
 	}
