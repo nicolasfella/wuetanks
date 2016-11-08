@@ -13,6 +13,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class GameScreen implements Screen {
 
@@ -26,6 +29,7 @@ public class GameScreen implements Screen {
 	BitmapFont font;
 
 	OrthographicCamera camera;
+
 	private GlyphLayout layout;
 
 	private List<Entity> entities;
@@ -74,6 +78,12 @@ public class GameScreen implements Screen {
 		test.setWidth(100);
 		test.setHeight(160);
 		entities.add(test);
+		
+		Obstacle test2 = new Obstacle();
+		test2.setPosition(500, 70);
+		test2.setWidth(100);
+		test2.setHeight(80);
+		entities.add(test2);
 	}
 
 	@Override

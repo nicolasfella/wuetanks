@@ -9,6 +9,8 @@ public class Player extends Entity {
 	private int key_up, key_down, key_left, key_right, key_shoot;
 
 	private int movingSpeed = 150;
+	
+	
 
 	public Player(int key_up, int key_down, int key_left, int key_right, int key_shoot) {
 		super("player.png");
