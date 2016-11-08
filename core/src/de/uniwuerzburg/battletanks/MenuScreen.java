@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -79,7 +81,6 @@ public class MenuScreen implements Screen {
 	public void create() {
 		final Button start = new TextButton("START!", skin, "toggle");
 		TextField test = new TextField(null, skin);
-
 		start.align(Align.bottom);
 		start.addListener(new ChangeListener() {
 			@Override
@@ -89,6 +90,33 @@ public class MenuScreen implements Screen {
 			}
 		});
 
+		final Button next = new TextButton("NEXT TANK", skin);
+		Image one = new Image(new Texture(Gdx.files.internal("player.png")));
+		Image two = new Image(new Texture(Gdx.files.internal("player2.png")));
+		Image zero = new Image();
+
+		next.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if (mainTable.getChildren().contains(zero, false)) {
+					mainTable.removeActor(zero);
+					mainTable.addActorAt(3, one);
+
+				} else if (mainTable.getChildren().contains(one, false)) {
+					mainTable.removeActor(one);
+					mainTable.addActorAt(3, two);
+
+					mainTable.addActorAt(3, two);
+				} else if (mainTable.getChildren().contains(two, false)) {
+					mainTable.removeActor(two);
+					mainTable.addActorAt(3, one);
+				}
+
+			}
+		});
+		
+		
+		
 		test.setMaxLength(3);
 		test.addListener(new InputListener() {
 			@Override
@@ -106,113 +134,7 @@ public class MenuScreen implements Screen {
 			}
 		});
 
-		mainTable.add(start, test);
+		mainTable.add(start, test, next, zero);
 		stage.addActor(mainTable);
 	}
 }
-
-/*-
-public class MenuScreen implements Screen {
-	
-	final BattleTanks game;
-	
-	Stage stage;
-	ImageButton startButton;
-    BitmapFont font;
-    Skin skin;
-    TextureAtlas buttonAtlas;
-	OrthographicCamera camera;
-	
-	TiledMap map;
-	
-	boolean gameStarted = false;
-	
-	
-	public MenuScreen(final BattleTanks game){
-		this.game = game;
-		gameStarted = false;
-		
-		camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
-        
-        create();
-	}
-	
-
-	public void create() {
-		stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-        
-        
-        //Start Button mit Texturen und Listener
-        Texture startButtonTexture = new Texture(Gdx.files.internal("startButton.png"));
-        TextureRegion startButtonTextureRegion = new TextureRegion(startButtonTexture);
-        TextureRegionDrawable startButtonTextRegionDrawable = new TextureRegionDrawable(startButtonTextureRegion);
-        startButton = new ImageButton(startButtonTextRegionDrawable);
-        startButton.addListener(new ChangeListener() {
-            @Override
-            public void changed (ChangeEvent event, Actor actor) {
-                System.out.println("Button Pressed");
-                gameStarted = true;
-            }
-        });
-        
-        stage.addActor(startButton);
-	}
-	
-	
-	@Override
-	public void show() {
-		
-	}
-
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        
-        camera.update();
-        
-        stage.draw();
-        
-        if(gameStarted){
-        	game.setScreen(new GameScreen(game));
-        	dispose();
-        }
-
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-
-	}
-	
-	
-
-}
-*/
