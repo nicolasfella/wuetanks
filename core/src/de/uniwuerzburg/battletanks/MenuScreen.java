@@ -1,14 +1,18 @@
 package de.uniwuerzburg.battletanks;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -30,7 +34,7 @@ public class MenuScreen implements Screen {
 		mainTable = new Table();
 		mainTable.setFillParent(true);
 
-		createStartButton();
+		create();
 	}
 
 	@Override
@@ -72,11 +76,11 @@ public class MenuScreen implements Screen {
 		// TODO Auto-generated method stub
 	}
 
-	public void createStartButton() {
+	public void create() {
 		final Button start = new TextButton("START!", skin, "toggle");
-		mainTable.add(start);
-		start.align(Align.center);
+		TextField test = new TextField(null, skin);
 
+		start.align(Align.bottom);
 		start.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -84,11 +88,30 @@ public class MenuScreen implements Screen {
 				dispose();
 			}
 		});
+
+		test.setMaxLength(3);
+		test.addListener(new InputListener() {
+			@Override
+			public boolean keyDown(InputEvent event, int keycode) {
+				if (keycode == Keys.ENTER) {
+					try {
+						int time = Integer.parseInt(test.getText());
+						System.out.println(time);
+
+					} catch (NumberFormatException e) {
+						System.out.println("Keine gültige Zahl eingegeben!");
+					}
+				}
+				return true;
+			}
+		});
+
+		mainTable.add(start, test);
 		stage.addActor(mainTable);
 	}
-
 }
-/*
+
+/*-
 public class MenuScreen implements Screen {
 	
 	final BattleTanks game;
