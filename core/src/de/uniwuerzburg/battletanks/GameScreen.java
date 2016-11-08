@@ -29,6 +29,7 @@ public class GameScreen implements Screen {
 	BitmapFont font;
 
 	OrthographicCamera camera;
+	Viewport viewPort;
 
 	private GlyphLayout layout;
 
@@ -53,6 +54,7 @@ public class GameScreen implements Screen {
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, width, height);
+		viewPort = new FitViewport(width,height,camera);
 
 		entities = new ArrayList<>();
 		players = new ArrayList<>(4);
@@ -190,7 +192,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-
+		viewPort.update(width, height);
 	}
 
 	@Override
