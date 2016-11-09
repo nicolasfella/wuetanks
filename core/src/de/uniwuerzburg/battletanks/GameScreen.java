@@ -70,8 +70,8 @@ public class GameScreen implements Screen {
 		tiledMap = new TmxMapLoader().load("TestMap.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         MapProperties tiledMapProps = tiledMap.getProperties();
-        
-        //berechnung der fenstergr��e durch die gr��e der tilemap
+
+		// berechnung der fenstergr��e durch die gr��e der tilemap 
         
         int mapWidth = tiledMapProps.get("width", Integer.class);
         int mapHeight = tiledMapProps.get("height", Integer.class);
