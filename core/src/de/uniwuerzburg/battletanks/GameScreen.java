@@ -13,6 +13,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -21,14 +30,17 @@ public class GameScreen implements Screen {
 
 	final BattleTanks game;
 
-	static int width = 800;
-	static int height = 600;
+	static int width; 
+	static int height;
 
 	SpriteBatch batch;
-	Texture img;
+	//Texture img;
 	BitmapFont font;
 
 	OrthographicCamera camera;
+	
+	private TiledMap tiledMap;
+	private TiledMapRenderer tiledMapRenderer;
 
 	private GlyphLayout layout;
 
@@ -38,12 +50,14 @@ public class GameScreen implements Screen {
 
 	public GameScreen(final BattleTanks game) {
 		this.game = game;
+        
+		
 	}
 
 	@Override
 	public void show() {
 		batch = new SpriteBatch();
-		img = new Texture("gravel.jpg");
+		// img = new Texture("gravel.jpg");
 
 		font = new BitmapFont();
 		font.setColor(Color.ORANGE);
@@ -51,11 +65,27 @@ public class GameScreen implements Screen {
 		layout = new GlyphLayout();
 		layout.setText(font, "");
 
+		
+		tiledMap = new TmxMapLoader().load("TestMap.tmx");
+        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+        MapProperties tiledMapProps = tiledMap.getProperties();
+        
+        //berechnung der fenstergröße durch die größe der tilemap
+        
+        int mapWidth = tiledMapProps.get("width", Integer.class);
+        int mapHeight = tiledMapProps.get("height", Integer.class);
+        int tilePixelWidth = tiledMapProps.get("tilewidth", Integer.class);
+        int tilePixelHeight = tiledMapProps.get("tileheight", Integer.class);
+
+        width = mapWidth * tilePixelWidth;
+        height = mapHeight * tilePixelHeight;
+        
+			
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, width, height);
 
-		entities = new ArrayList<>();
-		players = new ArrayList<>(4);
+		entities = new ArrayList<Entity>();
+		players = new ArrayList<Player>(4);
 
 		Player player1 = new Player(Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D, Input.Keys.E);
 		entities.add(player1);
@@ -72,18 +102,26 @@ public class GameScreen implements Screen {
 		 * Input.Keys.K, Input.Keys.E); entities.add(player3);
 		 * player3.setPosition(400, 300); players.add(player3);
 		 */
-
-		Obstacle test = new Obstacle();
-		test.setPosition(300, 200);
-		test.setWidth(100);
-		test.setHeight(160);
-		entities.add(test);
 		
-		Obstacle test2 = new Obstacle();
-		test2.setPosition(500, 70);
-		test2.setWidth(100);
-		test2.setHeight(80);
-		entities.add(test2);
+		
+		// einlesen der objects aus dem objects layer der tilemap und erstellung der obstacles
+		
+		MapLayer objectsLayer = tiledMap.getLayers().get("objects");
+        
+        for( MapObject object : objectsLayer.getObjects()){
+        	
+        	if (object instanceof RectangleMapObject) {
+        		RectangleMapObject rectObject = (RectangleMapObject) object;
+        		Rectangle rect = rectObject.getRectangle();
+        		Obstacle obst = new Obstacle();
+        		obst.setPosition((int)rect.getX(), (int)rect.getY());
+        		obst.setWidth((int)rect.getWidth());
+        		obst.setHeight((int)rect.getHeight());
+        		entities.add(obst);
+        	}
+        }
+		
+		
 	}
 
 	@Override
@@ -119,14 +157,23 @@ public class GameScreen implements Screen {
 			}
 		}
 
+		
+		tiledMapRenderer.setView(camera);
+        tiledMapRenderer.render();
+		
+		
+		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-
+		
+		/*
 		batch.draw(img, 0, 0, 400, 400);
 		batch.draw(img, 0, 400, 400, 400);
 		batch.draw(img, 400, 0, 400, 400);
 		batch.draw(img, 400, 400, 400, 400);
-
+		
+		*/
+		
 		for (Entity entity : entities) {
 			entity.render(batch);
 		}
@@ -141,7 +188,9 @@ public class GameScreen implements Screen {
 		 * "Player 4: 10 hits 6 kills", width - layout.width - 10, 25);
 		 */
 
-		batch.end();
+		 batch.end();
+		
+		
 
 	}
 
@@ -212,7 +261,7 @@ public class GameScreen implements Screen {
 	public void dispose() {
 		font.dispose();
 		batch.dispose();
-		img.dispose();
+		//img.dispose();
 
 	}
 

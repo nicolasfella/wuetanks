@@ -25,6 +25,7 @@ public class MenuScreen implements Screen {
 	private Skin skin;
 	private Stage stage;
 	private Table mainTable;
+	
 
 	public MenuScreen(final BattleTanks game) {
 		this.game = game;
