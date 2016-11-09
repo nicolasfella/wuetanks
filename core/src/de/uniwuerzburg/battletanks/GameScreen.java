@@ -57,6 +57,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
+		System.out.println("Start");
 		batch = new SpriteBatch();
 		// img = new Texture("gravel.jpg");
 
@@ -197,8 +198,16 @@ public class GameScreen implements Screen {
 	}
 
 	private void checkCollisionPlayerObstacle(Player p, Entity o) {
+
+		Rectangle r1 = new Rectangle(p.getX(), p.getY(), p.getWidth(), p.getHeight());
+		Rectangle r2 = new Rectangle(o.getX(), o.getY(), o.getWidth(), o.getHeight());
+
+		if(r2.contains(r2)){
+			System.out.println("Jammed");
+		}
+
 		// p1 is left to p2
-		if (p.getX() + p.getWidth() >= o.getX() && p.getX() + p.getWidth() < o.getX() + o.getWidth()) {
+		if (p.getX() + p.getWidth() > o.getX() && p.getX() + p.getWidth() < o.getX() + o.getWidth()) {
 			if (p.getY() + p.getHeight() > o.getY() && p.getY() < o.getY() + o.getHeight()) {
 				if (p.getSpeed().x > 0) {
 					p.setX(o.getX() - p.getWidth());
@@ -208,7 +217,7 @@ public class GameScreen implements Screen {
 		}
 
 		// p1 is right to p2
-		if (p.getX() >= o.getX() && p.getX() <= o.getX() + o.getWidth()) {
+		if (p.getX() > o.getX() && p.getX() < o.getX() + o.getWidth()) {
 			if (p.getY() + p.getHeight() > o.getY() && p.getY() < o.getY() + o.getHeight()) {
 				if (p.getSpeed().x < 0) {
 					p.setX(o.getX() + o.getWidth());
@@ -218,7 +227,7 @@ public class GameScreen implements Screen {
 		}
 
 		// p1 is below p2
-		if (p.getY() + p.getHeight() >= o.getY() && p.getY() + p.getHeight() < o.getY() + o.getHeight()) {
+		if (p.getY() + p.getHeight() > o.getY() && p.getY() + p.getHeight() < o.getY() + o.getHeight()) {
 			if (p.getX() + p.getWidth() > o.getX() && p.getX() < o.getX() + o.getWidth()) {
 				if (p.getSpeed().y > 0) {
 					p.setY(o.getY() - p.getHeight());
@@ -228,7 +237,7 @@ public class GameScreen implements Screen {
 		}
 
 		// p1 is above p2
-		if (p.getY() > o.getY() && p.getY() <= o.getY() + o.getHeight()) {
+		if (p.getY() > o.getY() && p.getY() < o.getY() + o.getHeight()) {
 			if (p.getX() + p.getWidth() > o.getX() && p.getX() < o.getX() + o.getWidth()) {
 				if (p.getSpeed().y < 0) {
 					p.setY(o.getY() + o.getHeight());
