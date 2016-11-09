@@ -22,6 +22,17 @@ public class Entity {
 	protected Vector2 speed;
 
 	protected Sprite sprite;
+	
+	public Entity() {
+
+		position = new Vector2();
+		speed = new Vector2();
+		
+		Texture texture = new Texture(Gdx.files.internal("empty.png"));
+		sprite = new Sprite(texture);
+		sprite.setPosition(position.x, position.y);
+
+	}
 
 	public Entity(String spritePath) {
 
