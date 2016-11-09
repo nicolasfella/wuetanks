@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 
 public class Player extends Entity {
 
-	private static final int WIDTH = 50, HEIGHT = 50;
+	private static final int WIDTH = 40, HEIGHT = 40;
 
 	private int key_up, key_down, key_left, key_right, key_shoot;
 
