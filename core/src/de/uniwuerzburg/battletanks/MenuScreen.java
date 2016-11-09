@@ -1,22 +1,20 @@
 package de.uniwuerzburg.battletanks;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MenuScreen implements Screen {
@@ -25,7 +23,6 @@ public class MenuScreen implements Screen {
 	private Skin skin;
 	private Stage stage;
 	private Table mainTable;
-	
 
 	public MenuScreen(final BattleTanks game) {
 		this.game = game;
@@ -37,6 +34,7 @@ public class MenuScreen implements Screen {
 		mainTable = new Table();
 		mainTable.setFillParent(true);
 
+		stage.setDebugAll(true);
 		create();
 	}
 
@@ -59,6 +57,115 @@ public class MenuScreen implements Screen {
 		stage.getViewport().update(width, height, true);
 	}
 
+	public void create() {
+		Button start = createStartButton();
+		HorizontalGroup hgroup = createTimeTextField();
+
+		mainTable.add(start, hgroup);
+
+		for (int i = 0; i < 2; i++) {
+			mainTable.row();
+			Table temp = createTankChooser();
+			mainTable.add(temp).expand();
+			Table temp2 = createTankChooser();
+			mainTable.add(temp2).expand();
+		}
+
+		stage.addActor(mainTable);
+	}
+
+	/**
+	 * Erstellt den Startbutton, der dafür sorgt, dass zum GameScreen gewechselt
+	 * wird
+	 * 
+	 * @return Button
+	 */
+	private Button createStartButton() {
+		final Button start = new TextButton("START!", skin);// , "toggle");
+		start.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				game.setScreen(new GameScreen(game));
+				dispose();
+			}
+		});
+		return start;
+
+	}
+
+	/**
+	 * Erstellt ein TextField mit Enter-Button zur Eingabe einer Spieldauer
+	 * 
+	 * 
+	 * @return HorizontalGroup
+	 */
+	private HorizontalGroup createTimeTextField() {
+		HorizontalGroup hgroup = new HorizontalGroup();
+
+		Button enter = new TextButton("Enter Time", skin);
+		TextField timeInput = new TextField(null, skin);
+		timeInput.setMaxLength(3);
+
+		enter.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				try {
+					int time = Integer.parseInt(timeInput.getText());
+					System.out.println(time);
+					timeInput.setDisabled(true);
+					enter.setDisabled(true);
+				} catch (NumberFormatException e) {
+					final Button close = new TextButton("close", skin);
+					Dialog error = new Dialog("Error", skin);
+					error.text("Not a valid number!");
+					error.button(close);
+					error.show(stage);
+
+				}
+			}
+		});
+
+		hgroup.addActor(timeInput);
+		hgroup.addActor(enter);
+		return hgroup;
+
+	}
+
+	/**
+	 * Erstellt eine Table mit Darstellung des Panzers und einer Möglichkeit,
+	 * durch die Panzer durchzuwechseln um einen auszuwählen.
+	 * 
+	 * @return Table
+	 */
+	private Table createTankChooser() {
+		Table temp = new Table();
+		Button next = new TextButton("NEXT TANK", skin);
+		Image one = new Image(new Texture(Gdx.files.internal("player.png")));
+		Image two = new Image(new Texture(Gdx.files.internal("player2.png")));
+		Image three = new Image(new Texture(Gdx.files.internal("player3.png")));
+
+		next.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if (temp.getChildren().contains(one, false)) {
+					temp.removeActor(one);
+					temp.add(two).center();
+				} else if (temp.getChildren().contains(two, false)) {
+					temp.removeActor(two);
+					temp.add(three).center();
+				} else if (temp.getChildren().contains(three, false)) {
+					temp.removeActor(three);
+					temp.add(one).center();
+				}
+			}
+		});
+
+		temp.add(next, one);
+
+		return temp;
+
+	}
+
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
@@ -76,66 +183,7 @@ public class MenuScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		stage.dispose();
 	}
 
-	public void create() {
-		final Button start = new TextButton("START!", skin, "toggle");
-		TextField test = new TextField(null, skin);
-		start.align(Align.bottom);
-		start.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				game.setScreen(new GameScreen(game));
-				dispose();
-			}
-		});
-
-		final Button next = new TextButton("NEXT TANK", skin);
-		Image one = new Image(new Texture(Gdx.files.internal("player.png")));
-		Image two = new Image(new Texture(Gdx.files.internal("player2.png")));
-		Image zero = new Image();
-
-		next.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				if (mainTable.getChildren().contains(zero, false)) {
-					mainTable.removeActor(zero);
-					mainTable.addActorAt(3, one);
-
-				} else if (mainTable.getChildren().contains(one, false)) {
-					mainTable.removeActor(one);
-					mainTable.addActorAt(3, two);
-
-					mainTable.addActorAt(3, two);
-				} else if (mainTable.getChildren().contains(two, false)) {
-					mainTable.removeActor(two);
-					mainTable.addActorAt(3, one);
-				}
-
-			}
-		});
-		
-		
-		
-		test.setMaxLength(3);
-		test.addListener(new InputListener() {
-			@Override
-			public boolean keyDown(InputEvent event, int keycode) {
-				if (keycode == Keys.ENTER) {
-					try {
-						int time = Integer.parseInt(test.getText());
-						System.out.println(time);
-
-					} catch (NumberFormatException e) {
-						System.out.println("Keine gültige Zahl eingegeben!");
-					}
-				}
-				return true;
-			}
-		});
-
-		mainTable.add(start, test, next, zero);
-		stage.addActor(mainTable);
-	}
 }
