@@ -28,8 +28,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class GameScreen implements Screen {
 
-	static int width = 800;
-	static int height = 600;
+	static int width;
+	static int height;
 	final BattleTanks game;
 
 
