@@ -49,8 +49,11 @@ public class GameScreen implements Screen {
 
     public GameScreen(final BattleTanks game) {
         this.game = game;
-
-
+    }
+    
+    public GameScreen(final BattleTanks game, int time){
+    	this.game = game;
+    	System.out.println(time);
     }
 
     @Override
