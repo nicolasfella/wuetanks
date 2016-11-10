@@ -227,7 +227,7 @@ public class GameScreen implements Screen {
         }
 
         // p1 is above p2
-        if (p.getY() >= o.getY() && p.getY() <= o.getY() + o.getHeight()) {
+        if (p.getY() >= o.getY() && p.getY() < o.getY() + o.getHeight()) {
             if (p.getOldPosition().y >= o.getY() + o.getHeight()) {
                 if (p.getX() + p.getWidth() > o.getX() && p.getX() < o.getX() + o.getWidth()) {
                     if (p.getY() < p.getOldPosition().y) {
