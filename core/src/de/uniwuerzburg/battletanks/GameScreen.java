@@ -70,7 +70,7 @@ public class GameScreen implements Screen {
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         MapProperties tiledMapProps = tiledMap.getProperties();
 
-        // berechnung der fenstergr��e durch die gr��e der tilemap
+        // berechnung der fenstergröße durch die größe der tilemap
 
         int mapWidth = tiledMapProps.get("width", Integer.class);
         int mapHeight = tiledMapProps.get("height", Integer.class);
@@ -168,14 +168,6 @@ public class GameScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
-		/*
-        batch.draw(img, 0, 0, 400, 400);
-		batch.draw(img, 0, 400, 400, 400);
-		batch.draw(img, 400, 0, 400, 400);
-		batch.draw(img, 400, 400, 400, 400);
-		
-		*/
-
         for (Entity entity : entities) {
             entity.render(batch);
         }
@@ -198,57 +190,57 @@ public class GameScreen implements Screen {
         Rectangle r1 = new Rectangle(p.getX(), p.getY(), p.getWidth(), p.getHeight());
         Rectangle r2 = new Rectangle(o.getX(), o.getY(), o.getWidth(), o.getHeight());
 
-        if (r1.contains(r2)) {
-            System.out.println("Jammed");
+        if (r1.overlaps(r2)) {
+            //System.out.println("Intersection");
         }
 
         // p1 is left to p2
-        if (p.getX() + p.getWidth() >= o.getX() && p.getX() + p.getWidth() < o.getX() + o.getWidth()) {
+        if (p.getX() + p.getWidth() >= o.getX()) {
             if (p.getOldPosition().x + p.getWidth() <= o.getX()) {
                 if (p.getY() + p.getHeight() > o.getY() && p.getY() < o.getY() + o.getHeight()) {
                     if (p.getX() > p.getOldPosition().x) {
                         p.setX(o.getX() - p.getWidth());
                         p.getSpeed().x = 0;
-                        //System.out.println("Kollision von links");
+                        System.out.println("Kollision von links");
                     }
                 }
             }
         }
 
         // p1 is below p2
-        if (p.getY() + p.getHeight() >= o.getY() && p.getY() + p.getHeight() < o.getY() + o.getHeight()) {
+        if (p.getY() + p.getHeight() >= o.getY()) {
             if (p.getOldPosition().y + p.getHeight() <= o.getY()) {
                 if (p.getX() + p.getWidth() > o.getX() && p.getX() < o.getX() + o.getWidth()) {
                     if (p.getY() > p.getOldPosition().y) {
                         p.setY(o.getY() - p.getHeight());
                         p.getSpeed().y = 0;
-                        //System.out.println("Kollision von unten");
+                        System.out.println("Kollision von unten");
                     }
                 }
             }
         }
 
         // p1 is above p2
-        if (p.getY() >= o.getY() && p.getY() < o.getY() + o.getHeight()) {
+        if (p.getY() < o.getY() + o.getHeight()) {
             if (p.getOldPosition().y >= o.getY() + o.getHeight()) {
                 if (p.getX() + p.getWidth() > o.getX() && p.getX() < o.getX() + o.getWidth()) {
                     if (p.getY() < p.getOldPosition().y) {
                         p.setY(o.getY() + o.getHeight());
                         p.getSpeed().y = 0;
-                        //System.out.println("Kollision von oben");
+                        System.out.println("Kollision von oben");
                     }
                 }
             }
         }
 
         // p is right to o
-        if (p.getX() > o.getX() && p.getX() <= o.getX() + o.getWidth()) {
+        if (p.getX() <= o.getX() + o.getWidth()) {
             if (p.getOldPosition().x >= o.getX() + o.getWidth()) {
                 if (p.getY() + p.getHeight() > o.getY() && p.getY() < o.getY() + o.getHeight()) {
                     if (p.getX() < p.getOldPosition().x) {
                         p.setX(o.getX() + o.getWidth());
                         p.getSpeed().x = 0;
-                        //System.out.println("Kollision von rechts");
+                        System.out.println("Kollision von rechts");
                     }
                 }
             }
@@ -280,7 +272,7 @@ public class GameScreen implements Screen {
     public void dispose() {
         font.dispose();
         batch.dispose();
-        //img.dispose();
+        tiledMap.dispose();
 
     }
 

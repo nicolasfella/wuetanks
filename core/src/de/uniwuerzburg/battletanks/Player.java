@@ -27,7 +27,7 @@ public class Player extends Entity {
 
     @Override
     public void update() {
-        super.update();
+
 
         speed.set(0, 0);
 
@@ -76,7 +76,7 @@ public class Player extends Entity {
             position.y = GameScreen.height - height;
             speed.y = 0;
         }
-
+        super.update();
     }
 
     public int getKey_up() {
