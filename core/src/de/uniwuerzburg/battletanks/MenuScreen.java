@@ -10,19 +10,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MenuScreen implements Screen {
 	final BattleTanks game;
-
 	private Skin skin;
 	private Stage stage;
 	private Table mainTable;
+
+	private int time;
 
 	public MenuScreen(final BattleTanks game) {
 		this.game = game;
@@ -34,13 +37,8 @@ public class MenuScreen implements Screen {
 		mainTable = new Table();
 		mainTable.setFillParent(true);
 
-		stage.setDebugAll(true);
+		//stage.setDebugAll(true);
 		create();
-	}
-
-	@Override
-	public void show() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -57,17 +55,41 @@ public class MenuScreen implements Screen {
 		stage.getViewport().update(width, height, true);
 	}
 
+	/**
+	 * Überprüft, ob alle benötigten Parameter (time, map, players) festgelegt
+	 * wurden und startet dann das game
+	 * 
+	 */
+	private void startGame() {
+		// game.setScreen(new GameScreen(game));
+		if (time != 0) {
+			game.setScreen(new GameScreen(game, time));
+			dispose();
+
+		} else {
+			final Button close = new TextButton("close", skin);
+			Dialog error = new Dialog("Error", skin);
+			error.text("No time entered!");
+			error.button(close);
+			error.show(stage);
+		}
+	}
+	
+	/**Erstellt das gesamte Menü
+	 */
 	public void create() {
 		Button start = createStartButton();
+		HorizontalGroup mapLoader = createMapLoader();
 		HorizontalGroup hgroup = createTimeTextField();
 
-		mainTable.add(start, hgroup);
-
+		mainTable.add(mapLoader, hgroup);
+		mainTable.row();
 		for (int i = 0; i < 2; i++) {
+			mainTable.add(createTankChooser()).expand();
+			mainTable.add(createTankChooser()).expand();
 			mainTable.row();
-			mainTable.add(createTankChooser()).expand();
-			mainTable.add(createTankChooser()).expand();
 		}
+		mainTable.add(start).colspan(2).padBottom(20);
 
 		stage.addActor(mainTable);
 	}
@@ -83,17 +105,14 @@ public class MenuScreen implements Screen {
 		start.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				game.setScreen(new GameScreen(game));
-				dispose();
+				startGame();
 			}
 		});
 		return start;
-
 	}
 
 	/**
 	 * Erstellt ein TextField mit Enter-Button zur Eingabe einer Spieldauer
-	 * 
 	 * 
 	 * @return HorizontalGroup
 	 */
@@ -108,8 +127,8 @@ public class MenuScreen implements Screen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				try {
-					int time = Integer.parseInt(timeInput.getText());
-					System.out.println(time);
+					time = Integer.parseInt(timeInput.getText());
+					//System.out.println(time);
 					timeInput.setDisabled(true);
 					enter.setDisabled(true);
 				} catch (NumberFormatException e) {
@@ -118,7 +137,6 @@ public class MenuScreen implements Screen {
 					error.text("Not a valid number!");
 					error.button(close);
 					error.show(stage);
-
 				}
 			}
 		});
@@ -127,6 +145,24 @@ public class MenuScreen implements Screen {
 		hgroup.addActor(enter);
 		return hgroup;
 
+	}
+
+	/**
+	 * Erstellt eine Möglichkeit, Maps zu laden; Das Label oll dann später
+	 * natürlich die jeweils geladene Map anzeigen zur überprüfung für den
+	 * benutzer, ob er die richtige Map ausgewählt hat
+	 * 
+	 * @return HorizontalGroup
+	 */
+	private HorizontalGroup createMapLoader() {
+		HorizontalGroup temp = new HorizontalGroup();
+		Button loadButton = new TextButton("Load Map", skin);
+		Label loadedMap = new Label("loadedmap.tmx", skin);
+
+		temp.addActor(loadButton);
+		temp.addActor(loadedMap);
+
+		return temp;
 	}
 
 	/**
@@ -181,6 +217,11 @@ public class MenuScreen implements Screen {
 
 		return temp;
 
+	}
+
+	@Override
+	public void show() {
+		// TODO Auto-generated method stub
 	}
 
 	@Override
