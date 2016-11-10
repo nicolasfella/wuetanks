@@ -17,6 +17,8 @@ import com.badlogic.gdx.math.Vector2;
 public class Entity {
 
 	protected Vector2 position;
+
+	protected Vector2 oldPosition;
 	protected int width, height;
 
 	protected Vector2 speed;
@@ -30,6 +32,7 @@ public class Entity {
 	public Entity(String spritePath) {
 
 		position = new Vector2();
+		oldPosition = new Vector2();
 		speed = new Vector2();
 
 		Texture texture = new Texture(Gdx.files.internal(spritePath));
@@ -38,6 +41,7 @@ public class Entity {
 	}
 
 	public void update() {
+		oldPosition = position.cpy();
 		position.add(speed.scl(Gdx.graphics.getDeltaTime()));
 	}
 
@@ -98,6 +102,14 @@ public class Entity {
 	public void setPosition(int x, int y) {
 		position.set(x, y);
 
+	}
+
+	public Vector2 getOldPosition() {
+		return oldPosition;
+	}
+
+	public void setOldPosition(Vector2 oldPosition) {
+		this.oldPosition = oldPosition;
 	}
 
 }
