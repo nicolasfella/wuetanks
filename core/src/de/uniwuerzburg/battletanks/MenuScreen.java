@@ -65,10 +65,8 @@ public class MenuScreen implements Screen {
 
 		for (int i = 0; i < 2; i++) {
 			mainTable.row();
-			Table temp = createTankChooser();
-			mainTable.add(temp).expand();
-			Table temp2 = createTankChooser();
-			mainTable.add(temp2).expand();
+			mainTable.add(createTankChooser()).expand();
+			mainTable.add(createTankChooser()).expand();
 		}
 
 		stage.addActor(mainTable);
@@ -137,30 +135,49 @@ public class MenuScreen implements Screen {
 	 * 
 	 * @return Table
 	 */
-	private Table createTankChooser() {
-		Table temp = new Table();
-		Button next = new TextButton("NEXT TANK", skin);
+	private HorizontalGroup createTankChooser() {
+		HorizontalGroup temp = new HorizontalGroup();
+		Button next = new TextButton(" >> ", skin);
+		Button previous = new TextButton(" << ", skin);
+
 		Image one = new Image(new Texture(Gdx.files.internal("player.png")));
 		Image two = new Image(new Texture(Gdx.files.internal("player2.png")));
 		Image three = new Image(new Texture(Gdx.files.internal("player3.png")));
-
 		next.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				if (temp.getChildren().contains(one, false)) {
 					temp.removeActor(one);
-					temp.add(two).center();
+					temp.addActorAt(1, two);
 				} else if (temp.getChildren().contains(two, false)) {
 					temp.removeActor(two);
-					temp.add(three).center();
+					temp.addActorAt(1, three);
 				} else if (temp.getChildren().contains(three, false)) {
 					temp.removeActor(three);
-					temp.add(one).center();
+					temp.addActorAt(1, one);
 				}
 			}
 		});
 
-		temp.add(next, one);
+		previous.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if (temp.getChildren().contains(one, false)) {
+					temp.removeActor(one);
+					temp.addActorAt(1, three);
+				} else if (temp.getChildren().contains(two, false)) {
+					temp.removeActor(two);
+					temp.addActorAt(1, one);
+				} else if (temp.getChildren().contains(three, false)) {
+					temp.removeActor(three);
+					temp.addActorAt(1, two);
+				}
+			}
+		});
+
+		temp.addActorAt(0, previous);
+		temp.addActorAt(1, one);
+		temp.addActorAt(2, next);
 
 		return temp;
 
