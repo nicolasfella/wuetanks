@@ -4,6 +4,7 @@ package de.uniwuerzburg.battletanks;
  * Use Texturemap instead of single textures 
  * 
  */
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -11,105 +12,103 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * 
  * @author nico Represents an object in the game world.
  */
 public class Entity {
 
-	protected Vector2 position;
+    protected Vector2 position;
 
-	protected Vector2 oldPosition;
-	protected int width, height;
+    protected Vector2 oldPosition;
+    protected int width, height;
 
-	protected Vector2 speed;
+    protected Vector2 speed;
 
-	protected Sprite sprite;
-	
-	public Entity() {
-		this("empty.png");
-	}
+    protected Sprite sprite;
 
-	public Entity(String spritePath) {
+    public Entity() {
+        this("empty.png");
+    }
 
-		position = new Vector2();
-		oldPosition = new Vector2();
-		speed = new Vector2();
+    public Entity(String spritePath) {
 
-		Texture texture = new Texture(Gdx.files.internal(spritePath));
-		sprite = new Sprite(texture);
-		sprite.setPosition(position.x, position.y);
-	}
+        position = new Vector2();
+        oldPosition = new Vector2();
+        speed = new Vector2();
 
-	public void update() {
-		oldPosition = position.cpy();
-		position.add(speed.scl(Gdx.graphics.getDeltaTime()));
-	}
+        Texture texture = new Texture(Gdx.files.internal(spritePath));
+        sprite = new Sprite(texture);
+        sprite.setPosition(position.x, position.y);
+    }
 
-	public void render(SpriteBatch batch) {
-		sprite.setPosition(position.x, position.y);
-		sprite.setSize(width, height);
-		sprite.draw(batch);
-	}
+    public void update() {
+        oldPosition = position.cpy();
+        position.add(speed.scl(Gdx.graphics.getDeltaTime()));
+    }
 
-	public Vector2 getPosition() {
-		return position;
-	}
+    public void render(SpriteBatch batch) {
+        sprite.setPosition(position.x, position.y);
+        sprite.setSize(width, height);
+        sprite.draw(batch);
+    }
 
-	public void setPosition(Vector2 position) {
-		this.position = position;
-	}
+    public Vector2 getPosition() {
+        return position;
+    }
 
-	public int getHeight() {
-		return height;
-	}
+    public void setPosition(Vector2 position) {
+        this.position = position;
+    }
 
-	public void setHeight(int height) {
-		this.height = height;
-	}
+    public int getHeight() {
+        return height;
+    }
 
-	public int getWidth() {
-		return width;
-	}
+    public void setHeight(int height) {
+        this.height = height;
+    }
 
-	public void setWidth(int width) {
-		this.width = width;
-	}
+    public int getWidth() {
+        return width;
+    }
 
-	public Vector2 getSpeed() {
-		return speed;
-	}
+    public void setWidth(int width) {
+        this.width = width;
+    }
 
-	public void setSpeed(Vector2 speed) {
-		this.speed = speed;
-	}
+    public Vector2 getSpeed() {
+        return speed;
+    }
 
-	public int getX() {
-		return (int) position.x;
-	}
+    public void setSpeed(Vector2 speed) {
+        this.speed = speed;
+    }
 
-	public void setX(int x) {
-		position.x = x;
-	}
+    public int getX() {
+        return (int) position.x;
+    }
 
-	public int getY() {
-		return (int) position.y;
-	}
+    public void setX(int x) {
+        position.x = x;
+    }
 
-	public void setY(int y) {
-		position.y = y;
-	}
+    public int getY() {
+        return (int) position.y;
+    }
 
-	public void setPosition(int x, int y) {
-		position.set(x, y);
+    public void setY(int y) {
+        position.y = y;
+    }
 
-	}
+    public void setPosition(int x, int y) {
+        position.set(x, y);
+    }
 
-	public Vector2 getOldPosition() {
-		return oldPosition;
-	}
+    public Vector2 getOldPosition() {
+        return oldPosition;
+    }
 
-	public void setOldPosition(Vector2 oldPosition) {
-		this.oldPosition = oldPosition;
-	}
+    public void setOldPosition(Vector2 oldPosition) {
+        this.oldPosition = oldPosition;
+    }
 
 }

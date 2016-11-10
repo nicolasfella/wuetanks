@@ -179,12 +179,12 @@ public class GameScreen implements Screen {
         }
 
         // font.draw(batch, "Player 1: 7 hits 3 kills", 10, 20);
-          font.draw(batch, "Player 3: 3 hits 3 kills", 10, 25);
+          /*font.draw(batch, "Player 3: 3 hits 3 kills", 10, 25);
 		  font.draw(batch, "Player 1: 5 hits 8 kills", 10, height - 10);
 		  layout.setText(font, "Player 2: 5 hits 8 kills"); font.draw(batch,
 		  "Player 2: 5 hits 8 kills", width - layout.width - 10, height - 10);
 		  layout.setText(font, "Player 4: 10 hits 6 kills"); font.draw(batch,
-		  "Player 4: 10 hits 6 kills", width - layout.width - 10, 25);
+		  "Player 4: 10 hits 6 kills", width - layout.width - 10, 25);*/
 
         batch.end();
 
@@ -207,7 +207,7 @@ public class GameScreen implements Screen {
                     if (p.getX() > p.getOldPosition().x) {
                         p.setX(o.getX() - p.getWidth());
                         p.getSpeed().x = 0;
-                        System.out.println("Kollision von links");
+                        //System.out.println("Kollision von links");
                     }
                 }
             }
@@ -220,11 +220,25 @@ public class GameScreen implements Screen {
                     if (p.getY() > p.getOldPosition().y) {
                         p.setY(o.getY() - p.getHeight());
                         p.getSpeed().y = 0;
-                        System.out.println("Kollision von unten");
+                        //System.out.println("Kollision von unten");
                     }
                 }
             }
         }
+
+        // p1 is above p2
+        if (p.getY() >= o.getY() && p.getY() <= o.getY() + o.getHeight()) {
+            if (p.getOldPosition().y >= o.getY() + o.getHeight()) {
+                if (p.getX() + p.getWidth() > o.getX() && p.getX() < o.getX() + o.getWidth()) {
+                    if (p.getY() < p.getOldPosition().y) {
+                        p.setY(o.getY() + o.getHeight());
+                        p.getSpeed().y = 0;
+                        //System.out.println("Kollision von oben");
+                    }
+                }
+            }
+        }
+
         // p is right to o
         if (p.getX() > o.getX() && p.getX() <= o.getX() + o.getWidth()) {
             if (p.getOldPosition().x >= o.getX() + o.getWidth()) {
@@ -232,24 +246,12 @@ public class GameScreen implements Screen {
                     if (p.getX() < p.getOldPosition().x) {
                         p.setX(o.getX() + o.getWidth());
                         p.getSpeed().x = 0;
-                        System.out.println("Kollision von rechts");
+                        //System.out.println("Kollision von rechts");
                     }
                 }
             }
         }
 
-        // p1 is above p2
-        if (p.getY() > o.getY() && p.getY() <= o.getY() + o.getHeight()) {
-            if (p.getOldPosition().y >= o.getY() + o.getHeight()) {
-                if (p.getX() + p.getWidth() > o.getX() && p.getX() < o.getX() + o.getWidth()) {
-                    if (p.getY() < p.getOldPosition().y) {
-                        p.setY(o.getY() + o.getHeight());
-                        p.getSpeed().y = 0;
-                        System.out.println("Kollision von oben");
-                    }
-                }
-            }
-        }
     }
 
     @Override
