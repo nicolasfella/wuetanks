@@ -1,6 +1,8 @@
 package de.uniwuerzburg.battletanks;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Player extends Entity {
 
@@ -10,6 +12,9 @@ public class Player extends Entity {
 
     private int movingSpeed = 150;
 
+    private Direction direction;
+
+    private Sprite gunSprite;
 
     public Player(int key_up, int key_down, int key_left, int key_right, int key_shoot) {
         super("player");
@@ -23,6 +28,12 @@ public class Player extends Entity {
         width = WIDTH;
         height = HEIGHT;
 
+        direction = Direction.UP;
+
+        gunSprite = GameScreen.instance.getAtlas().createSprite("gun");
+        gunSprite.setSize(getWidth(), getHeight());
+        gunSprite.setPosition(getX(), getY());
+        gunSprite.setOriginCenter();
     }
 
     @Override
@@ -33,17 +44,38 @@ public class Player extends Entity {
 
         if (Gdx.input.isKeyPressed(key_up)) {
             speed.y = 1;
+            direction = Direction.UP;
         }
 
         if (Gdx.input.isKeyPressed(key_down)) {
             speed.y = -1;
+            direction = Direction.DOWN;
         }
 
         if (Gdx.input.isKeyPressed(key_left)) {
             speed.x = -1;
+            direction = Direction.LEFT;
         }
         if (Gdx.input.isKeyPressed(key_right)) {
             speed.x = 1;
+            direction = Direction.RIGHT;
+        }
+
+
+        if(Gdx.input.isKeyPressed(key_left) && Gdx.input.isKeyPressed(key_up)){
+            direction = Direction.UPLEFT;
+        }
+
+        if(Gdx.input.isKeyPressed(key_right) && Gdx.input.isKeyPressed(key_up)){
+            direction = Direction.UPRIGHT;
+        }
+
+        if(Gdx.input.isKeyPressed(key_left) && Gdx.input.isKeyPressed(key_down)){
+            direction = Direction.DOWNLEFT;
+        }
+
+        if(Gdx.input.isKeyPressed(key_right) && Gdx.input.isKeyPressed(key_down)){
+            direction = Direction.DOWNRIGHT;
         }
 
         if (Gdx.input.isKeyPressed(key_up) && Gdx.input.isKeyPressed(key_down)) {
@@ -77,6 +109,14 @@ public class Player extends Entity {
             speed.y = 0;
         }
         super.update();
+    }
+
+    @Override
+    public void render(SpriteBatch batch) {
+        super.render(batch);
+        gunSprite.setPosition(getX(), getY());
+        gunSprite.setRotation(direction.getRotation());
+        gunSprite.draw(batch);
     }
 
     public int getKey_up() {

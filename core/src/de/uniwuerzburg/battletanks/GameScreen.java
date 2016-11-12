@@ -78,7 +78,11 @@ public class GameScreen implements Screen {
 
         atlas = new TextureAtlas(Gdx.files.internal("textures/textures.atlas"));
 
-		tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
+        if(tiledMapFileHandle!=null) {
+            tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
+        }else{
+            tiledMap = new TmxMapLoader().load("maps/TestMap.tmx");
+        }
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		MapProperties tiledMapProps = tiledMap.getProperties();
 
