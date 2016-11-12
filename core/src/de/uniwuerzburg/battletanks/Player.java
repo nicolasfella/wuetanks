@@ -16,12 +16,12 @@ public class Player extends Entity {
     private Direction direction;
 
     private Sprite gunSprite;
-    
+
     private TextureAtlas atlas;
 
     public Player(String sprite, int key_up, int key_down, int key_left, int key_right, int key_shoot) {
         //super("player");
-    	super(sprite);
+        super(sprite);
 
         this.key_up = key_up;
         this.key_down = key_down;
@@ -43,44 +43,41 @@ public class Player extends Entity {
     @Override
     public void update() {
 
+        if (speed.x < 0 && speed.y > 0) {
+            direction = Direction.UPLEFT;
+        } else if (speed.x > 0 && speed.y > 0) {
+            direction = Direction.UPRIGHT;
+        } else if (speed.x < 0 && speed.y < 0) {
+            direction = Direction.DOWNLEFT;
+        } else if (speed.x > 0 && speed.y < 0) {
+            direction = Direction.DOWNRIGHT;
+        } else if (speed.y > 0 && speed.x == 0) {
+            direction = Direction.UP;
+        } else if (speed.x < 0 && speed.y == 0) {
+            direction = Direction.LEFT;
+        } else if (speed.y < 0 && speed.x == 0) {
+            direction = Direction.DOWN;
+        } else if (speed.x > 0 && speed.y == 0) {
+            direction = Direction.RIGHT;
+        }
 
         speed.set(0, 0);
 
         if (Gdx.input.isKeyPressed(key_up)) {
             speed.y = 1;
-            direction = Direction.UP;
         }
 
         if (Gdx.input.isKeyPressed(key_down)) {
             speed.y = -1;
-            direction = Direction.DOWN;
         }
 
         if (Gdx.input.isKeyPressed(key_left)) {
             speed.x = -1;
-            direction = Direction.LEFT;
         }
         if (Gdx.input.isKeyPressed(key_right)) {
             speed.x = 1;
-            direction = Direction.RIGHT;
         }
 
-
-        if(Gdx.input.isKeyPressed(key_left) && Gdx.input.isKeyPressed(key_up)){
-            direction = Direction.UPLEFT;
-        }
-
-        if(Gdx.input.isKeyPressed(key_right) && Gdx.input.isKeyPressed(key_up)){
-            direction = Direction.UPRIGHT;
-        }
-
-        if(Gdx.input.isKeyPressed(key_left) && Gdx.input.isKeyPressed(key_down)){
-            direction = Direction.DOWNLEFT;
-        }
-
-        if(Gdx.input.isKeyPressed(key_right) && Gdx.input.isKeyPressed(key_down)){
-            direction = Direction.DOWNRIGHT;
-        }
 
         if (Gdx.input.isKeyPressed(key_up) && Gdx.input.isKeyPressed(key_down)) {
             speed.y = 0;
