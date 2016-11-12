@@ -1,10 +1,5 @@
 package de.uniwuerzburg.battletanks;
 
-/* TODO
- * Use Texturemap instead of single textures 
- * 
- */
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -12,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * @author nico Represents an object in the game world.
+ * Represents an object in the game world.
  */
 public class Entity {
 
@@ -26,17 +21,16 @@ public class Entity {
     protected Sprite sprite;
 
     public Entity() {
-        this("empty.png");
+        this("empty");
     }
 
-    public Entity(String spritePath) {
+    public Entity(String spriteName) {
 
         position = new Vector2();
         oldPosition = new Vector2();
         speed = new Vector2();
 
-        Texture texture = new Texture(Gdx.files.internal(spritePath));
-        sprite = new Sprite(texture);
+        sprite = GameScreen.instance.getAtlas().createSprite(spriteName);
         sprite.setPosition(position.x, position.y);
     }
 
@@ -107,8 +101,15 @@ public class Entity {
         return oldPosition;
     }
 
-    public void setOldPosition(Vector2 oldPosition) {
-        this.oldPosition = oldPosition;
+    public Sprite getSprite(){
+        return sprite;
     }
 
+    public void setSprite(Sprite sprite){
+        this.sprite = sprite;
+    }
+
+    public void setSprite(String spriteName){
+        sprite = GameScreen.instance.getAtlas().createSprite(spriteName);
+    }
 }

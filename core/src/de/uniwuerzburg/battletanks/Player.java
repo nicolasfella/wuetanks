@@ -12,7 +12,7 @@ public class Player extends Entity {
 
 
     public Player(int key_up, int key_down, int key_left, int key_right, int key_shoot) {
-        super("player.png");
+        super("player");
 
         this.key_up = key_up;
         this.key_down = key_down;
@@ -62,8 +62,8 @@ public class Player extends Entity {
             speed.x = 0;
         }
 
-        if (position.x + speed.x * Gdx.graphics.getDeltaTime() + width > GameScreen.width) {
-            position.x = GameScreen.width - width;
+        if (position.x + speed.x * Gdx.graphics.getDeltaTime() + width > GameScreen.instance.getWidth()) {
+            position.x = GameScreen.instance.getWidth() - width;
             speed.x = 0;
         }
 
@@ -72,8 +72,8 @@ public class Player extends Entity {
             speed.y = 0;
         }
 
-        if (position.y + speed.y * Gdx.graphics.getDeltaTime() + height > GameScreen.height) {
-            position.y = GameScreen.height - height;
+        if (position.y + speed.y * Gdx.graphics.getDeltaTime() + height > GameScreen.instance.getHeight()) {
+            position.y = GameScreen.instance.getHeight() - height;
             speed.y = 0;
         }
         super.update();

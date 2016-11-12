@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
@@ -24,19 +25,24 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.Query;
+
 public class GameScreen implements Screen {
 
-    static int width;
-    static int height;
-    final BattleTanks game;
+    public static GameScreen instance;
 
+    private int width;
 
-    SpriteBatch batch;
-    //Texture img;
-    BitmapFont font;
+    private int height;
+    private final BattleTanks game;
 
-    OrthographicCamera camera;
-    Viewport viewPort;
+    private TextureAtlas atlas;
+
+    private SpriteBatch batch;
+    private BitmapFont font;
+
+    private OrthographicCamera camera;
+    private Viewport viewPort;
 
     private TiledMap tiledMap;
     private TiledMapRenderer tiledMapRenderer;
@@ -46,21 +52,15 @@ public class GameScreen implements Screen {
     private List<Entity> entities;
 
     private List<Player> players;
-
-    public GameScreen(final BattleTanks game) {
-        this.game = game;
-    }
     
     public GameScreen(final BattleTanks game, int time){
+        instance = this;
     	this.game = game;
-    	System.out.println(time);
     }
 
     @Override
     public void show() {
-        System.out.println("Start");
         batch = new SpriteBatch();
-        // img = new Texture("gravel.jpg");
 
         font = new BitmapFont();
         font.setColor(Color.ORANGE);
@@ -69,7 +69,7 @@ public class GameScreen implements Screen {
         layout.setText(font, "");
 
 
-        tiledMap = new TmxMapLoader().load("TestMap.tmx");
+        tiledMap = new TmxMapLoader().load("maps/TestMap.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         MapProperties tiledMapProps = tiledMap.getProperties();
 
@@ -83,6 +83,7 @@ public class GameScreen implements Screen {
         width = mapWidth * tilePixelWidth;
         height = mapHeight * tilePixelHeight;
 
+        atlas = new TextureAtlas(Gdx.files.internal("textures/textures.atlas"));
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, width, height);
@@ -99,6 +100,7 @@ public class GameScreen implements Screen {
         Player player2 = new Player(Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT, Input.Keys.E);
         entities.add(player2);
         player2.setPosition(150, 500);
+        player2.setSprite("player2");
         players.add(player2);
 
 		/*
@@ -204,7 +206,7 @@ public class GameScreen implements Screen {
                     if (p.getX() > p.getOldPosition().x) {
                         p.setX(o.getX() - p.getWidth());
                         p.getSpeed().x = 0;
-                        System.out.println("Kollision von links");
+                        //System.out.println("Kollision von links");
                     }
                 }
             }
@@ -217,7 +219,7 @@ public class GameScreen implements Screen {
                     if (p.getY() > p.getOldPosition().y) {
                         p.setY(o.getY() - p.getHeight());
                         p.getSpeed().y = 0;
-                        System.out.println("Kollision von unten");
+                        //System.out.println("Kollision von unten");
                     }
                 }
             }
@@ -230,7 +232,7 @@ public class GameScreen implements Screen {
                     if (p.getY() < p.getOldPosition().y) {
                         p.setY(o.getY() + o.getHeight());
                         p.getSpeed().y = 0;
-                        System.out.println("Kollision von oben");
+                        //System.out.println("Kollision von oben");
                     }
                 }
             }
@@ -243,7 +245,7 @@ public class GameScreen implements Screen {
                     if (p.getX() < p.getOldPosition().x) {
                         p.setX(o.getX() + o.getWidth());
                         p.getSpeed().x = 0;
-                        System.out.println("Kollision von rechts");
+                        //System.out.println("Kollision von rechts");
                     }
                 }
             }
@@ -278,5 +280,15 @@ public class GameScreen implements Screen {
         tiledMap.dispose();
 
     }
+    public int getWidth() {
+        return width;
+    }
 
+    public int getHeight() {
+        return height;
+    }
+
+    public TextureAtlas getAtlas() {
+        return atlas;
+    }
 }
