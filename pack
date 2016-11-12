@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+java -cp runnable-texturepacker.jar com.badlogic.gdx.tools.texturepacker.TexturePacker textures core/assets/textures/ textures.atlas
+
