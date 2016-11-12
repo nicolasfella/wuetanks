@@ -1,7 +1,11 @@
 package de.uniwuerzburg.battletanks;
 
+import java.io.File;
+import java.io.FileFilter;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -19,6 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import de.uniwuerzburg.battletanks.FileChooser.ResultListener;
+
 public class MenuScreen implements Screen {
 	final BattleTanks game;
 	private Skin skin;
@@ -26,6 +32,9 @@ public class MenuScreen implements Screen {
 	private Table mainTable;
 
 	private int time;
+	
+	// falls keine tilemap geladen wird, wird die TestMap an GameScreen übergeben
+	private FileHandle tiledMapFileHandle = Gdx.files.internal("TestMap.tmx");
 
 	public MenuScreen(final BattleTanks game) {
 		this.game = game;
@@ -37,7 +46,7 @@ public class MenuScreen implements Screen {
 		mainTable = new Table();
 		mainTable.setFillParent(true);
 
-		//stage.setDebugAll(true);
+		// stage.setDebugAll(true);
 		create();
 	}
 
@@ -63,7 +72,7 @@ public class MenuScreen implements Screen {
 	private void startGame() {
 		// game.setScreen(new GameScreen(game));
 		if (time != 0) {
-			game.setScreen(new GameScreen(game, time));
+			game.setScreen(new GameScreen(game, time, tiledMapFileHandle));
 			dispose();
 
 		} else {
@@ -74,8 +83,9 @@ public class MenuScreen implements Screen {
 			error.show(stage);
 		}
 	}
-	
-	/**Erstellt das gesamte Menü
+
+	/**
+	 * Erstellt das gesamte Menü
 	 */
 	public void create() {
 		Button start = createStartButton();
@@ -128,7 +138,7 @@ public class MenuScreen implements Screen {
 			public void changed(ChangeEvent event, Actor actor) {
 				try {
 					time = Integer.parseInt(timeInput.getText());
-					//System.out.println(time);
+					// System.out.println(time);
 					timeInput.setDisabled(true);
 					enter.setDisabled(true);
 				} catch (NumberFormatException e) {
@@ -157,7 +167,29 @@ public class MenuScreen implements Screen {
 	private HorizontalGroup createMapLoader() {
 		HorizontalGroup temp = new HorizontalGroup();
 		Button loadButton = new TextButton("Load Map", skin);
-		Label loadedMap = new Label("loadedmap.tmx", skin);
+		Label loadedMap = new Label("", skin);
+
+		loadButton.addListener(new ChangeListener() {
+
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				FileChooser dialog = FileChooser.createDialog("Load TileMap ...", skin,
+						Gdx.files.absolute(Gdx.files.getExternalStoragePath()));
+				dialog.setResultListener(new ResultListener() {
+					@Override
+					public boolean result(boolean success, FileHandle result) {
+						if (success) {
+							loadedMap.setText(result.name());
+							tiledMapFileHandle = result;
+						}
+						return true;
+					}
+				});
+				dialog.show(stage);
+
+			}
+
+		});
 
 		temp.addActor(loadButton);
 		temp.addActor(loadedMap);

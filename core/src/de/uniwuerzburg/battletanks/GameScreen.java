@@ -3,6 +3,8 @@ package de.uniwuerzburg.battletanks;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.loaders.resolvers.AbsoluteFileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -25,8 +27,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.management.Query;
-
 public class GameScreen implements Screen {
 
     public static GameScreen instance;
@@ -44,58 +44,63 @@ public class GameScreen implements Screen {
     private OrthographicCamera camera;
     private Viewport viewPort;
 
-    private TiledMap tiledMap;
-    private TiledMapRenderer tiledMapRenderer;
+	private TiledMap tiledMap;
+	private TiledMapRenderer tiledMapRenderer;
+	private FileHandle tiledMapFileHandle;
 
-    private GlyphLayout layout;
+	private GlyphLayout layout;
 
-    private List<Entity> entities;
+	private List<Entity> entities;
 
-    private List<Player> players;
+	private List<Player> players;
+
     
     public GameScreen(final BattleTanks game, int time){
         instance = this;
     	this.game = game;
     }
 
-    @Override
-    public void show() {
-        batch = new SpriteBatch();
+	public GameScreen(final BattleTanks game, int time, FileHandle tiledMapFileHandle) {
+        instance = this;
+		this.game = game;
+		this.tiledMapFileHandle = tiledMapFileHandle;
+	}
 
-        font = new BitmapFont();
-        font.setColor(Color.ORANGE);
+	@Override
+	public void show() {
+		batch = new SpriteBatch();
 
-        layout = new GlyphLayout();
-        layout.setText(font, "");
+		font = new BitmapFont();
+		font.setColor(Color.ORANGE);
 
-
-        tiledMap = new TmxMapLoader().load("maps/TestMap.tmx");
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
-        MapProperties tiledMapProps = tiledMap.getProperties();
-
-        // berechnung der fenstergröße durch die größe der tilemap
-
-        int mapWidth = tiledMapProps.get("width", Integer.class);
-        int mapHeight = tiledMapProps.get("height", Integer.class);
-        int tilePixelWidth = tiledMapProps.get("tilewidth", Integer.class);
-        int tilePixelHeight = tiledMapProps.get("tileheight", Integer.class);
-
-        width = mapWidth * tilePixelWidth;
-        height = mapHeight * tilePixelHeight;
+		layout = new GlyphLayout();
+		layout.setText(font, "");
 
         atlas = new TextureAtlas(Gdx.files.internal("textures/textures.atlas"));
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, width, height);
-        viewPort = new FitViewport(width, height, camera);
+		tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
+		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+		MapProperties tiledMapProps = tiledMap.getProperties();
 
-        entities = new ArrayList<Entity>();
-        players = new ArrayList<Player>(4);
+		int mapWidth = tiledMapProps.get("width", Integer.class);
+		int mapHeight = tiledMapProps.get("height", Integer.class);
+		int tilePixelWidth = tiledMapProps.get("tilewidth", Integer.class);
+		int tilePixelHeight = tiledMapProps.get("tileheight", Integer.class);
 
-        Player player1 = new Player(Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D, Input.Keys.E);
-        entities.add(player1);
-        player1.setPosition(0, 0);
-        players.add(player1);
+		width = mapWidth * tilePixelWidth;
+		height = mapHeight * tilePixelHeight;
+
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, width, height);
+		viewPort = new FitViewport(width, height, camera);
+
+		entities = new ArrayList<Entity>();
+		players = new ArrayList<Player>(4);
+
+		Player player1 = new Player(Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D, Input.Keys.E);
+		entities.add(player1);
+		player1.setPosition(0, 0);
+		players.add(player1);
 
         Player player2 = new Player(Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT, Input.Keys.E);
         entities.add(player2);
@@ -103,87 +108,81 @@ public class GameScreen implements Screen {
         player2.setSprite("player2");
         players.add(player2);
 
-		/*
-         * Player player3 = new Player(Input.Keys.U, Input.Keys.J, Input.Keys.H,
-		 * Input.Keys.K, Input.Keys.E); entities.add(player3);
-		 * player3.setPosition(400, 300); players.add(player3);
-		 */
+		// einlesen der objects aus dem objects layer der tilemap und erstellung
+		// der obstacles
 
+		MapLayer objectsLayer = tiledMap.getLayers().get("objects");
 
-        // einlesen der objects aus dem objects layer der tilemap und erstellung der obstacles
+		if (objectsLayer != null) {
+			for (MapObject object : objectsLayer.getObjects()) {
 
-        MapLayer objectsLayer = tiledMap.getLayers().get("objects");
+				if (object instanceof RectangleMapObject) {
+					RectangleMapObject rectObject = (RectangleMapObject) object;
+					Rectangle rect = rectObject.getRectangle();
+					Obstacle obst = new Obstacle();
+					obst.setPosition((int) rect.getX(), (int) rect.getY());
+					obst.setWidth((int) rect.getWidth());
+					obst.setHeight((int) rect.getHeight());
+					entities.add(obst);
+				}
+			}
+		}
 
-        for (MapObject object : objectsLayer.getObjects()) {
+	}
 
-            if (object instanceof RectangleMapObject) {
-                RectangleMapObject rectObject = (RectangleMapObject) object;
-                Rectangle rect = rectObject.getRectangle();
-                Obstacle obst = new Obstacle();
-                obst.setPosition((int) rect.getX(), (int) rect.getY());
-                obst.setWidth((int) rect.getWidth());
-                obst.setHeight((int) rect.getHeight());
-                entities.add(obst);
-            }
-        }
+	@Override
+	public void render(float delta) {
 
+		Gdx.graphics.setTitle("Battletanks " + Gdx.graphics.getFramesPerSecond() + " fps");
 
-    }
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-    @Override
-    public void render(float delta) {
+		camera.update();
 
-        Gdx.graphics.setTitle("Battletanks "+Gdx.graphics.getFramesPerSecond()+" fps");
+		for (Entity entity : entities) {
+			entity.update();
+		}
 
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		// Player to player collision
+		// extend to player-obstacle?
+		for (int i = 0; i < entities.size(); i++) {
+			for (int j = 0; j < entities.size(); j++) {
+				if (i == j)
+					continue;
 
-        camera.update();
+				Entity e1 = entities.get(i);
+				Entity e2 = entities.get(j);
 
-        for (Entity entity : entities) {
-            entity.update();
-        }
+				if (e1 instanceof Player) {
 
-        // Player to player collision
-        // extend to player-obstacle?
-        for (int i = 0; i < entities.size(); i++) {
-            for (int j = 0; j < entities.size(); j++) {
-                if (i == j)
-                    continue;
+					if (e2 instanceof Player || e2 instanceof Obstacle) {
+						checkCollisionPlayerObstacle((Player) e1, e2);
+					}
 
-                Entity e1 = entities.get(i);
-                Entity e2 = entities.get(j);
+				}
 
-                if (e1 instanceof Player) {
+			}
+		}
 
-                    if (e2 instanceof Player || e2 instanceof Obstacle) {
-                        checkCollisionPlayerObstacle((Player) e1, e2);
-                    }
+		tiledMapRenderer.setView(camera);
+		tiledMapRenderer.render();
 
-                }
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
 
-            }
-        }
-
-
-        tiledMapRenderer.setView(camera);
-        tiledMapRenderer.render();
-
-
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-
-        for (Entity entity : entities) {
-            entity.render(batch);
-        }
-
+		for (Entity entity : entities) {
+			entity.render(batch);
+		}
         // font.draw(batch, "Player 1: 7 hits 3 kills", 10, 20);
-          /*font.draw(batch, "Player 3: 3 hits 3 kills", 10, 25);
-		  font.draw(batch, "Player 1: 5 hits 8 kills", 10, height - 10);
-		  layout.setText(font, "Player 2: 5 hits 8 kills"); font.draw(batch,
-		  "Player 2: 5 hits 8 kills", width - layout.width - 10, height - 10);
-		  layout.setText(font, "Player 4: 10 hits 6 kills"); font.draw(batch,
-		  "Player 4: 10 hits 6 kills", width - layout.width - 10, 25);*/
+		/*
+		 * font.draw(batch, "Player 3: 3 hits 3 kills", 10, 25);
+		 * font.draw(batch, "Player 1: 5 hits 8 kills", 10, height - 10);
+		 * layout.setText(font, "Player 2: 5 hits 8 kills"); font.draw(batch,
+		 * "Player 2: 5 hits 8 kills", width - layout.width - 10, height - 10);
+		 * layout.setText(font, "Player 4: 10 hits 6 kills"); font.draw(batch,
+		 * "Player 4: 10 hits 6 kills", width - layout.width - 10, 25);
+		 */
 
         batch.end();
 
