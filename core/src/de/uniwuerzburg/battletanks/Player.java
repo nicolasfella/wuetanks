@@ -34,9 +34,7 @@ public class Player extends Entity {
 
         direction = Direction.UP;
 
-        //gunSprite = GameScreen.instance.getAtlas().createSprite("gun");
-    	 atlas = new TextureAtlas(Gdx.files.internal("textures/textures.atlas"));
-    	gunSprite = atlas.createSprite("gun");
+        gunSprite = BattleTanks.getTextureAtlas().createSprite("gun");
         gunSprite.setSize(getWidth(), getHeight());
         gunSprite.setPosition(getX(), getY());
         gunSprite.setOriginCenter();

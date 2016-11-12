@@ -35,8 +35,6 @@ public class GameScreen implements Screen {
 	private int height;
 	private final BattleTanks game;
 
-	private TextureAtlas atlas;
-
 	private SpriteBatch batch;
 	private BitmapFont font;
 
@@ -80,8 +78,6 @@ public class GameScreen implements Screen {
 
 		layout = new GlyphLayout();
 		layout.setText(font, "");
-
-		atlas = new TextureAtlas(Gdx.files.internal("textures/textures.atlas"));
 
 		if (tiledMapFileHandle != null) {
 			tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
@@ -288,7 +284,6 @@ public class GameScreen implements Screen {
         font.dispose();
         batch.dispose();
         tiledMap.dispose();
-        atlas.dispose();
         tiledMapFileHandle.delete();
 
     }
@@ -298,10 +293,6 @@ public class GameScreen implements Screen {
 
     public int getHeight() {
         return height;
-    }
-
-    public TextureAtlas getAtlas() {
-        return atlas;
     }
 
 }

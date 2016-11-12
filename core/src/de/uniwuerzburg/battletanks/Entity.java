@@ -20,21 +20,18 @@ public class Entity {
     protected Vector2 speed;
 
     protected Sprite sprite;
-    protected TextureAtlas atlas;
 
     public Entity() {
         this("empty");
     }
 
     public Entity(String spriteName) {
-    	atlas = new TextureAtlas(Gdx.files.internal("textures/textures.atlas"));
 
         position = new Vector2();
         oldPosition = new Vector2();
         speed = new Vector2();
 
-        //sprite = GameScreen.instance.getAtlas().createSprite(spriteName);
-        sprite = atlas.createSprite(spriteName);
+        sprite = BattleTanks.getTextureAtlas().createSprite(spriteName);
         sprite.setPosition(position.x, position.y);
     }
 
@@ -114,6 +111,6 @@ public class Entity {
     }
 
     public void setSprite(String spriteName){
-        sprite = GameScreen.instance.getAtlas().createSprite(spriteName);
+        sprite = BattleTanks.getTextureAtlas().createSprite(spriteName);
     }
 }
