@@ -1,7 +1,6 @@
 package de.uniwuerzburg.battletanks;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.resolvers.AbsoluteFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
@@ -29,20 +28,20 @@ import java.util.List;
 
 public class GameScreen implements Screen {
 
-    public static GameScreen instance;
+	public static GameScreen instance;
 
-    private int width;
+	private int width;
 
-    private int height;
-    private final BattleTanks game;
+	private int height;
+	private final BattleTanks game;
 
-    private TextureAtlas atlas;
+	private TextureAtlas atlas;
 
-    private SpriteBatch batch;
-    private BitmapFont font;
+	private SpriteBatch batch;
+	private BitmapFont font;
 
-    private OrthographicCamera camera;
-    private Viewport viewPort;
+	private OrthographicCamera camera;
+	private Viewport viewPort;
 
 	private TiledMap tiledMap;
 	private TiledMapRenderer tiledMapRenderer;
@@ -54,15 +53,21 @@ public class GameScreen implements Screen {
 
 	private List<Player> players;
 
-    
-    public GameScreen(final BattleTanks game, int time){
-        instance = this;
-    	this.game = game;
-    }
-
-	public GameScreen(final BattleTanks game, int time, FileHandle tiledMapFileHandle) {
-        instance = this;
+	public GameScreen(final BattleTanks game, int time) {
+		instance = this;
 		this.game = game;
+	}
+	
+	/** 
+	 * @param game
+	 * @param time
+	 * @param tiledMapFileHandle
+	 * @param players
+	 */
+	public GameScreen(final BattleTanks game, int time, FileHandle tiledMapFileHandle, List<Player> players) {
+		instance = this;
+		this.game = game;
+		this.players = new ArrayList<>(players);
 		this.tiledMapFileHandle = tiledMapFileHandle;
 	}
 
@@ -76,13 +81,13 @@ public class GameScreen implements Screen {
 		layout = new GlyphLayout();
 		layout.setText(font, "");
 
-        atlas = new TextureAtlas(Gdx.files.internal("textures/textures.atlas"));
+		atlas = new TextureAtlas(Gdx.files.internal("textures/textures.atlas"));
 
-        if(tiledMapFileHandle!=null) {
-            tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
-        }else{
-            tiledMap = new TmxMapLoader().load("maps/TestMap.tmx");
-        }
+		if (tiledMapFileHandle != null) {
+			tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
+		} else {
+			tiledMap = new TmxMapLoader().load("maps/TestMap.tmx");
+		}
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		MapProperties tiledMapProps = tiledMap.getProperties();
 
@@ -99,18 +104,20 @@ public class GameScreen implements Screen {
 		viewPort = new FitViewport(width, height, camera);
 
 		entities = new ArrayList<Entity>();
-		players = new ArrayList<Player>(4);
+		//players = new ArrayList<Player>(4);
 
-		Player player1 = new Player(Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D, Input.Keys.E);
+		//Player player1 = new Player(Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D, Input.Keys.E);
+		Player player1 = players.get(0);
 		entities.add(player1);
 		player1.setPosition(0, 0);
 		players.add(player1);
 
-        Player player2 = new Player(Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT, Input.Keys.E);
-        entities.add(player2);
-        player2.setPosition(150, 500);
-        player2.setSprite("player2");
-        players.add(player2);
+		//Player player2 = new Player(Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT, Input.Keys.E);
+		Player player2 = players.get(1);
+		entities.add(player2);
+		player2.setPosition(150, 500);
+		//player2.setSprite("player2");
+		players.add(player2);
 
 		// einlesen der objects aus dem objects layer der tilemap und erstellung
 		// der obstacles
@@ -178,7 +185,7 @@ public class GameScreen implements Screen {
 		for (Entity entity : entities) {
 			entity.render(batch);
 		}
-        // font.draw(batch, "Player 1: 7 hits 3 kills", 10, 20);
+		// font.draw(batch, "Player 1: 7 hits 3 kills", 10, 20);
 		/*
 		 * font.draw(batch, "Player 3: 3 hits 3 kills", 10, 25);
 		 * font.draw(batch, "Player 1: 5 hits 8 kills", 10, height - 10);
@@ -296,4 +303,5 @@ public class GameScreen implements Screen {
     public TextureAtlas getAtlas() {
         return atlas;
     }
+
 }

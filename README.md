@@ -6,3 +6,4 @@ Bug in Kollisionserkennung fixen
 Schüsse implementieren  
 Spielstände anzeigen  
 Spiel beenden  
+Settings aus Datei laden  
