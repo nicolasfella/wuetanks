@@ -1,13 +1,16 @@
 package de.uniwuerzburg.battletanks;
 
-import java.io.File;
-import java.io.FileFilter;
+import java.util.*;
+import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -20,7 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import de.uniwuerzburg.battletanks.FileChooser.ResultListener;
@@ -31,13 +33,19 @@ public class MenuScreen implements Screen {
 	private Stage stage;
 	private Table mainTable;
 
+	private TextureAtlas atlas;
+	private List<Player> players;
+
 	private int time;
-	
-	// falls keine tilemap geladen wird, wird die TestMap an GameScreen übergeben
-	private FileHandle tiledMapFileHandle = Gdx.files.internal("TestMap.tmx");
+
+	// falls keine tilemap geladen wird, wird die TestMap an GameScreen
+	// übergeben
+	private FileHandle tiledMapFileHandle = Gdx.files.internal("maps/TestMap.tmx");
 
 	public MenuScreen(final BattleTanks game) {
 		this.game = game;
+
+		this.atlas = new TextureAtlas(Gdx.files.internal("textures/textures.atlas"));
 
 		this.skin = new Skin(Gdx.files.internal("data/uiskin.json"));
 		this.stage = new Stage(new ScreenViewport());
@@ -70,7 +78,6 @@ public class MenuScreen implements Screen {
 	 * 
 	 */
 	private void startGame() {
-		// game.setScreen(new GameScreen(game));
 		if (time != 0) {
 			game.setScreen(new GameScreen(game, time, tiledMapFileHandle));
 			dispose();
@@ -88,6 +95,8 @@ public class MenuScreen implements Screen {
 	 * Erstellt das gesamte Menü
 	 */
 	public void create() {
+		players = new ArrayList<>();
+
 		Button start = createStartButton();
 		HorizontalGroup mapLoader = createMapLoader();
 		HorizontalGroup hgroup = createTimeTextField();
@@ -99,6 +108,12 @@ public class MenuScreen implements Screen {
 			mainTable.add(createTankChooser()).expand();
 			mainTable.row();
 		}
+//		mainTable.add(createTankChooser(Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D, Input.Keys.E)).expand();
+//		mainTable
+//				.add(createTankChooser(Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT, Input.Keys.E))
+//				.expand();
+//		mainTable.row();
+
 		mainTable.add(start).colspan(2).padBottom(20);
 
 		stage.addActor(mainTable);
@@ -138,7 +153,6 @@ public class MenuScreen implements Screen {
 			public void changed(ChangeEvent event, Actor actor) {
 				try {
 					time = Integer.parseInt(timeInput.getText());
-					// System.out.println(time);
 					timeInput.setDisabled(true);
 					enter.setDisabled(true);
 				} catch (NumberFormatException e) {
@@ -203,14 +217,21 @@ public class MenuScreen implements Screen {
 	 * 
 	 * @return Table
 	 */
-	private HorizontalGroup createTankChooser() {
+	// private Table createTankChooser(int key_up, int key_down, int key_left,
+	// int key_right, int key_shoot) {
+	private Table createTankChooser() {
+		Table tankChooser = new Table();
+
 		HorizontalGroup temp = new HorizontalGroup();
 		Button next = new TextButton(" >> ", skin);
 		Button previous = new TextButton(" << ", skin);
 
-		Image one = new Image(new Texture(Gdx.files.internal("player.png")));
-		Image two = new Image(new Texture(Gdx.files.internal("player2.png")));
-		Image three = new Image(new Texture(Gdx.files.internal("player3.png")));
+		Image one = new Image(atlas.createSprite("player"));
+		one.setName("player");
+		Image two = new Image(atlas.createSprite("player2"));
+		two.setName("player2");
+		Image three = new Image(atlas.createSprite("player3"));
+		three.setName("player3");
 		next.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -242,12 +263,28 @@ public class MenuScreen implements Screen {
 				}
 			}
 		});
-
 		temp.addActorAt(0, previous);
 		temp.addActorAt(1, one);
 		temp.addActorAt(2, next);
 
-		return temp;
+		TextButton lockButton = new TextButton("Lock tank choice", skin);
+		lockButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				// Player player = new Player(key_up, key_down, key_left,
+				// key_right, key_shoot);
+				// players.add(player);
+
+				next.setDisabled(true);
+				previous.setDisabled(true);
+				lockButton.setChecked(true);
+			}
+		});
+
+		tankChooser.add(temp);
+		tankChooser.row();
+		tankChooser.add(lockButton);
+		return tankChooser;
 
 	}
 
