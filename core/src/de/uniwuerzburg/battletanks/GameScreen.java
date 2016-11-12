@@ -29,20 +29,20 @@ import java.util.List;
 
 public class GameScreen implements Screen {
 
-    public static GameScreen instance;
+	public static GameScreen instance;
 
-    private int width;
+	private int width;
 
-    private int height;
-    private final BattleTanks game;
+	private int height;
+	private final BattleTanks game;
 
-    private TextureAtlas atlas;
+	private TextureAtlas atlas;
 
-    private SpriteBatch batch;
-    private BitmapFont font;
+	private SpriteBatch batch;
+	private BitmapFont font;
 
-    private OrthographicCamera camera;
-    private Viewport viewPort;
+	private OrthographicCamera camera;
+	private Viewport viewPort;
 
 	private TiledMap tiledMap;
 	private TiledMapRenderer tiledMapRenderer;
@@ -54,15 +54,21 @@ public class GameScreen implements Screen {
 
 	private List<Player> players;
 
-    
-    public GameScreen(final BattleTanks game, int time){
-        instance = this;
-    	this.game = game;
-    }
-
-	public GameScreen(final BattleTanks game, int time, FileHandle tiledMapFileHandle) {
-        instance = this;
+	public GameScreen(final BattleTanks game, int time) {
+		instance = this;
 		this.game = game;
+	}
+	
+	/** 
+	 * @param game
+	 * @param time
+	 * @param tiledMapFileHandle
+	 * @param players
+	 */
+	public GameScreen(final BattleTanks game, int time, FileHandle tiledMapFileHandle, List<Player> players) {
+		instance = this;
+		this.game = game;
+		this.players = new ArrayList<>(players);
 		this.tiledMapFileHandle = tiledMapFileHandle;
 	}
 
@@ -76,13 +82,13 @@ public class GameScreen implements Screen {
 		layout = new GlyphLayout();
 		layout.setText(font, "");
 
-        atlas = new TextureAtlas(Gdx.files.internal("textures/textures.atlas"));
+		atlas = new TextureAtlas(Gdx.files.internal("textures/textures.atlas"));
 
-        if(tiledMapFileHandle!=null) {
-            tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
-        }else{
-            tiledMap = new TmxMapLoader().load("maps/TestMap.tmx");
-        }
+		if (tiledMapFileHandle != null) {
+			tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
+		} else {
+			tiledMap = new TmxMapLoader().load("maps/TestMap.tmx");
+		}
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		MapProperties tiledMapProps = tiledMap.getProperties();
 
@@ -99,18 +105,20 @@ public class GameScreen implements Screen {
 		viewPort = new FitViewport(width, height, camera);
 
 		entities = new ArrayList<Entity>();
-		players = new ArrayList<Player>(4);
+		//players = new ArrayList<Player>(4);
 
-		Player player1 = new Player(Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D, Input.Keys.E);
+		//Player player1 = new Player(Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D, Input.Keys.E);
+		Player player1 = players.get(0);
 		entities.add(player1);
 		player1.setPosition(0, 0);
 		players.add(player1);
 
-        Player player2 = new Player(Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT, Input.Keys.E);
-        entities.add(player2);
-        player2.setPosition(150, 500);
-        player2.setSprite("player2");
-        players.add(player2);
+		//Player player2 = new Player(Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT, Input.Keys.E);
+		Player player2 = players.get(1);
+		entities.add(player2);
+		player2.setPosition(150, 500);
+		//player2.setSprite("player2");
+		players.add(player2);
 
 		// einlesen der objects aus dem objects layer der tilemap und erstellung
 		// der obstacles
@@ -178,7 +186,7 @@ public class GameScreen implements Screen {
 		for (Entity entity : entities) {
 			entity.render(batch);
 		}
-        // font.draw(batch, "Player 1: 7 hits 3 kills", 10, 20);
+		// font.draw(batch, "Player 1: 7 hits 3 kills", 10, 20);
 		/*
 		 * font.draw(batch, "Player 3: 3 hits 3 kills", 10, 25);
 		 * font.draw(batch, "Player 1: 5 hits 8 kills", 10, height - 10);
@@ -188,110 +196,110 @@ public class GameScreen implements Screen {
 		 * "Player 4: 10 hits 6 kills", width - layout.width - 10, 25);
 		 */
 
-        batch.end();
+		batch.end();
 
+	}
 
-    }
+	private void checkCollisionPlayerObstacle(Player p, Entity o) {
 
-    private void checkCollisionPlayerObstacle(Player p, Entity o) {
+		Rectangle r1 = new Rectangle(p.getX(), p.getY(), p.getWidth(), p.getHeight());
+		Rectangle r2 = new Rectangle(o.getX(), o.getY(), o.getWidth(), o.getHeight());
 
-        Rectangle r1 = new Rectangle(p.getX(), p.getY(), p.getWidth(), p.getHeight());
-        Rectangle r2 = new Rectangle(o.getX(), o.getY(), o.getWidth(), o.getHeight());
+		if (r1.overlaps(r2)) {
+			// System.out.println("Intersection");
+		}
 
-        if (r1.overlaps(r2)) {
-            //System.out.println("Intersection");
-        }
+		// p1 is left to p2
+		if (p.getX() + p.getWidth() >= o.getX()) {
+			if (p.getOldPosition().x + p.getWidth() <= o.getX()) {
+				if (p.getY() + p.getHeight() > o.getY() && p.getY() < o.getY() + o.getHeight()) {
+					if (p.getX() > p.getOldPosition().x) {
+						p.setX(o.getX() - p.getWidth());
+						p.getSpeed().x = 0;
+						// System.out.println("Kollision von links");
+					}
+				}
+			}
+		}
 
-        // p1 is left to p2
-        if (p.getX() + p.getWidth() >= o.getX()) {
-            if (p.getOldPosition().x + p.getWidth() <= o.getX()) {
-                if (p.getY() + p.getHeight() > o.getY() && p.getY() < o.getY() + o.getHeight()) {
-                    if (p.getX() > p.getOldPosition().x) {
-                        p.setX(o.getX() - p.getWidth());
-                        p.getSpeed().x = 0;
-                        //System.out.println("Kollision von links");
-                    }
-                }
-            }
-        }
+		// p1 is below p2
+		if (p.getY() + p.getHeight() >= o.getY()) {
+			if (p.getOldPosition().y + p.getHeight() <= o.getY()) {
+				if (p.getX() + p.getWidth() > o.getX() && p.getX() < o.getX() + o.getWidth()) {
+					if (p.getY() > p.getOldPosition().y) {
+						p.setY(o.getY() - p.getHeight());
+						p.getSpeed().y = 0;
+						// System.out.println("Kollision von unten");
+					}
+				}
+			}
+		}
 
-        // p1 is below p2
-        if (p.getY() + p.getHeight() >= o.getY()) {
-            if (p.getOldPosition().y + p.getHeight() <= o.getY()) {
-                if (p.getX() + p.getWidth() > o.getX() && p.getX() < o.getX() + o.getWidth()) {
-                    if (p.getY() > p.getOldPosition().y) {
-                        p.setY(o.getY() - p.getHeight());
-                        p.getSpeed().y = 0;
-                        //System.out.println("Kollision von unten");
-                    }
-                }
-            }
-        }
+		// p1 is above p2
+		if (p.getY() < o.getY() + o.getHeight()) {
+			if (p.getOldPosition().y >= o.getY() + o.getHeight()) {
+				if (p.getX() + p.getWidth() > o.getX() && p.getX() < o.getX() + o.getWidth()) {
+					if (p.getY() < p.getOldPosition().y) {
+						p.setY(o.getY() + o.getHeight());
+						p.getSpeed().y = 0;
+						// System.out.println("Kollision von oben");
+					}
+				}
+			}
+		}
 
-        // p1 is above p2
-        if (p.getY() < o.getY() + o.getHeight()) {
-            if (p.getOldPosition().y >= o.getY() + o.getHeight()) {
-                if (p.getX() + p.getWidth() > o.getX() && p.getX() < o.getX() + o.getWidth()) {
-                    if (p.getY() < p.getOldPosition().y) {
-                        p.setY(o.getY() + o.getHeight());
-                        p.getSpeed().y = 0;
-                        //System.out.println("Kollision von oben");
-                    }
-                }
-            }
-        }
+		// p is right to o
+		if (p.getX() <= o.getX() + o.getWidth()) {
+			if (p.getOldPosition().x >= o.getX() + o.getWidth()) {
+				if (p.getY() + p.getHeight() > o.getY() && p.getY() < o.getY() + o.getHeight()) {
+					if (p.getX() < p.getOldPosition().x) {
+						p.setX(o.getX() + o.getWidth());
+						p.getSpeed().x = 0;
+						// System.out.println("Kollision von rechts");
+					}
+				}
+			}
+		}
 
-        // p is right to o
-        if (p.getX() <= o.getX() + o.getWidth()) {
-            if (p.getOldPosition().x >= o.getX() + o.getWidth()) {
-                if (p.getY() + p.getHeight() > o.getY() && p.getY() < o.getY() + o.getHeight()) {
-                    if (p.getX() < p.getOldPosition().x) {
-                        p.setX(o.getX() + o.getWidth());
-                        p.getSpeed().x = 0;
-                        //System.out.println("Kollision von rechts");
-                    }
-                }
-            }
-        }
+	}
 
-    }
+	@Override
+	public void resize(int width, int height) {
+		viewPort.update(width, height);
+	}
 
-    @Override
-    public void resize(int width, int height) {
-        viewPort.update(width, height);
-    }
+	@Override
+	public void pause() {
 
-    @Override
-    public void pause() {
+	}
 
-    }
+	@Override
+	public void resume() {
 
-    @Override
-    public void resume() {
+	}
 
-    }
+	@Override
+	public void hide() {
 
-    @Override
-    public void hide() {
+	}
 
-    }
+	@Override
+	public void dispose() {
+		font.dispose();
+		batch.dispose();
+		tiledMap.dispose();
 
-    @Override
-    public void dispose() {
-        font.dispose();
-        batch.dispose();
-        tiledMap.dispose();
+	}
 
-    }
-    public int getWidth() {
-        return width;
-    }
+	public int getWidth() {
+		return width;
+	}
 
-    public int getHeight() {
-        return height;
-    }
+	public int getHeight() {
+		return height;
+	}
 
-    public TextureAtlas getAtlas() {
-        return atlas;
-    }
+	public TextureAtlas getAtlas() {
+		return atlas;
+	}
 }

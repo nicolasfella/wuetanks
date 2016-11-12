@@ -3,6 +3,7 @@ package de.uniwuerzburg.battletanks;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class Player extends Entity {
 
@@ -15,9 +16,12 @@ public class Player extends Entity {
     private Direction direction;
 
     private Sprite gunSprite;
+    
+    private TextureAtlas atlas;
 
-    public Player(int key_up, int key_down, int key_left, int key_right, int key_shoot) {
-        super("player");
+    public Player(String sprite, int key_up, int key_down, int key_left, int key_right, int key_shoot) {
+        //super("player");
+    	super(sprite);
 
         this.key_up = key_up;
         this.key_down = key_down;
@@ -30,7 +34,9 @@ public class Player extends Entity {
 
         direction = Direction.UP;
 
-        gunSprite = GameScreen.instance.getAtlas().createSprite("gun");
+        //gunSprite = GameScreen.instance.getAtlas().createSprite("gun");
+    	 atlas = new TextureAtlas(Gdx.files.internal("textures/textures.atlas"));
+    	gunSprite = atlas.createSprite("gun");
         gunSprite.setSize(getWidth(), getHeight());
         gunSprite.setPosition(getX(), getY());
         gunSprite.setOriginCenter();

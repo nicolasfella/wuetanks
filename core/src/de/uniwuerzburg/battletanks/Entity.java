@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -19,18 +20,21 @@ public class Entity {
     protected Vector2 speed;
 
     protected Sprite sprite;
+    protected TextureAtlas atlas;
 
     public Entity() {
         this("empty");
     }
 
     public Entity(String spriteName) {
+    	atlas = new TextureAtlas(Gdx.files.internal("textures/textures.atlas"));
 
         position = new Vector2();
         oldPosition = new Vector2();
         speed = new Vector2();
 
-        sprite = GameScreen.instance.getAtlas().createSprite(spriteName);
+        //sprite = GameScreen.instance.getAtlas().createSprite(spriteName);
+        sprite = atlas.createSprite(spriteName);
         sprite.setPosition(position.x, position.y);
     }
 

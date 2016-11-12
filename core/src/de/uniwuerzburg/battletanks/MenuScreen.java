@@ -78,8 +78,8 @@ public class MenuScreen implements Screen {
 	 * 
 	 */
 	private void startGame() {
-		if (time != 0) {
-			game.setScreen(new GameScreen(game, time, tiledMapFileHandle));
+		if (time != 0 && !players.isEmpty()) {
+			game.setScreen(new GameScreen(game, time, tiledMapFileHandle, players));
 			dispose();
 
 		} else {
@@ -95,7 +95,7 @@ public class MenuScreen implements Screen {
 	 * Erstellt das gesamte Menü
 	 */
 	public void create() {
-		players = new ArrayList<>();
+		players = new ArrayList<>(4);
 
 		Button start = createStartButton();
 		HorizontalGroup mapLoader = createMapLoader();
@@ -103,16 +103,16 @@ public class MenuScreen implements Screen {
 
 		mainTable.add(mapLoader, hgroup);
 		mainTable.row();
-		for (int i = 0; i < 2; i++) {
-			mainTable.add(createTankChooser()).expand();
-			mainTable.add(createTankChooser()).expand();
-			mainTable.row();
-		}
-//		mainTable.add(createTankChooser(Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D, Input.Keys.E)).expand();
-//		mainTable
-//				.add(createTankChooser(Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT, Input.Keys.E))
-//				.expand();
-//		mainTable.row();
+		// for (int i = 0; i < 2; i++) {
+		// mainTable.add(createTankChooser()).expand();
+		// mainTable.add(createTankChooser()).expand();
+		// mainTable.row();
+		// }
+		mainTable.add(createTankChooser(Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D, Input.Keys.E)).expand();
+		mainTable
+				.add(createTankChooser(Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT, Input.Keys.E))
+				.expand();
+		mainTable.row();
 
 		mainTable.add(start).colspan(2).padBottom(20);
 
@@ -213,13 +213,13 @@ public class MenuScreen implements Screen {
 
 	/**
 	 * Erstellt eine Table mit Darstellung des Panzers und einer Möglichkeit,
-	 * durch die Panzer durchzuwechseln um einen auszuwählen.
+	 * durch die Panzer durchzuwechseln um einen auszuwählen. Ein TankChooser
+	 * wird mit einer Tastenbelegung initialisiert Erstellt gleichzeitig die
+	 * Player, die dann an den GameScreen übergeben werden
 	 * 
 	 * @return Table
 	 */
-	// private Table createTankChooser(int key_up, int key_down, int key_left,
-	// int key_right, int key_shoot) {
-	private Table createTankChooser() {
+	private Table createTankChooser(int key_up, int key_down, int key_left, int key_right, int key_shoot) {
 		Table tankChooser = new Table();
 
 		HorizontalGroup temp = new HorizontalGroup();
@@ -271,9 +271,9 @@ public class MenuScreen implements Screen {
 		lockButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				// Player player = new Player(key_up, key_down, key_left,
-				// key_right, key_shoot);
-				// players.add(player);
+				String sprite = temp.getChildren().get(1).getName();
+				Player player = new Player(sprite, key_up, key_down, key_left, key_right, key_shoot);
+				players.add(player);
 
 				next.setDisabled(true);
 				previous.setDisabled(true);
@@ -281,9 +281,17 @@ public class MenuScreen implements Screen {
 			}
 		});
 
+		String tempKeys = "UP: " + Keys.toString(key_up) + " DOWN: " + Keys.toString(key_down) + " LEFT: "
+				+ Keys.toString(key_left) + " RIGHT: " + Keys.toString(key_right) + " SHOOT: "
+				+ Keys.toString(key_shoot);
+
+		Label keys = new Label(tempKeys, skin);
+
 		tankChooser.add(temp);
 		tankChooser.row();
 		tankChooser.add(lockButton);
+		tankChooser.row();
+		tankChooser.add(keys);
 		return tankChooser;
 
 	}
