@@ -281,6 +281,8 @@ public class GameScreen implements Screen {
         font.dispose();
         batch.dispose();
         tiledMap.dispose();
+        atlas.dispose();
+        tiledMapFileHandle.delete();
 
     }
     public int getWidth() {
