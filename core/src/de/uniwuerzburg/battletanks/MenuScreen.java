@@ -9,7 +9,6 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -45,7 +44,7 @@ public class MenuScreen implements Screen {
 	public MenuScreen(final BattleTanks game) {
 		this.game = game;
 
-		this.atlas = new TextureAtlas(Gdx.files.internal("textures/textures.atlas"));
+		this.atlas = BattleTanks.getTextureAtlas();
 
 		this.skin = new Skin(Gdx.files.internal("data/uiskin.json"));
 		this.stage = new Stage(new ScreenViewport());
@@ -103,17 +102,12 @@ public class MenuScreen implements Screen {
 
 		mainTable.add(mapLoader, hgroup);
 		mainTable.row();
-		// for (int i = 0; i < 2; i++) {
-		// mainTable.add(createTankChooser()).expand();
-		// mainTable.add(createTankChooser()).expand();
-		// mainTable.row();
-		// }
-		mainTable.add(createTankChooser(Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D, Input.Keys.E)).expand();
-		mainTable
-				.add(createTankChooser(Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT, Input.Keys.E))
-				.expand();
+		mainTable.add(createTankChooser(Keys.W, Keys.S, Keys.A, Keys.D, Keys.E)).expand();
+		mainTable.add(createTankChooser(Keys.UP, Keys.DOWN, Keys.LEFT, Keys.RIGHT, Keys.CONTROL_RIGHT)).expand();
 		mainTable.row();
-
+		mainTable.add(createTankChooser(Keys.T, Keys.G, Keys.F, Keys.H, Keys.Z)).expand();
+		mainTable.add(createTankChooser(Keys.I, Keys.K, Keys.J, Keys.L, Keys.O)).expand();
+		mainTable.row();
 		mainTable.add(start).colspan(2).padBottom(20);
 
 		stage.addActor(mainTable);
