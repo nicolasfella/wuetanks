@@ -101,29 +101,28 @@ public class GameScreen implements Screen {
 
 		entities = new ArrayList<Entity>();
 
-		int i = 0;
 		for (Player p : players) {
 			entities.add(p);
 
 			float x = 0;
 			float y = 0;
-			switch (i) {
+			switch (p.getNumber()) {
 			case 1:
-				x = width;
+				x = 0;
 				y = 0;
 				break;
 			case 2:
 				x = width;
-				y = height;
+				y = 0;
 				break;
 			case 3:
-				x = 0;
+				x = width;
 				y = height;
 				break;
-			default:
-				break;
+			case 4:
+				x = 0;
+				y = height;
 			}
-			i++;
 			p.setPosition(x, y);
 		}
 

@@ -84,7 +84,12 @@ public class MenuScreen implements Screen {
 		} else {
 			final Button close = new TextButton("close", skin);
 			Dialog error = new Dialog("Error", skin);
-			error.text("No time entered!");
+
+			if (time == 0) {
+				error.text("No time entered!");
+			} else {
+				error.text("No tank chosen!");
+			}
 			error.button(close);
 			error.show(stage);
 		}
@@ -102,11 +107,11 @@ public class MenuScreen implements Screen {
 
 		mainTable.add(mapLoader, hgroup);
 		mainTable.row();
-		mainTable.add(createTankChooser(Keys.W, Keys.S, Keys.A, Keys.D, Keys.E)).expand();
-		mainTable.add(createTankChooser(Keys.UP, Keys.DOWN, Keys.LEFT, Keys.RIGHT, Keys.CONTROL_RIGHT)).expand();
+		mainTable.add(createTankChooser(1, Keys.W, Keys.S, Keys.A, Keys.D, Keys.E)).expand();
+		mainTable.add(createTankChooser(2, Keys.UP, Keys.DOWN, Keys.LEFT, Keys.RIGHT, Keys.CONTROL_RIGHT)).expand();
 		mainTable.row();
-		mainTable.add(createTankChooser(Keys.T, Keys.G, Keys.F, Keys.H, Keys.Z)).expand();
-		mainTable.add(createTankChooser(Keys.I, Keys.K, Keys.J, Keys.L, Keys.O)).expand();
+		mainTable.add(createTankChooser(3, Keys.T, Keys.G, Keys.F, Keys.H, Keys.Z)).expand();
+		mainTable.add(createTankChooser(4, Keys.I, Keys.K, Keys.J, Keys.L, Keys.O)).expand();
 		mainTable.row();
 		mainTable.add(start).colspan(2).padBottom(20);
 
@@ -213,7 +218,7 @@ public class MenuScreen implements Screen {
 	 * 
 	 * @return Table
 	 */
-	private Table createTankChooser(int key_up, int key_down, int key_left, int key_right, int key_shoot) {
+	private Table createTankChooser(int number, int key_up, int key_down, int key_left, int key_right, int key_shoot) {
 		Table tankChooser = new Table();
 
 		HorizontalGroup temp = new HorizontalGroup();
@@ -267,6 +272,7 @@ public class MenuScreen implements Screen {
 			public void changed(ChangeEvent event, Actor actor) {
 				String sprite = temp.getChildren().get(1).getName();
 				Player player = new Player(sprite, key_up, key_down, key_left, key_right, key_shoot);
+				player.setNumber(number);
 				players.add(player);
 
 				next.setDisabled(true);
@@ -275,8 +281,8 @@ public class MenuScreen implements Screen {
 			}
 		});
 
-		String tempKeys = "UP: " + Keys.toString(key_up) + " DOWN: " + Keys.toString(key_down) + " LEFT: "
-				+ Keys.toString(key_left) + " RIGHT: " + Keys.toString(key_right) + " SHOOT: "
+		String tempKeys = "UP: " + Keys.toString(key_up) + "\nDOWN: " + Keys.toString(key_down) + "\nLEFT: "
+				+ Keys.toString(key_left) + "\nRIGHT: " + Keys.toString(key_right) + "\nSHOOT: "
 				+ Keys.toString(key_shoot);
 
 		Label keys = new Label(tempKeys, skin);
