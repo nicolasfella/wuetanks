@@ -109,19 +109,19 @@ public class GameScreen implements Screen {
 			switch (p.getNumber()) {
 			case 1:
 				x = 0;
-				y = 0;
+				y = height;
 				break;
 			case 2:
 				x = width;
-				y = 0;
+				y = height;
 				break;
 			case 3:
-				x = width;
-				y = height;
+				x = 0;
+				y = 0;
 				break;
 			case 4:
-				x = 0;
-				y = height;
+				x = width;
+				y = 0;
 			}
 			p.setPosition(x, y);
 		}
