@@ -2,7 +2,7 @@ TODO
 
 TextureAtlas im Menü verwenden  
 Gute Texturen finden (auf Lizenzen achten)  
-Bug in Kollisionserkennung fixen  
+Kollisionserkennung optimieren 
 Schüsse implementieren  
 Spielstände anzeigen  
 Spiel beenden  
