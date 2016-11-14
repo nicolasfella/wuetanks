@@ -174,8 +174,11 @@ public class GameScreen implements Screen {
 
 				if (e1 instanceof Player) {
 
-					if (e2 instanceof Player || e2 instanceof Obstacle) {
+					if (e2 instanceof Obstacle) {
 						checkCollisionPlayerObstacle((Player) e1, e2);
+					}
+					if (e2 instanceof Player) {
+						checkCollisionPlayerPlayer((Player) e1, (Player) e2);
 					}
 
 				}
@@ -203,6 +206,137 @@ public class GameScreen implements Screen {
 		 */
 
 		batch.end();
+
+	}
+
+	private void checkCollisionPlayerPlayer(Player p, Player o) {
+
+		// variablen für 1. player
+
+		float pRX = p.getX() + p.getWidth();
+		float pLX = p.getX();
+		float pVX = p.getSpeed().x;
+
+		float pRY = p.getY() + p.getHeight();
+		float pLY = p.getY();
+		float pVY = p.getSpeed().y;
+
+		// variablen für 2. player
+
+		float oRX = o.getX() + o.getWidth();
+		float oLX = o.getX();
+		float oVX = o.getSpeed().x;
+
+		float oRY = o.getY() + o.getHeight();
+		float oLY = o.getY();
+		float oVY = o.getSpeed().y;
+
+		// kollision nur bei überschneidung in vertikaler sowie horizontaler
+		// richtung
+		if ((pRY >= oLY && pLY < oRY) && (pRX >= oLX && pLX < oRX)) {
+
+			
+			
+			// berechnung wie stark sich die player in x und y richtung überlappen
+			float overlapX;
+			float overlapY;
+
+			if (pLX < oLX) {
+				overlapX = pRX - oLX;
+			} else {
+				overlapX = oRX - pLX;
+			}
+
+			if (pLY < oLY) {
+				overlapY = pRY - oLY;
+			} else {
+				overlapY = oRY - pLY;
+			}
+
+			
+			// momentan noch mit abfrage ob die überlappung in x oder y richtung aufgelöst werden soll
+			// TODO: code kürzen und eventuell anderes verfahren mit richtungsvektoren
+			
+			if (overlapY > overlapX) {
+
+				// falls beide player aufeinander zufahren muss der overlap auf
+				// beide aufgeteilt werden
+				if (pVX > 0 && oVX < 0) {
+					p.setX(pLX - overlapX / 2.f);
+					p.getSpeed().x = 0;
+
+					o.setX(oLX + overlapX / 2.f);
+					o.getSpeed().x = 0;
+				} else if (pVX < 0 && oVX > 0) {
+					p.setX(pLX + overlapX / 2.f);
+					p.getSpeed().x = 0;
+
+					o.setX(oLX - overlapX / 2.f);
+					o.getSpeed().x = 0;
+				} else {
+
+					// andernfalls muss herausgefunden werden wer den overlap
+					// verursacht hat und von welcher richtung
+					if (pVX > 0) {
+						p.setX(pLX - overlapX);
+						p.getSpeed().x = 0;
+					}
+					if (pVX < 0) {
+						p.setX(pLX + overlapX);
+						p.getSpeed().x = 0;
+					}
+
+					if (oVX > 0) {
+						o.setX(oLX - overlapX);
+						o.getSpeed().x = 0;
+					}
+					if (oVX < 0) {
+						o.setX(oLX + overlapX);
+						o.getSpeed().x = 0;
+					}
+				}
+			} else {
+
+				// falls beide player aufeinander zufahren muss der overlap auf
+				// beide aufgeteilt werden
+				if (pVY > 0 && oVY < 0) {
+					p.setY(pLY - overlapY / 2.f);
+					p.getSpeed().y = 0;
+
+					o.setY(oLY + overlapY / 2.f);
+					o.getSpeed().y = 0;
+				} else if (pVY < 0 && oVY > 0) {
+					p.setY(pLY + overlapY / 2.f);
+					p.getSpeed().y = 0;
+
+					o.setY(oLY - overlapY / 2.f);
+					o.getSpeed().y = 0;
+				} else {
+
+					// andernfalls muss herausgefunden werden wer den overlap
+					// verursacht hat und von welcher richtung
+					if (pVY > 0) {
+						p.setY(pLY - overlapY);
+						p.getSpeed().y = 0;
+					}
+					if (pVY < 0) {
+						p.setY(pLY + overlapY);
+						p.getSpeed().y = 0;
+					}
+
+					if (oVY > 0) {
+						o.setY(oLY - overlapY);
+						o.getSpeed().y = 0;
+					}
+					if (oVY < 0) {
+						o.setY(oLY + overlapY);
+						o.getSpeed().y = 0;
+					}
+				}
+
+			}
+
+		}
 
 	}
 
