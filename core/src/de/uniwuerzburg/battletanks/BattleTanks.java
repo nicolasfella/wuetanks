@@ -24,6 +24,7 @@ public class BattleTanks extends Game {
 	@Override
 	public void dispose () {
 		atlas.dispose();
+		super.dispose();
 	}
 
 	public static TextureAtlas getTextureAtlas(){
