@@ -225,24 +225,28 @@ public class MenuScreen implements Screen {
 		Button next = new TextButton(" >> ", skin);
 		Button previous = new TextButton(" << ", skin);
 
+		Image[] images = new Image[3];
+
 		Image one = new Image(atlas.createSprite("player"));
 		one.setName("player");
+		images[0] = one;
 		Image two = new Image(atlas.createSprite("player2"));
 		two.setName("player2");
+		images[1] = two;
 		Image three = new Image(atlas.createSprite("player3"));
 		three.setName("player3");
+		images[2] = three;
+
 		next.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if (temp.getChildren().contains(one, false)) {
-					temp.removeActor(one);
-					temp.addActorAt(1, two);
-				} else if (temp.getChildren().contains(two, false)) {
-					temp.removeActor(two);
-					temp.addActorAt(1, three);
-				} else if (temp.getChildren().contains(three, false)) {
-					temp.removeActor(three);
-					temp.addActorAt(1, one);
+				for (int i = 0; i < images.length; i++) {
+					if (temp.getChildren().contains(images[i], false)) {
+						temp.removeActor(images[i]);
+						int mod = Math.floorMod((i + 1), images.length);
+						temp.addActorAt(1, images[mod]);
+						break;
+					}
 				}
 			}
 		});
@@ -250,15 +254,14 @@ public class MenuScreen implements Screen {
 		previous.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if (temp.getChildren().contains(one, false)) {
-					temp.removeActor(one);
-					temp.addActorAt(1, three);
-				} else if (temp.getChildren().contains(two, false)) {
-					temp.removeActor(two);
-					temp.addActorAt(1, one);
-				} else if (temp.getChildren().contains(three, false)) {
-					temp.removeActor(three);
-					temp.addActorAt(1, two);
+				for (int i = 0; i < images.length; i++) {
+					if (temp.getChildren().contains(images[i], false)) {
+						temp.removeActor(images[i]);
+						int mod = Math.floorMod((i - 1), images.length);
+						System.out.println(mod);
+						temp.addActorAt(1, images[mod]);
+						break;
+					}
 				}
 			}
 		});
