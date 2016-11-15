@@ -9,6 +9,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -33,6 +35,7 @@ public class MenuScreen implements Screen {
 	private Table mainTable;
 
 	private TextureAtlas atlas;
+	private TextureAtlas keyatlas = new TextureAtlas(Gdx.files.internal("textures/keyatlas.atlas"));
 	private List<Player> players;
 
 	private int time;
@@ -113,7 +116,7 @@ public class MenuScreen implements Screen {
 		mainTable.add(createTankChooser(3, Keys.T, Keys.G, Keys.F, Keys.H, Keys.Z)).expand();
 		mainTable.add(createTankChooser(4, Keys.I, Keys.K, Keys.J, Keys.L, Keys.O)).expand();
 		mainTable.row();
-		mainTable.add(start).colspan(2).padBottom(20);
+		mainTable.add(start).colspan(2).padBottom(20).width(100).height(50);
 
 		stage.addActor(mainTable);
 	}
@@ -125,7 +128,7 @@ public class MenuScreen implements Screen {
 	 * @return Button
 	 */
 	private Button createStartButton() {
-		final Button start = new TextButton("START!", skin);// , "toggle");
+		Button start = new TextButton("START!", skin);// , "toggle");
 		start.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -199,9 +202,7 @@ public class MenuScreen implements Screen {
 					}
 				});
 				dialog.show(stage);
-
 			}
-
 		});
 
 		temp.addActor(loadButton);
@@ -226,7 +227,6 @@ public class MenuScreen implements Screen {
 		Button previous = new TextButton(" << ", skin);
 
 		Image[] images = new Image[3];
-
 		Image one = new Image(atlas.createSprite("player"));
 		one.setName("player");
 		images[0] = one;
@@ -284,19 +284,44 @@ public class MenuScreen implements Screen {
 			}
 		});
 
-		String tempKeys = "UP: " + Keys.toString(key_up) + "\nDOWN: " + Keys.toString(key_down) + "\nLEFT: "
-				+ Keys.toString(key_left) + "\nRIGHT: " + Keys.toString(key_right) + "\nSHOOT: "
-				+ Keys.toString(key_shoot);
-
-		Label keys = new Label(tempKeys, skin);
-
 		tankChooser.add(temp);
 		tankChooser.row();
 		tankChooser.add(lockButton);
 		tankChooser.row();
-		tankChooser.add(keys);
+		tankChooser.add(createKeys(number)).expand();
 		return tankChooser;
 
+	}
+
+	private Table createKeys(int number) {
+		Table keys = new Table();
+		Image move = new Image();
+		Image shoot = new Image();
+		switch (number) {
+		case 1:
+			move = new Image(keyatlas.createSprite("wasd"));
+			shoot = new Image(keyatlas.createSprite("e"));
+			break;
+		case 2:
+			move = new Image(keyatlas.createSprite("updownleftright"));
+			shoot = new Image(keyatlas.createSprite("ctrl"));
+			break;
+		case 3:
+			move = new Image(keyatlas.createSprite("tfgh"));
+			shoot = new Image(keyatlas.createSprite("z"));
+			break;
+		case 4:
+			move = new Image(keyatlas.createSprite("ijkl"));
+			shoot = new Image(keyatlas.createSprite("o"));
+			break;
+		}
+		Label plus = new Label(" + ", skin);
+
+		keys.add(move, plus, shoot);
+		keys.padTop(20);
+		keys.padBottom(20);
+
+		return keys;
 	}
 
 	@Override
