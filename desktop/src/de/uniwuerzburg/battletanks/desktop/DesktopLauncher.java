@@ -10,8 +10,8 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
 		// TODO decide on with and height, fullscreen?
-		config.width = 1200;
-		config.height = 900;
+		config.width = 1024;
+		config.height = 768;
 
 		new LwjglApplication(new BattleTanks(), config);
 	}
