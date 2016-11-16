@@ -32,7 +32,6 @@ public class MenuScreen implements Screen {
 	private Table mainTable;
 
 	private TextureAtlas atlas;
-	private TextureAtlas keyatlas = new TextureAtlas(Gdx.files.internal("textures/keyatlas.atlas"));
 	private List<Player> players;
 
 	private int time;
@@ -296,20 +295,20 @@ public class MenuScreen implements Screen {
 		Image shoot = new Image();
 		switch (number) {
 		case 1:
-			move = new Image(keyatlas.createSprite("wasd"));
-			shoot = new Image(keyatlas.createSprite("e"));
+			move = new Image(atlas.createSprite("wasd"));
+			shoot = new Image(atlas.createSprite("e"));
 			break;
 		case 2:
-			move = new Image(keyatlas.createSprite("updownleftright"));
-			shoot = new Image(keyatlas.createSprite("ctrl"));
+			move = new Image(atlas.createSprite("updownleftright"));
+			shoot = new Image(atlas.createSprite("ctrl"));
 			break;
 		case 3:
-			move = new Image(keyatlas.createSprite("tfgh"));
-			shoot = new Image(keyatlas.createSprite("z"));
+			move = new Image(atlas.createSprite("tfgh"));
+			shoot = new Image(atlas.createSprite("z"));
 			break;
 		case 4:
-			move = new Image(keyatlas.createSprite("ijkl"));
-			shoot = new Image(keyatlas.createSprite("o"));
+			move = new Image(atlas.createSprite("ijkl"));
+			shoot = new Image(atlas.createSprite("o"));
 			break;
 		}
 		Label plus = new Label(" + ", skin);
@@ -345,7 +344,6 @@ public class MenuScreen implements Screen {
 	public void dispose() {
 		stage.dispose();
 		skin.dispose();
-		keyatlas.dispose();
 	}
 
 }
