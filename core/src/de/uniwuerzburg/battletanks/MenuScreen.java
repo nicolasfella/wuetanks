@@ -52,7 +52,7 @@ public class MenuScreen implements Screen {
 		mainTable = new Table();
 		mainTable.setFillParent(true);
 
-		// stage.setDebugAll(true);
+		//stage.setDebugAll(true);
 		create();
 	}
 
@@ -105,14 +105,14 @@ public class MenuScreen implements Screen {
 		HorizontalGroup hgroup = createTimeTextField();
 
 		mainTable.add(mapLoader, hgroup);
-		mainTable.row();
+		mainTable.row().padTop(10);
 		mainTable.add(createTankChooser(1, Keys.W, Keys.S, Keys.A, Keys.D, Keys.E)).expand();
 		mainTable.add(createTankChooser(2, Keys.UP, Keys.DOWN, Keys.LEFT, Keys.RIGHT, Keys.CONTROL_RIGHT)).expand();
 		mainTable.row();
 		mainTable.add(createTankChooser(3, Keys.T, Keys.G, Keys.F, Keys.H, Keys.Z)).expand();
 		mainTable.add(createTankChooser(4, Keys.I, Keys.K, Keys.J, Keys.L, Keys.O)).expand();
 		mainTable.row();
-		mainTable.add(start).colspan(2).padBottom(20).width(100).height(50);
+		mainTable.add(start).colspan(2).padBottom(20).width(100);
 
 		stage.addActor(mainTable);
 	}
@@ -222,7 +222,7 @@ public class MenuScreen implements Screen {
 		Button next = new TextButton(" >> ", skin);
 		Button previous = new TextButton(" << ", skin);
 
-		Image[] images = new Image[3];
+		Image[] images = new Image[4];
 		Image one = new Image(atlas.createSprite("player"));
 		one.setName("player");
 		images[0] = one;
@@ -232,6 +232,9 @@ public class MenuScreen implements Screen {
 		Image three = new Image(atlas.createSprite("player3"));
 		three.setName("player3");
 		images[2] = three;
+		Image four = new Image(atlas.createSprite("player4_info"));
+		four.setName("player4");
+		images[3] = four;
 
 		next.addListener(new ChangeListener() {
 			@Override
@@ -262,7 +265,7 @@ public class MenuScreen implements Screen {
 			}
 		});
 		temp.addActorAt(0, previous);
-		temp.addActorAt(1, one);
+		temp.addActorAt(1, four);
 		temp.addActorAt(2, next);
 
 		TextButton lockButton = new TextButton("Lock tank choice", skin);
@@ -282,7 +285,7 @@ public class MenuScreen implements Screen {
 
 		tankChooser.add(temp);
 		tankChooser.row();
-		tankChooser.add(lockButton);
+		tankChooser.add(lockButton).padTop(5);
 		tankChooser.row();
 		tankChooser.add(createKeys(number)).expand();
 		return tankChooser;
