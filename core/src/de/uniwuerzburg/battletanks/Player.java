@@ -36,10 +36,9 @@ public class Player extends Entity {
 
 		direction = Direction.UP;
 
-		gunSprite = BattleTanks.getTextureAtlas().createSprite("gun");
-		gunSprite.setSize(getWidth(), getHeight());
-		gunSprite.setPosition(getX(), getY());
-		gunSprite.setOriginCenter();
+		gunSprite = BattleTanks.getTextureAtlas().createSprite("barrelBlue");
+		gunSprite.setSize(10, 40);
+		gunSprite.setOrigin(gunSprite.getWidth()/2, 0);
 	}
 
 	@Override
@@ -116,7 +115,7 @@ public class Player extends Entity {
 	@Override
 	public void render(SpriteBatch batch) {
 		super.render(batch);
-		gunSprite.setPosition(getX(), getY());
+		gunSprite.setPosition(getX() + 0.5f*(getWidth() - gunSprite.getWidth()), getY() + getHeight()/2);
 		gunSprite.setRotation(direction.getRotation());
 		gunSprite.draw(batch);
 	}

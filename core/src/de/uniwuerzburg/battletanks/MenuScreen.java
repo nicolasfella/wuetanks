@@ -145,6 +145,7 @@ public class MenuScreen implements Screen {
 		Button enter = new TextButton("Enter Time", skin);
 		TextField timeInput = new TextField(null, skin);
 		timeInput.setMaxLength(3);
+		timeInput.setText("40");
 
 		enter.addListener(new ChangeListener() {
 			@Override

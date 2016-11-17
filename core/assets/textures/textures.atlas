@@ -4,6 +4,20 @@ size: 1024,256
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+barrelBlack
+  rotate: false
+  xy: 940, 196
+  size: 16, 50
+  orig: 16, 50
+  offset: 0, 0
+  index: -1
+barrelBlue
+  rotate: false
+  xy: 958, 196
+  size: 16, 50
+  orig: 16, 50
+  offset: 0, 0
+  index: -1
 ctrl
   rotate: false
   xy: 2, 2
@@ -111,7 +125,41 @@ wasd
   index: -1
 z
   rotate: false
-  xy: 940, 214
+  xy: 976, 214
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+
+textures2.png
+size: 128,32
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+map/dirt
+  rotate: false
+  xy: 0, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+map/grass
+  rotate: false
+  xy: 32, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+map/sand
+  rotate: false
+  xy: 64, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+map/treeSmall
+  rotate: false
+  xy: 96, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
