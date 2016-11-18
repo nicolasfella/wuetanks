@@ -31,6 +31,8 @@ public class MenuScreen implements Screen {
 	private Stage stage;
 	private Table mainTable;
 
+	private TextField timeInput;
+
 	private TextureAtlas atlas;
 	private List<Player> players;
 
@@ -46,13 +48,13 @@ public class MenuScreen implements Screen {
 		this.atlas = BattleTanks.getTextureAtlas();
 
 		this.skin = new Skin(Gdx.files.internal("data/uiskin.json"));
-		this.stage = new Stage(new FitViewport(1024,768));
+		this.stage = new Stage(new FitViewport(1024, 768));
 		Gdx.input.setInputProcessor(stage);
 
 		mainTable = new Table();
 		mainTable.setFillParent(true);
 
-		//stage.setDebugAll(true);
+		// stage.setDebugAll(true);
 		create();
 	}
 
@@ -79,13 +81,12 @@ public class MenuScreen implements Screen {
 		if (time != 0 && !players.isEmpty()) {
 			game.setScreen(new GameScreen(game, time, tiledMapFileHandle, players));
 			dispose();
-
 		} else {
 			final Button close = new TextButton("close", skin);
 			Dialog error = new Dialog("Error", skin);
 
 			if (time == 0) {
-				error.text("No time entered!");
+				error.text("No valid time entered!");
 			} else {
 				error.text("No tank chosen!");
 			}
@@ -102,9 +103,9 @@ public class MenuScreen implements Screen {
 
 		Button start = createStartButton();
 		HorizontalGroup mapLoader = createMapLoader();
-		HorizontalGroup hgroup = createTimeTextField();
+		HorizontalGroup timeTextField = createTimeTextField();
 
-		mainTable.add(mapLoader, hgroup);
+		mainTable.add(mapLoader, timeTextField);
 		mainTable.row().padTop(10);
 		mainTable.add(createTankChooser(1, Keys.W, Keys.S, Keys.A, Keys.D, Keys.E)).expand();
 		mainTable.add(createTankChooser(2, Keys.UP, Keys.DOWN, Keys.LEFT, Keys.RIGHT, Keys.CONTROL_RIGHT)).expand();
@@ -124,10 +125,15 @@ public class MenuScreen implements Screen {
 	 * @return Button
 	 */
 	private Button createStartButton() {
-		Button start = new TextButton("START!", skin);// , "toggle");
+		Button start = new TextButton("START!", skin);
 		start.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				try {
+					time = Integer.parseInt(timeInput.getText());
+				} catch (NumberFormatException e) {
+					time = 0;
+				}
 				startGame();
 			}
 		});
@@ -142,30 +148,13 @@ public class MenuScreen implements Screen {
 	private HorizontalGroup createTimeTextField() {
 		HorizontalGroup hgroup = new HorizontalGroup();
 
-		Button enter = new TextButton("Enter Time", skin);
-		TextField timeInput = new TextField(null, skin);
+		Label enterTime = new Label("Enter time (sec): ", skin);
+		timeInput = new TextField(null, skin);
 		timeInput.setMaxLength(3);
 		timeInput.setText("40");
 
-		enter.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				try {
-					time = Integer.parseInt(timeInput.getText());
-					timeInput.setDisabled(true);
-					enter.setDisabled(true);
-				} catch (NumberFormatException e) {
-					final Button close = new TextButton("close", skin);
-					Dialog error = new Dialog("Error", skin);
-					error.text("Not a valid number!");
-					error.button(close);
-					error.show(stage);
-				}
-			}
-		});
-
+		hgroup.addActor(enterTime);
 		hgroup.addActor(timeInput);
-		hgroup.addActor(enter);
 		return hgroup;
 
 	}
@@ -280,7 +269,7 @@ public class MenuScreen implements Screen {
 
 				next.setDisabled(true);
 				previous.setDisabled(true);
-				lockButton.setChecked(true);
+				lockButton.setDisabled(true);
 			}
 		});
 
