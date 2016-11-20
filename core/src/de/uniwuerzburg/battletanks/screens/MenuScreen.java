@@ -24,7 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
-import de.uniwuerzburg.battletanks.Player;
+import de.uniwuerzburg.battletanks.entity.Player;
 import de.uniwuerzburg.battletanks.utility.FileChooser;
 import de.uniwuerzburg.battletanks.utility.FileChooser.ResultListener;
 
