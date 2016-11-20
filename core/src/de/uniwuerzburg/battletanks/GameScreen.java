@@ -162,27 +162,25 @@ public class GameScreen implements Screen {
 			entity.update();
 		}
 
-		// Player to player collision
-		// extend to player-obstacle?
-		for (int i = 0; i < entities.size(); i++) {
-			for (int j = 0; j < entities.size(); j++) {
-				if (i == j)
-					continue;
-
-				Entity e1 = entities.get(i);
-				Entity e2 = entities.get(j);
-
-				if (e1 instanceof Player) {
-
-					if (e2 instanceof Obstacle) {
+		// auflösung der kollisionen zwischen playern und obstacles
+		for (Entity e1 : entities) {
+			if (e1 instanceof Player) {
+				for (Entity e2 : entities) {
+					if (e2 instanceof Obstacle && e1 != e2) {
 						checkCollisionPlayerObstacle((Player) e1, e2);
 					}
-					if (e2 instanceof Player) {
+				}
+			}
+		}
+
+		// auflösung der kollisionen zwischen playern und playern
+		for (Entity e1 : entities) {
+			if (e1 instanceof Player) {
+				for (Entity e2 : entities) {
+					if (e2 instanceof Player && e1 != e2) {
 						checkCollisionPlayerPlayer((Player) e1, (Player) e2);
 					}
-
 				}
-
 			}
 		}
 
@@ -235,9 +233,8 @@ public class GameScreen implements Screen {
 		// richtung
 		if ((pRY >= oLY && pLY < oRY) && (pRX >= oLX && pLX < oRX)) {
 
-			
-			
-			// berechnung wie stark sich die player in x und y richtung überlappen
+			// berechnung wie stark sich die player in x und y richtung
+			// überlappen
 			float overlapX;
 			float overlapY;
 
@@ -253,10 +250,11 @@ public class GameScreen implements Screen {
 				overlapY = oRY - pLY;
 			}
 
-			
-			// momentan noch mit abfrage ob die überlappung in x oder y richtung aufgelöst werden soll
-			// TODO: code kürzen und eventuell anderes verfahren mit richtungsvektoren
-			
+			// momentan noch mit abfrage ob die überlappung in x oder y richtung
+			// aufgelöst werden soll
+			// TODO: code kürzen und eventuell anderes verfahren mit
+			// richtungsvektoren
+
 			if (overlapY > overlapX) {
 
 				// falls beide player aufeinander zufahren muss der overlap auf

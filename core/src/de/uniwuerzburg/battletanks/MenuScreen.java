@@ -38,13 +38,11 @@ public class MenuScreen implements Screen {
 
 	private int time;
 
-	// falls keine tilemap geladen wird, wird die TestMap an GameScreen
-	// übergeben
-	private FileHandle tiledMapFileHandle = Gdx.files.internal("maps/TestMap.tmx");
+	private FileHandle tiledMapFileHandle;
 
 	public MenuScreen(final BattleTanks game) {
 		this.game = game;
-
+		tiledMapFileHandle = null;
 		this.atlas = BattleTanks.getTextureAtlas();
 
 		this.skin = new Skin(Gdx.files.internal("data/uiskin.json"));
