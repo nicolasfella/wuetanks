@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
+import de.uniwuerzburg.battletanks.screens.GameScreen;
+
 public class Player extends Entity {
 
 	private static final int WIDTH = 40, HEIGHT = 40;

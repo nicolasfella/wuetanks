@@ -1,4 +1,4 @@
-package de.uniwuerzburg.battletanks;
+package de.uniwuerzburg.battletanks.utility;
 
 import com.badlogic.gdx.files.FileHandle; 
 

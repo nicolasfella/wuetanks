@@ -1,4 +1,4 @@
-package de.uniwuerzburg.battletanks;
+package de.uniwuerzburg.battletanks.utility;
 
 import java.io.File;
 import java.io.FileFilter;

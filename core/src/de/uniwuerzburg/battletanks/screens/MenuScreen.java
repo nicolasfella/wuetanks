@@ -1,4 +1,4 @@
-package de.uniwuerzburg.battletanks;
+package de.uniwuerzburg.battletanks.screens;
 
 import java.util.*;
 import java.util.ArrayList;
@@ -23,7 +23,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import de.uniwuerzburg.battletanks.FileChooser.ResultListener;
+import de.uniwuerzburg.battletanks.BattleTanks;
+import de.uniwuerzburg.battletanks.Player;
+import de.uniwuerzburg.battletanks.utility.FileChooser;
+import de.uniwuerzburg.battletanks.utility.FileChooser.ResultListener;
 
 public class MenuScreen implements Screen {
 	final BattleTanks game;
