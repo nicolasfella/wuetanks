@@ -1,4 +1,4 @@
-package de.uniwuerzburg.battletanks;
+package de.uniwuerzburg.battletanks.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
@@ -22,6 +21,11 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import de.uniwuerzburg.battletanks.BattleTanks;
+import de.uniwuerzburg.battletanks.entity.Entity;
+import de.uniwuerzburg.battletanks.entity.Obstacle;
+import de.uniwuerzburg.battletanks.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
