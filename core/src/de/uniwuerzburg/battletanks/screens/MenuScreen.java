@@ -28,21 +28,42 @@ import de.uniwuerzburg.battletanks.entity.Player;
 import de.uniwuerzburg.battletanks.utility.FileChooser;
 import de.uniwuerzburg.battletanks.utility.FileChooser.ResultListener;
 
+/**
+ * The main menu of the Game; For choosing tanks, a map and the match duration
+ */
 public class MenuScreen implements Screen {
 	final BattleTanks game;
+
+	/** The skin.json for Buttons, Fonts etc */
 	private Skin skin;
+
+	/** The standard TextureAtlas as used in this project */
+	private TextureAtlas atlas;
+
+	/** The main Stage; Provides environment for the main Table */
 	private Stage stage;
+
+	/** The mainTable; Contains every UI element */
 	private Table mainTable;
 
+	/** The TextField for match duration input */
 	private TextField timeInput;
 
-	private TextureAtlas atlas;
+	/** List of players for GameScreen */
 	private List<Player> players;
 
+	/** time in seconds for GameScreen */
 	private int time;
 
+	/** The FileHandle for the TiledMap */
 	private FileHandle tiledMapFileHandle;
 
+	/**
+	 * New MenuScreen for a BattleTanks game; sets atlas, skin, stage, mainTable
+	 * and creates the UI
+	 * 
+	 * @param game
+	 */
 	public MenuScreen(final BattleTanks game) {
 		this.game = game;
 		tiledMapFileHandle = null;
@@ -74,9 +95,8 @@ public class MenuScreen implements Screen {
 	}
 
 	/**
-	 * Überprüft, ob alle benötigten Parameter (time, map, players) festgelegt
-	 * wurden und startet dann das game
-	 * 
+	 * Checks if a time and at least one tank are chosen, then starts the Game by
+	 * creating and setting a new GameScreen;
 	 */
 	private void startGame() {
 		if (time != 0 && !players.isEmpty()) {
@@ -96,9 +116,7 @@ public class MenuScreen implements Screen {
 		}
 	}
 
-	/**
-	 * Erstellt das gesamte Menü
-	 */
+	/** Creates the entire Menu UI */
 	public void create() {
 		players = new ArrayList<>(4);
 
@@ -120,8 +138,7 @@ public class MenuScreen implements Screen {
 	}
 
 	/**
-	 * Erstellt den Startbutton, der dafür sorgt, dass zum GameScreen gewechselt
-	 * wird
+	 * Creates the StartButton that calls startGame()
 	 * 
 	 * @return Button
 	 */
@@ -142,7 +159,7 @@ public class MenuScreen implements Screen {
 	}
 
 	/**
-	 * Erstellt ein TextField mit Enter-Button zur Eingabe einer Spieldauer
+	 * Creates the UI Element for the input of a match duration
 	 * 
 	 * @return HorizontalGroup
 	 */
@@ -161,14 +178,12 @@ public class MenuScreen implements Screen {
 	}
 
 	/**
-	 * Erstellt eine Möglichkeit, Maps zu laden; Das Label oll dann später
-	 * natürlich die jeweils geladene Map anzeigen zur überprüfung für den
-	 * benutzer, ob er die richtige Map ausgewählt hat
+	 * Creates the UI Element for loading a Map; Uses the custom FileChooser UI
 	 * 
 	 * @return HorizontalGroup
 	 */
 	private HorizontalGroup createMapLoader() {
-		HorizontalGroup temp = new HorizontalGroup();
+		HorizontalGroup mapLoader = new HorizontalGroup();
 		Button loadButton = new TextButton("Load Map", skin);
 		Label loadedMap = new Label("", skin);
 
@@ -192,49 +207,50 @@ public class MenuScreen implements Screen {
 			}
 		});
 
-		temp.addActor(loadButton);
-		temp.addActor(loadedMap);
+		mapLoader.addActor(loadButton);
+		mapLoader.addActor(loadedMap);
 
-		return temp;
+		return mapLoader;
 	}
 
 	/**
-	 * Erstellt eine Table mit Darstellung des Panzers und einer Möglichkeit,
-	 * durch die Panzer durchzuwechseln um einen auszuwählen. Ein TankChooser
-	 * wird mit einer Tastenbelegung initialisiert Erstellt gleichzeitig die
-	 * Player, die dann an den GameScreen übergeben werden
+	 * Creates the UI Element for choosing a Tank by cycling through the
+	 * available Tanks; Once a tank is locked, a new player is created and added
+	 * to the List players; Element shows key assignments
 	 * 
+	 * @param playerNumber
+	 * @param key_up
+	 * @param key_down
+	 * @param key_left
+	 * @param key_right
+	 * @param key_shoot
 	 * @return Table
 	 */
-	private Table createTankChooser(int number, int key_up, int key_down, int key_left, int key_right, int key_shoot) {
+	private Table createTankChooser(int playerNumber, int key_up, int key_down, int key_left, int key_right, int key_shoot) {
 		Table tankChooser = new Table();
 
-		HorizontalGroup temp = new HorizontalGroup();
+		HorizontalGroup tankCycle = new HorizontalGroup();
 		Button next = new TextButton(" >> ", skin);
 		Button previous = new TextButton(" << ", skin);
 
 		Image[] images = new Image[4];
-		Image one = new Image(atlas.createSprite("player"));
-		one.setName("player");
-		images[0] = one;
-		Image two = new Image(atlas.createSprite("player2"));
-		two.setName("player2");
-		images[1] = two;
-		Image three = new Image(atlas.createSprite("player3"));
-		three.setName("player3");
-		images[2] = three;
-		Image four = new Image(atlas.createSprite("player4_info"));
-		four.setName("player4");
-		images[3] = four;
+		images[0] = new Image(atlas.createSprite("player"));
+		images[0].setName("player");
+		images[1] = new Image(atlas.createSprite("player2"));
+		images[1].setName("player2");
+		images[2] = new Image(atlas.createSprite("player3"));
+		images[2].setName("player3");
+		images[3] = new Image(atlas.createSprite("player4_info"));
+		images[3].setName("player4");
 
 		next.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				for (int i = 0; i < images.length; i++) {
-					if (temp.getChildren().contains(images[i], false)) {
-						temp.removeActor(images[i]);
+					if (tankCycle.getChildren().contains(images[i], false)) {
+						tankCycle.removeActor(images[i]);
 						int mod = Math.floorMod((i + 1), images.length);
-						temp.addActorAt(1, images[mod]);
+						tankCycle.addActorAt(1, images[mod]);
 						break;
 					}
 				}
@@ -245,27 +261,27 @@ public class MenuScreen implements Screen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				for (int i = 0; i < images.length; i++) {
-					if (temp.getChildren().contains(images[i], false)) {
-						temp.removeActor(images[i]);
+					if (tankCycle.getChildren().contains(images[i], false)) {
+						tankCycle.removeActor(images[i]);
 						int mod = Math.floorMod((i - 1), images.length);
 						System.out.println(mod);
-						temp.addActorAt(1, images[mod]);
+						tankCycle.addActorAt(1, images[mod]);
 						break;
 					}
 				}
 			}
 		});
-		temp.addActorAt(0, previous);
-		temp.addActorAt(1, four);
-		temp.addActorAt(2, next);
+		tankCycle.addActorAt(0, previous);
+		tankCycle.addActorAt(1, images[3]);
+		tankCycle.addActorAt(2, next);
 
 		TextButton lockButton = new TextButton("Lock tank choice", skin);
 		lockButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				String sprite = temp.getChildren().get(1).getName();
+				String sprite = tankCycle.getChildren().get(1).getName();
 				Player player = new Player(sprite, key_up, key_down, key_left, key_right, key_shoot);
-				player.setNumber(number);
+				player.setNumber(playerNumber);
 				players.add(player);
 
 				next.setDisabled(true);
@@ -274,20 +290,27 @@ public class MenuScreen implements Screen {
 			}
 		});
 
-		tankChooser.add(temp);
+		tankChooser.add(tankCycle);
 		tankChooser.row();
 		tankChooser.add(lockButton).padTop(5);
 		tankChooser.row();
-		tankChooser.add(createKeys(number)).expand();
+		tankChooser.add(createKeys(playerNumber)).expand();
 		return tankChooser;
 
 	}
 
-	private Table createKeys(int number) {
+	/**
+	 * Creates the UI Element for displaying the key assignments used in
+	 * createTankChooser
+	 * 
+	 * @param playerNumber
+	 * @return Table
+	 */
+	private Table createKeys(int playerNumber) {
 		Table keys = new Table();
 		Image move = new Image();
 		Image shoot = new Image();
-		switch (number) {
+		switch (playerNumber) {
 		case 1:
 			move = new Image(atlas.createSprite("wasd"));
 			shoot = new Image(atlas.createSprite("e"));
