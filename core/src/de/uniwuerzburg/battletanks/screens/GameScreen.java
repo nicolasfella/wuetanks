@@ -28,6 +28,7 @@ import de.uniwuerzburg.battletanks.entity.Obstacle;
 import de.uniwuerzburg.battletanks.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class GameScreen implements Screen {
@@ -167,22 +168,22 @@ public class GameScreen implements Screen {
 		}
 
 		// auflösung der kollisionen zwischen playern und obstacles
-		for (Entity e1 : entities) {
-			if (e1 instanceof Player) {
-				for (Entity e2 : entities) {
-					if (e2 instanceof Obstacle && e1 != e2) {
-						checkCollisionPlayerObstacle((Player) e1, e2);
+		for (Entity p : entities) {
+			if (p instanceof Player) {
+				for (Entity e : entities) {
+					if (e instanceof Obstacle && p != e) {
+						detectCollisionAndResponse(p, e);
 					}
 				}
 			}
 		}
 
 		// auflösung der kollisionen zwischen playern und playern
-		for (Entity e1 : entities) {
-			if (e1 instanceof Player) {
-				for (Entity e2 : entities) {
-					if (e2 instanceof Player && e1 != e2) {
-						checkCollisionPlayerPlayer((Player) e1, (Player) e2);
+		for (Entity p : entities) {
+			if (p instanceof Player) {
+				for (Entity e : entities) {
+					if (e instanceof Player && p != e) {
+						detectCollisionAndResponse(p, e);
 					}
 				}
 			}
@@ -211,9 +212,9 @@ public class GameScreen implements Screen {
 
 	}
 
-	private void checkCollisionPlayerPlayer(Player p, Player o) {
+	private void detectCollisionAndResponse(Entity p, Entity o) {
 
-		// variablen für 1. player
+		// variablen für 1. entity
 
 		float pRX = p.getX() + p.getWidth();
 		float pLX = p.getX();
@@ -223,7 +224,7 @@ public class GameScreen implements Screen {
 		float pLY = p.getY();
 		float pVY = p.getSpeed().y;
 
-		// variablen für 2. player
+		// variablen für 2. entity
 
 		float oRX = o.getX() + o.getWidth();
 		float oLX = o.getX();
@@ -237,7 +238,7 @@ public class GameScreen implements Screen {
 		// richtung
 		if ((pRY >= oLY && pLY < oRY) && (pRX >= oLX && pLX < oRX)) {
 
-			// berechnung wie stark sich die player in x und y richtung
+			// berechnung wie stark sich die entities in x und y richtung
 			// überlappen
 			float overlapX;
 			float overlapY;
@@ -254,86 +255,37 @@ public class GameScreen implements Screen {
 				overlapY = oRY - pLY;
 			}
 
-			// momentan noch mit abfrage ob die überlappung in x oder y richtung
-			// aufgelöst werden soll
-			// TODO: code kürzen und eventuell anderes verfahren mit
-			// richtungsvektoren
+			float[] translations;
+
+			// es wird in richtung der kleineren überlappung aufgelöst ->
+			// kleinste verschiebung
 
 			if (overlapY > overlapX) {
 
-				// falls beide player aufeinander zufahren muss der overlap auf
-				// beide aufgeteilt werden
-				if (pVX > 0 && oVX < 0) {
-					p.setX(pLX - overlapX / 2.f);
+				translations = solveOverlap(pVX, oVX, overlapX);
+
+				if (translations[0] != 0) {
+					p.setX(pLX + translations[0]);
 					p.getSpeed().x = 0;
-
-					o.setX(oLX + overlapX / 2.f);
-					o.getSpeed().x = 0;
-				} else if (pVX < 0 && oVX > 0) {
-					p.setX(pLX + overlapX / 2.f);
-					p.getSpeed().x = 0;
-
-					o.setX(oLX - overlapX / 2.f);
-					o.getSpeed().x = 0;
-				} else {
-
-					// andernfalls muss herausgefunden werden wer den overlap
-					// verursacht hat und von welcher richtung
-					if (pVX > 0) {
-						p.setX(pLX - overlapX);
-						p.getSpeed().x = 0;
-					}
-					if (pVX < 0) {
-						p.setX(pLX + overlapX);
-						p.getSpeed().x = 0;
-					}
-
-					if (oVX > 0) {
-						o.setX(oLX - overlapX);
-						o.getSpeed().x = 0;
-					}
-					if (oVX < 0) {
-						o.setX(oLX + overlapX);
-						o.getSpeed().x = 0;
-					}
 				}
+
+				if (translations[1] != 0) {
+					o.setX(oLX + translations[1]);
+					o.getSpeed().x = 0;
+				}
+
 			} else {
 
-				// falls beide player aufeinander zufahren muss der overlap auf
-				// beide aufgeteilt werden
-				if (pVY > 0 && oVY < 0) {
-					p.setY(pLY - overlapY / 2.f);
+				translations = solveOverlap(pVY, oVY, overlapY);
+
+				if (translations[0] != 0) {
+					p.setY(pLY + translations[0]);
 					p.getSpeed().y = 0;
+				}
 
-					o.setY(oLY + overlapY / 2.f);
+				if (translations[1] != 0) {
+					o.setY(oLY + translations[1]);
 					o.getSpeed().y = 0;
-				} else if (pVY < 0 && oVY > 0) {
-					p.setY(pLY + overlapY / 2.f);
-					p.getSpeed().y = 0;
-
-					o.setY(oLY - overlapY / 2.f);
-					o.getSpeed().y = 0;
-				} else {
-
-					// andernfalls muss herausgefunden werden wer den overlap
-					// verursacht hat und von welcher richtung
-					if (pVY > 0) {
-						p.setY(pLY - overlapY);
-						p.getSpeed().y = 0;
-					}
-					if (pVY < 0) {
-						p.setY(pLY + overlapY);
-						p.getSpeed().y = 0;
-					}
-
-					if (oVY > 0) {
-						o.setY(oLY - overlapY);
-						o.getSpeed().y = 0;
-					}
-					if (oVY < 0) {
-						o.setY(oLY + overlapY);
-						o.getSpeed().y = 0;
-					}
 				}
 
 			}
@@ -342,67 +294,67 @@ public class GameScreen implements Screen {
 
 	}
 
-	private void checkCollisionPlayerObstacle(Player p, Entity o) {
+	private float[] solveOverlap(float pSpeed, float oSpeed, float overlap) {
+		float[] translations = new float[2];
 
-		Rectangle r1 = new Rectangle(p.getX(), p.getY(), p.getWidth(), p.getHeight());
-		Rectangle r2 = new Rectangle(o.getX(), o.getY(), o.getWidth(), o.getHeight());
+		// falls eine der beiden entities steht, wird der verursacher der
+		// kollision zurückgesetzt
+		if (pSpeed == 0 || oSpeed == 0) {
+			if (pSpeed > 0) {
+				translations[0] = -overlap;
+			}
+			if (pSpeed < 0) {
+				translations[0] = overlap;
+			}
 
-		if (r1.overlaps(r2)) {
-			// System.out.println("Intersection");
-		}
-
-		// p1 is left to p2
-		if (p.getX() + p.getWidth() >= o.getX()) {
-			if (p.getOldPosition().x + p.getWidth() <= o.getX()) {
-				if (p.getY() + p.getHeight() > o.getY() && p.getY() < o.getY() + o.getHeight()) {
-					if (p.getX() > p.getOldPosition().x) {
-						p.setX(o.getX() - p.getWidth());
-						p.getSpeed().x = 0;
-						// System.out.println("Kollision von links");
-					}
-				}
+			if (oSpeed > 0) {
+				translations[1] = -overlap;
+			}
+			if (oSpeed < 0) {
+				translations[1] = overlap;
 			}
 		}
 
-		// p1 is below p2
-		if (p.getY() + p.getHeight() >= o.getY()) {
-			if (p.getOldPosition().y + p.getHeight() <= o.getY()) {
-				if (p.getX() + p.getWidth() > o.getX() && p.getX() < o.getX() + o.getWidth()) {
-					if (p.getY() > p.getOldPosition().y) {
-						p.setY(o.getY() - p.getHeight());
-						p.getSpeed().y = 0;
-						// System.out.println("Kollision von unten");
-					}
-				}
+		// andernfalls gibt es nur noch folgende kollisionsursachen
+		else {
+
+			// falls beide entities aufeinander zufahren muss der overlap auf
+			// beide aufgeteilt werden
+			if (pSpeed > 0 && oSpeed < 0) {
+
+				translations[0] = -overlap / 2.f;
+				translations[1] = overlap / 2.f;
+
+			} else if (pSpeed < 0 && oSpeed > 0) {
+
+				translations[0] = overlap / 2.f;
+				translations[1] = -overlap / 2.f;
+
 			}
+
+			// falls eine entity schneller als die andere ist und ihr hinten
+			// auffährt, wird die schnellere ausgebremst
+			else if (pSpeed > 0 && oSpeed > 0) {
+
+				if (pSpeed > oSpeed) {
+					translations[0] = -overlap;
+				} else {
+					translations[1] = -overlap;
+				}
+
+			} else if (pSpeed < 0 && oSpeed < 0) {
+
+				if (pSpeed < oSpeed) {
+					translations[0] = overlap;
+				} else {
+					translations[1] = overlap;
+				}
+
+			}
+
 		}
 
-		// p1 is above p2
-		if (p.getY() < o.getY() + o.getHeight()) {
-			if (p.getOldPosition().y >= o.getY() + o.getHeight()) {
-				if (p.getX() + p.getWidth() > o.getX() && p.getX() < o.getX() + o.getWidth()) {
-					if (p.getY() < p.getOldPosition().y) {
-						p.setY(o.getY() + o.getHeight());
-						p.getSpeed().y = 0;
-						// System.out.println("Kollision von oben");
-					}
-				}
-			}
-		}
-
-		// p is right to o
-		if (p.getX() <= o.getX() + o.getWidth()) {
-			if (p.getOldPosition().x >= o.getX() + o.getWidth()) {
-				if (p.getY() + p.getHeight() > o.getY() && p.getY() < o.getY() + o.getHeight()) {
-					if (p.getX() < p.getOldPosition().x) {
-						p.setX(o.getX() + o.getWidth());
-						p.getSpeed().x = 0;
-						// System.out.println("Kollision von rechts");
-					}
-				}
-			}
-		}
-
+		return translations;
 	}
 
 	@Override
