@@ -53,9 +53,8 @@ public class MenuScreen implements Screen {
 	private List<Player> players;
 
 	/** time in seconds for GameScreen */
-	private int time;
+	private float time;
 
-	/** The FileHandle for the TiledMap */
 	private FileHandle tiledMapFileHandle;
 
 	/**
@@ -95,13 +94,13 @@ public class MenuScreen implements Screen {
 	}
 
 	/**
-	 * Checks if a time and at least one tank are chosen, then starts the Game by
-	 * creating and setting a new GameScreen;
+	 * Checks if a time and at least one tank are chosen, then starts the Game
+	 * by creating and setting a new GameScreen;
 	 */
 	private void startGame() {
 		if (time != 0 && !players.isEmpty()) {
 			game.setScreen(new GameScreen(game, time, tiledMapFileHandle, players));
-			dispose();
+			this.dispose();
 		} else {
 			final Button close = new TextButton("close", skin);
 			Dialog error = new Dialog("Error", skin);
@@ -148,7 +147,7 @@ public class MenuScreen implements Screen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				try {
-					time = Integer.parseInt(timeInput.getText());
+					time = Float.parseFloat(timeInput.getText());
 				} catch (NumberFormatException e) {
 					time = 0;
 				}
@@ -226,7 +225,8 @@ public class MenuScreen implements Screen {
 	 * @param key_shoot
 	 * @return Table
 	 */
-	private Table createTankChooser(int playerNumber, int key_up, int key_down, int key_left, int key_right, int key_shoot) {
+	private Table createTankChooser(int playerNumber, int key_up, int key_down, int key_left, int key_right,
+			int key_shoot) {
 		Table tankChooser = new Table();
 
 		HorizontalGroup tankCycle = new HorizontalGroup();

@@ -55,6 +55,8 @@ public class GameScreen implements Screen {
 
 	private List<Player> players;
 
+	private float time;
+
 	public GameScreen(final BattleTanks game, int time) {
 		instance = this;
 		this.game = game;
@@ -66,9 +68,10 @@ public class GameScreen implements Screen {
 	 * @param tiledMapFileHandle
 	 * @param players
 	 */
-	public GameScreen(final BattleTanks game, int time, FileHandle tiledMapFileHandle, List<Player> players) {
+	public GameScreen(final BattleTanks game, float time, FileHandle tiledMapFileHandle, List<Player> players) {
 		instance = this;
 		this.game = game;
+		this.time = time;
 		this.players = new ArrayList<>(players);
 		this.tiledMapFileHandle = tiledMapFileHandle;
 	}
@@ -154,14 +157,19 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-
 		Gdx.graphics.setTitle("Battletanks " + Gdx.graphics.getFramesPerSecond() + " fps");
-
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		// float deltaTime = Gdx.graphics.getDeltaTime();
+		// time -= deltaTime;
+		time -= delta;
+		if (time <= 0) {
+			game.setScreen(new EndScreen());
+			this.dispose();
+		}
+		
 		camera.update();
-
 		for (Entity entity : entities) {
 			entity.update();
 		}
@@ -430,7 +438,9 @@ public class GameScreen implements Screen {
 		font.dispose();
 		batch.dispose();
 		tiledMap.dispose();
-		tiledMapFileHandle.delete();
+		if (tiledMapFileHandle != null) {
+			tiledMapFileHandle.delete();
+		}
 
 	}
 
