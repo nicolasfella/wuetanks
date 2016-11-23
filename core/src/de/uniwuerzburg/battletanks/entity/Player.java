@@ -24,9 +24,9 @@ public class Player extends Entity {
 
 	private TextureAtlas atlas;
 
-	public Player(String sprite, int key_up, int key_down, int key_left, int key_right, int key_shoot) {
+	public Player(Tanks tank, int key_up, int key_down, int key_left, int key_right, int key_shoot) {
 		// super("player");
-		super(sprite);
+		super("tank"+tank.getName());
 
 		this.key_up = key_up;
 		this.key_down = key_down;
@@ -39,7 +39,7 @@ public class Player extends Entity {
 
 		direction = Direction.UP;
 
-		gunSprite = BattleTanks.getTextureAtlas().createSprite("barrelBlue");
+		gunSprite = BattleTanks.getTextureAtlas().createSprite("barrel"+tank.getName());
 		gunSprite.setSize(10, 40);
 		gunSprite.setOrigin(gunSprite.getWidth()/2, 0);
 	}
