@@ -1,131 +1,194 @@
 
 textures.png
-size: 1024,256
+size: 1024,128
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+barrelBeige
+  rotate: false
+  xy: 926, 55
+  size: 16, 50
+  orig: 16, 50
+  offset: 0, 0
+  index: -1
 barrelBlack
   rotate: false
-  xy: 940, 196
+  xy: 944, 55
   size: 16, 50
   orig: 16, 50
   offset: 0, 0
   index: -1
 barrelBlue
   rotate: false
-  xy: 958, 196
+  xy: 962, 55
   size: 16, 50
   orig: 16, 50
   offset: 0, 0
   index: -1
+barrelGreen
+  rotate: false
+  xy: 980, 55
+  size: 16, 50
+  orig: 16, 50
+  offset: 0, 0
+  index: -1
+barrelRed
+  rotate: false
+  xy: 998, 55
+  size: 16, 50
+  orig: 16, 50
+  offset: 0, 0
+  index: -1
+bulletBeige
+  rotate: false
+  xy: 340, 13
+  size: 12, 26
+  orig: 12, 26
+  offset: 0, 0
+  index: -1
+bulletBlack
+  rotate: false
+  xy: 354, 13
+  size: 12, 26
+  orig: 12, 26
+  offset: 0, 0
+  index: -1
+bulletBlue
+  rotate: false
+  xy: 368, 13
+  size: 12, 26
+  orig: 12, 26
+  offset: 0, 0
+  index: -1
+bulletGreen
+  rotate: false
+  xy: 382, 13
+  size: 12, 26
+  orig: 12, 26
+  offset: 0, 0
+  index: -1
+bulletRed
+  rotate: false
+  xy: 396, 13
+  size: 12, 26
+  orig: 12, 26
+  offset: 0, 0
+  index: -1
+bulletSilver
+  rotate: false
+  xy: 410, 13
+  size: 12, 26
+  orig: 12, 26
+  offset: 0, 0
+  index: -1
+bulletYellow
+  rotate: false
+  xy: 424, 13
+  size: 12, 26
+  orig: 12, 26
+  offset: 0, 0
+  index: -1
 ctrl
   rotate: false
-  xy: 2, 2
+  xy: 204, 7
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 e
   rotate: false
-  xy: 229, 46
+  xy: 238, 7
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 empty
   rotate: false
-  xy: 425, 143
+  xy: 2, 2
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
-gun
-  rotate: false
-  xy: 704, 182
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
 ijkl
   rotate: false
-  xy: 229, 80
+  xy: 204, 41
   size: 96, 64
   orig: 96, 64
   offset: 0, 0
   index: -1
 o
   rotate: false
-  xy: 431, 148
+  xy: 272, 7
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-player
-  rotate: false
-  xy: 770, 182
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-player2
-  rotate: false
-  xy: 836, 196
-  size: 50, 50
-  orig: 50, 50
-  offset: 0, 0
-  index: -1
-player3
-  rotate: false
-  xy: 888, 196
-  size: 50, 50
-  orig: 50, 50
-  offset: 0, 0
-  index: -1
-player4
-  rotate: false
-  xy: 627, 176
-  size: 75, 70
-  orig: 75, 70
-  offset: 0, 0
-  index: -1
-player4_info
-  rotate: false
-  xy: 2, 36
-  size: 225, 210
-  orig: 225, 210
-  offset: 0, 0
-  index: -1
 startButton
   rotate: false
-  xy: 229, 146
+  xy: 2, 5
   size: 200, 100
   orig: 200, 100
   offset: 0, 0
   index: -1
+tankBeige
+  rotate: false
+  xy: 596, 41
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+tankBlack
+  rotate: false
+  xy: 662, 41
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+tankBlue
+  rotate: false
+  xy: 728, 41
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+tankGreen
+  rotate: false
+  xy: 794, 41
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+tankRed
+  rotate: false
+  xy: 860, 41
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 tfgh
   rotate: false
-  xy: 431, 182
+  xy: 302, 41
   size: 96, 64
   orig: 96, 64
   offset: 0, 0
   index: -1
 updownleftright
   rotate: false
-  xy: 327, 80
+  xy: 400, 41
   size: 96, 64
   orig: 96, 64
   offset: 0, 0
   index: -1
 wasd
   rotate: false
-  xy: 529, 182
+  xy: 498, 41
   size: 96, 64
   orig: 96, 64
   offset: 0, 0
   index: -1
 z
   rotate: false
-  xy: 976, 214
+  xy: 306, 7
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

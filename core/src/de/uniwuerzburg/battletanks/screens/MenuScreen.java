@@ -233,15 +233,17 @@ public class MenuScreen implements Screen {
 		Button next = new TextButton(" >> ", skin);
 		Button previous = new TextButton(" << ", skin);
 
-		Image[] images = new Image[4];
-		images[0] = new Image(atlas.createSprite("player"));
-		images[0].setName("player");
-		images[1] = new Image(atlas.createSprite("player2"));
-		images[1].setName("player2");
-		images[2] = new Image(atlas.createSprite("player3"));
-		images[2].setName("player3");
-		images[3] = new Image(atlas.createSprite("player4_info"));
-		images[3].setName("player4");
+		Image[] images = new Image[5];
+		images[0] = new Image(atlas.createSprite("tankBeige"));
+		images[0].setName("tankBeige");
+		images[1] = new Image(atlas.createSprite("tankBlack"));
+		images[1].setName("tankBlack");
+		images[2] = new Image(atlas.createSprite("tankBlue"));
+		images[2].setName("tankBlue");
+		images[3] = new Image(atlas.createSprite("tankGreen"));
+		images[3].setName("tankGreen");
+		images[4] = new Image(atlas.createSprite("tankRed"));
+		images[4].setName("tankRed");
 
 		next.addListener(new ChangeListener() {
 			@Override
