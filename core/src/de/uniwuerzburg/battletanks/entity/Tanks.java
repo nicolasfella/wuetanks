@@ -2,29 +2,29 @@ package de.uniwuerzburg.battletanks.entity;
 
 public enum Tanks {
 	/** low hp/armor, high damage */
-	BEIGE(100f, 50f, 0.25f),
+	BEIGE("Beige", 100f, 50f, 0.25f),
 
 	/** medium hp/armor/damage */
-	BLACK(150f, 40f, 0.25f),
+	BLACK("Black", 150f, 40f, 0.25f),
 
 	/** medium hp/armor/damage */
-	BLUE(200f, 30f, 0.5f),
+	BLUE("Blue", 200f, 30f, 0.5f),
 
 	/** medium hp/armor/damage */
-	GREEN(250f, 20f, 0.75f),
+	GREEN("Green", 250f, 20f, 0.75f),
 
 	/** high hp/armor, low damage */
-	RED(300f, 10f, 0.75f);
+	RED("Red", 300f, 10f, 0.75f);
 
-	
-	
 	private float health;
 	private float damage;
-	
-	/**Reducing incoming dmg before hp subtraction*/
+	private String name;
+
+	/** Reducing incoming dmg before hp subtraction */
 	private float armor;
 
-	private Tanks(float health, float damage, float armor) {
+	private Tanks(String name, float health, float damage, float armor) {
+		this.name = name;
 		this.health = health;
 		this.damage = damage;
 		this.armor = armor;
@@ -44,6 +44,10 @@ public enum Tanks {
 
 	public void setArmor(float armor) {
 		this.armor = armor;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public float getHealth() {

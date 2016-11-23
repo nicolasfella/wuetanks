@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
 import de.uniwuerzburg.battletanks.entity.Player;
+import de.uniwuerzburg.battletanks.entity.Tanks;
 import de.uniwuerzburg.battletanks.utility.FileChooser;
 import de.uniwuerzburg.battletanks.utility.FileChooser.ResultListener;
 
@@ -233,17 +234,14 @@ public class MenuScreen implements Screen {
 		Button next = new TextButton(" >> ", skin);
 		Button previous = new TextButton(" << ", skin);
 
+		Tanks[] tanks = Tanks.values();
+		List<Tanks> tankList = new ArrayList<Tanks>(Arrays.asList(tanks));
 		Image[] images = new Image[5];
-		images[0] = new Image(atlas.createSprite("tankBeige"));
-		images[0].setName("tankBeige");
-		images[1] = new Image(atlas.createSprite("tankBlack"));
-		images[1].setName("tankBlack");
-		images[2] = new Image(atlas.createSprite("tankBlue"));
-		images[2].setName("tankBlue");
-		images[3] = new Image(atlas.createSprite("tankGreen"));
-		images[3].setName("tankGreen");
-		images[4] = new Image(atlas.createSprite("tankRed"));
-		images[4].setName("tankRed");
+
+		for (int i = 0; i < images.length; i++) {
+			images[i] = new Image(atlas.createSprite("tank" + tankList.get(i).getName()));
+			images[i].setName(tankList.get(i).getName());
+		}
 
 		next.addListener(new ChangeListener() {
 			@Override
@@ -274,15 +272,17 @@ public class MenuScreen implements Screen {
 			}
 		});
 		tankCycle.addActorAt(0, previous);
-		tankCycle.addActorAt(1, images[3]);
+		tankCycle.addActorAt(1, images[0]);
 		tankCycle.addActorAt(2, next);
 
 		TextButton lockButton = new TextButton("Lock tank choice", skin);
 		lockButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				String sprite = tankCycle.getChildren().get(1).getName();
-				Player player = new Player(sprite, key_up, key_down, key_left, key_right, key_shoot);
+				String tankName = tankCycle.getChildren().get(1).getName();
+				Tanks tank = tankList.stream().filter(t -> t.getName().equals(tankName)).findAny().get();
+
+				Player player = new Player(tank, key_up, key_down, key_left, key_right, key_shoot);
 				player.setNumber(playerNumber);
 				players.add(player);
 
