@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -74,7 +75,8 @@ public class MenuScreen implements Screen {
 		this.atlas = BattleTanks.getTextureAtlas();
 
 		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
-		this.stage = new Stage(new FitViewport(prefs.getInteger("window_width", 1024), prefs.getInteger("window_height", 768)));
+		this.stage = new Stage(
+				new FitViewport(prefs.getInteger("window_width", 1024), prefs.getInteger("window_height", 768)));
 		Gdx.input.setInputProcessor(stage);
 
 		mainTable = new Table();
@@ -173,7 +175,7 @@ public class MenuScreen implements Screen {
 		Label enterTime = new Label("Enter time (sec): ", skin);
 		timeInput = new TextField(null, skin);
 		timeInput.setMaxLength(3);
-		timeInput.setText(""+prefs.getInteger("default_time", 50));
+		timeInput.setText("" + prefs.getInteger("default_time", 50));
 
 		hgroup.addActor(enterTime);
 		hgroup.addActor(timeInput);
@@ -240,21 +242,20 @@ public class MenuScreen implements Screen {
 
 		Tanks[] tanks = Tanks.values();
 		List<Tanks> tankList = new ArrayList<Tanks>(Arrays.asList(tanks));
-		Image[] images = new Image[5];
 
-		for (int i = 0; i < images.length; i++) {
-			images[i] = new Image(atlas.createSprite("tank" + tankList.get(i).getName()));
-			images[i].setName(tankList.get(i).getName());
+		VerticalGroup[] tankInfo = new VerticalGroup[5];
+		for (int i = 0; i < tankInfo.length; i++) {
+			tankInfo[i] = createTankInfo(tankList.get(i));
 		}
-
+		
 		next.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				for (int i = 0; i < images.length; i++) {
-					if (tankCycle.getChildren().contains(images[i], false)) {
-						tankCycle.removeActor(images[i]);
-						int mod = Math.floorMod((i + 1), images.length);
-						tankCycle.addActorAt(1, images[mod]);
+				for (int i = 0; i < tankInfo.length; i++) {
+					if (tankCycle.getChildren().contains(tankInfo[i], false)) {
+						tankCycle.removeActor(tankInfo[i]);
+						int mod = Math.floorMod((i + 1), tankInfo.length);
+						tankCycle.addActorAt(1, tankInfo[mod]);
 						break;
 					}
 				}
@@ -264,19 +265,19 @@ public class MenuScreen implements Screen {
 		previous.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				for (int i = 0; i < images.length; i++) {
-					if (tankCycle.getChildren().contains(images[i], false)) {
-						tankCycle.removeActor(images[i]);
-						int mod = Math.floorMod((i - 1), images.length);
+				for (int i = 0; i < tankInfo.length; i++) {
+					if (tankCycle.getChildren().contains(tankInfo[i], false)) {
+						tankCycle.removeActor(tankInfo[i]);
+						int mod = Math.floorMod((i - 1), tankInfo.length);
 						System.out.println(mod);
-						tankCycle.addActorAt(1, images[mod]);
+						tankCycle.addActorAt(1, tankInfo[mod]);
 						break;
 					}
 				}
 			}
 		});
 		tankCycle.addActorAt(0, previous);
-		tankCycle.addActorAt(1, images[0]);
+		tankCycle.addActorAt(1, tankInfo[0]);
 		tankCycle.addActorAt(2, next);
 
 		TextButton lockButton = new TextButton("Lock tank choice", skin);
@@ -303,6 +304,27 @@ public class MenuScreen implements Screen {
 		tankChooser.add(createKeys(playerNumber)).expand();
 		return tankChooser;
 
+	}
+
+	private VerticalGroup createTankInfo(Tanks tank) {
+		VerticalGroup tankInfo = new VerticalGroup();
+		tankInfo.setName(tank.getName());
+
+		Image tankImage = new Image(atlas.createSprite("tank" + tank.getName()));
+
+		Label hp = new Label("HP: " + tank.getHealth(), skin);
+		Label damage = new Label("DMG: " + tank.getDamage(), skin);
+		Label armor = new Label("Armor: " + tank.getArmor(), skin);
+
+		tankInfo.addActor(damage);
+		tankInfo.addActor(tankImage);
+		tankInfo.addActor(hp);
+		tankInfo.addActor(armor);
+
+		tankInfo.padLeft(5).padRight(5);
+		tankInfo.space(5);
+
+		return tankInfo;
 	}
 
 	/**
@@ -345,22 +367,18 @@ public class MenuScreen implements Screen {
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
