@@ -206,6 +206,10 @@ public class GameScreen implements Screen {
 		for (Entity entity : entities) {
 			entity.render(batch);
 		}
+
+		for(Player p:players){
+			p.renderGun(batch);
+		}
 		// font.draw(batch, "Player 1: 7 hits 3 kills", 10, 20);
 		/*
 		 * font.draw(batch, "Player 3: 3 hits 3 kills", 10, 25);

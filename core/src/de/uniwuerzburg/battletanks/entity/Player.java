@@ -115,9 +115,7 @@ public class Player extends Entity {
 		super.update();
 	}
 
-	@Override
-	public void render(SpriteBatch batch) {
-		super.render(batch);
+	public void renderGun(SpriteBatch batch){
 		gunSprite.setPosition(getX() + 0.5f*(getWidth() - gunSprite.getWidth()), getY() + getHeight()/2);
 		gunSprite.setRotation(direction.getRotation());
 		gunSprite.draw(batch);
