@@ -23,12 +23,14 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
+import de.uniwuerzburg.battletanks.entity.Bullet;
 import de.uniwuerzburg.battletanks.entity.Entity;
 import de.uniwuerzburg.battletanks.entity.Obstacle;
 import de.uniwuerzburg.battletanks.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class GameScreen implements Screen {
@@ -90,7 +92,8 @@ public class GameScreen implements Screen {
 		if (tiledMapFileHandle != null) {
 			tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
 		} else {
-			tiledMap = new TmxMapLoader().load(BattleTanks.getPreferences().getString("default_map", "maps/TestMap.tmx"));
+			tiledMap = new TmxMapLoader()
+					.load(BattleTanks.getPreferences().getString("default_map", "maps/TestMap.tmx"));
 		}
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		MapProperties tiledMapProps = tiledMap.getProperties();
@@ -111,6 +114,7 @@ public class GameScreen implements Screen {
 
 		for (Player p : players) {
 			entities.add(p);
+			p.setEntities(entities);
 
 			float x = 0;
 			float y = 0;
@@ -167,16 +171,29 @@ public class GameScreen implements Screen {
 		time -= delta;
 		if (time <= 0) {
 			game.setScreen(new EndScreen());
-			//this.dispose();
+			// this.dispose();
 		}
-		
+
 		camera.update();
-		for (Entity entity : entities) {
+
+		// updated zuerst die ursprünglichen entities
+		int n = entities.size();
+		for (int i = 0; i < n; i++) {
+			Entity entity = entities.get(i);
 			entity.update();
 		}
 
-		// auflösung der kollisionen zwischen playern und obstacles
+		// updated neu hinzugekommene entities
+		for (int i = n; i < entities.size(); i++) {
+			Entity entity = entities.get(i);
+			entity.update();
+		}
+
+		List<Integer> deleteIndices = new LinkedList<Integer>();
+		
 		for (Entity p : entities) {
+
+			// auflösung der kollisionen zwischen playern und obstacles
 			if (p instanceof Player) {
 				for (Entity e : entities) {
 					if (e instanceof Obstacle && p != e) {
@@ -184,7 +201,23 @@ public class GameScreen implements Screen {
 					}
 				}
 			}
+
+			// speichern der indizes der bullets die nicht mehr auf dem
+			// spielfeld sind
+			if (p instanceof Bullet) {
+				Bullet b = (Bullet) p;
+				if (isOutOfGame(b)) {
+					deleteIndices.add(entities.indexOf(b));
+				}
+			}
 		}
+		
+		
+		// lösche markierte entities
+		for(int i : deleteIndices){
+			entities.remove(i);
+		}
+		
 
 		// auflösung der kollisionen zwischen playern und playern
 		for (Entity p : entities) {
@@ -207,14 +240,14 @@ public class GameScreen implements Screen {
 			entity.render(batch);
 		}
 
-		for(Player p:players){
+		for (Player p : players) {
 			p.renderGun(batch);
 		}
 
-		String timeLeft = "Time left: "+ (int) time;
+		String timeLeft = "Time left: " + (int) time;
 
 		layout.setText(font, timeLeft);
-		font.draw(batch, timeLeft, width/2 -layout.width/2, height-10);
+		font.draw(batch, timeLeft, width / 2 - layout.width / 2, height - 10);
 
 		// font.draw(batch, "Player 1: 7 hits 3 kills", 10, 20);
 		/*
@@ -228,6 +261,16 @@ public class GameScreen implements Screen {
 
 		batch.end();
 
+	}
+
+	private boolean isOutOfGame(Entity e) {
+		float max = Math.max(e.getHeight(), e.getWidth());
+
+		if (e.getX() < 0 - max || e.getX() > width + max || e.getY() < 0 - max || e.getY() > height + max) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private void detectCollisionAndResponse(Entity p, Entity o) {

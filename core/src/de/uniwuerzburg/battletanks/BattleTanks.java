@@ -58,6 +58,9 @@ public class BattleTanks extends Game {
         prefs.putInteger("player_height", 40);
         prefs.putInteger("gun_width", 10);
         prefs.putInteger("gun_height", 40);
+        prefs.putInteger("bullet_width", 12);
+        prefs.putInteger("bullet_height", 26);
+        prefs.putInteger("bullet_speed", 450);
         prefs.putInteger("player_speed", 150);
         prefs.flush();
     }

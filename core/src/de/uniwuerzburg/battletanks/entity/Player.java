@@ -1,9 +1,13 @@
 package de.uniwuerzburg.battletanks.entity;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
 import de.uniwuerzburg.battletanks.screens.GameScreen;
@@ -17,17 +21,32 @@ public class Player extends Entity {
 	private int movingSpeed;
 
 	private int number;
+	
+	private float shootTimer;
 
 	private Direction direction;
 
 	private Sprite gunSprite;
 
 	private TextureAtlas atlas;
+	
+	private Tanks tank;
+	
+	private List<Entity> entities;
 
+	
+	public Player(Tanks tank, List<Entity> entities, int key_up, int key_down, int key_left, int key_right, int key_shoot) {
+		this(tank, key_up, key_down, key_left, key_right, key_shoot);
+		this.entities = entities;
+	}
+	
+	
 	public Player(Tanks tank, int key_up, int key_down, int key_left, int key_right, int key_shoot) {
 		// super("player");
 		super("tank"+tank.getName());
 
+		this.tank = tank;
+		
 		this.key_up = key_up;
 		this.key_down = key_down;
 		this.key_right = key_right;
@@ -40,6 +59,7 @@ public class Player extends Entity {
 		movingSpeed = BattleTanks.getPreferences().getInteger("player_speed", 150);
 
 		direction = Direction.UP;
+		shootTimer = tank.getReloadTime();
 
 		gunSprite = BattleTanks.getTextureAtlas().createSprite("barrel"+tank.getName());
 		gunSprite.setSize(BattleTanks.getPreferences().getInteger("gun_width", 10), BattleTanks.getPreferences().getInteger("gun_height", 40));
@@ -67,6 +87,16 @@ public class Player extends Entity {
 			direction = Direction.RIGHT;
 		}
 
+		
+		shootTimer += Gdx.graphics.getDeltaTime();
+		if (Gdx.input.isKeyPressed(key_shoot) && shootTimer > tank.getReloadTime()) {
+			createBullet();
+			shootTimer = 0.f;
+		}
+		
+		
+		
+		
 		speed.set(0, 0);
 
 		if (Gdx.input.isKeyPressed(key_up)) {
@@ -116,6 +146,26 @@ public class Player extends Entity {
 		}
 		super.update();
 	}
+
+	public void createBullet() {
+		Vector2 pos = position.cpy();
+		
+		//pos wird zu mitte des players
+		pos.x += width/2.f;
+		pos.y += height/2.f;
+		
+		//pos wird zu spitze der waffe
+		pos.x -= Math.sin(Math.toRadians(direction.getRotation())) * gunSprite.getHeight();
+		pos.y += Math.cos(Math.toRadians(direction.getRotation())) * gunSprite.getHeight();
+		
+		Bullet bullet = new Bullet(this, pos, direction);
+		entities.add(entities.size(), bullet);
+	}
+	
+	public void setEntities(List<Entity> entities){
+		this.entities = entities;
+	}
+	
 
 	public void renderGun(SpriteBatch batch){
 		gunSprite.setPosition(getX() + 0.5f*(getWidth() - gunSprite.getWidth()), getY() + getHeight()/2);
@@ -180,5 +230,10 @@ public class Player extends Entity {
 	public int getNumber() {
 		return number;
 	}
+	
+	public Tanks getTank(){
+		return tank;
+	}
+	
 
 }
