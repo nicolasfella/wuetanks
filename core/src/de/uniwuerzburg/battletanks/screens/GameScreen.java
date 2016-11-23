@@ -82,7 +82,7 @@ public class GameScreen implements Screen {
 		batch = new SpriteBatch();
 
 		font = new BitmapFont();
-		font.setColor(Color.ORANGE);
+		font.setColor(Color.WHITE);
 
 		layout = new GlyphLayout();
 		layout.setText(font, "");
@@ -210,6 +210,12 @@ public class GameScreen implements Screen {
 		for(Player p:players){
 			p.renderGun(batch);
 		}
+
+		String timeLeft = "Time left: "+ (int) time;
+
+		layout.setText(font, timeLeft);
+		font.draw(batch, timeLeft, width/2 -layout.width/2, height-10);
+
 		// font.draw(batch, "Player 1: 7 hits 3 kills", 10, 20);
 		/*
 		 * font.draw(batch, "Player 3: 3 hits 3 kills", 10, 25);
