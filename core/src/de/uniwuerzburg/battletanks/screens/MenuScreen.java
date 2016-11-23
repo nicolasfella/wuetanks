@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
@@ -58,6 +59,8 @@ public class MenuScreen implements Screen {
 
 	private FileHandle tiledMapFileHandle;
 
+	private Preferences prefs;
+
 	/**
 	 * New MenuScreen for a BattleTanks game; sets atlas, skin, stage, mainTable
 	 * and creates the UI
@@ -66,11 +69,12 @@ public class MenuScreen implements Screen {
 	 */
 	public MenuScreen(final BattleTanks game) {
 		this.game = game;
+		prefs = BattleTanks.getPreferences();
 		tiledMapFileHandle = null;
 		this.atlas = BattleTanks.getTextureAtlas();
 
-		this.skin = new Skin(Gdx.files.internal("data/uiskin.json"));
-		this.stage = new Stage(new FitViewport(1024, 768));
+		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
+		this.stage = new Stage(new FitViewport(prefs.getInteger("window_width", 1024), prefs.getInteger("window_height", 768)));
 		Gdx.input.setInputProcessor(stage);
 
 		mainTable = new Table();
@@ -169,7 +173,7 @@ public class MenuScreen implements Screen {
 		Label enterTime = new Label("Enter time (sec): ", skin);
 		timeInput = new TextField(null, skin);
 		timeInput.setMaxLength(3);
-		timeInput.setText("40");
+		timeInput.setText(""+prefs.getInteger("default_time", 50));
 
 		hgroup.addActor(enterTime);
 		hgroup.addActor(timeInput);

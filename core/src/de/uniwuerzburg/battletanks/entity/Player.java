@@ -10,11 +10,11 @@ import de.uniwuerzburg.battletanks.screens.GameScreen;
 
 public class Player extends Entity {
 
-	private static final int WIDTH = 40, HEIGHT = 40;
+	//private static final int WIDTH = 40, HEIGHT = 40;
 
 	private int key_up, key_down, key_left, key_right, key_shoot;
 
-	private int movingSpeed = 150;
+	private int movingSpeed;
 
 	private int number;
 
@@ -34,13 +34,15 @@ public class Player extends Entity {
 		this.key_left = key_left;
 		this.key_shoot = key_shoot;
 
-		width = WIDTH;
-		height = HEIGHT;
+		width = BattleTanks.getPreferences().getInteger("player_width", 40);
+		height = BattleTanks.getPreferences().getInteger("player_height", 40);
+
+		movingSpeed = BattleTanks.getPreferences().getInteger("player_speed", 150);
 
 		direction = Direction.UP;
 
 		gunSprite = BattleTanks.getTextureAtlas().createSprite("barrel"+tank.getName());
-		gunSprite.setSize(10, 40);
+		gunSprite.setSize(BattleTanks.getPreferences().getInteger("gun_width", 10), BattleTanks.getPreferences().getInteger("gun_height", 40));
 		gunSprite.setOrigin(gunSprite.getWidth()/2, 0);
 	}
 

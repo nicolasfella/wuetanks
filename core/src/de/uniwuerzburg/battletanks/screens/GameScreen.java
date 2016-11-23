@@ -90,7 +90,7 @@ public class GameScreen implements Screen {
 		if (tiledMapFileHandle != null) {
 			tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
 		} else {
-			tiledMap = new TmxMapLoader().load("maps/TestMap.tmx");
+			tiledMap = new TmxMapLoader().load(BattleTanks.getPreferences().getString("default_map", "maps/TestMap.tmx"));
 		}
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		MapProperties tiledMapProps = tiledMap.getProperties();
@@ -158,7 +158,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.graphics.setTitle("Battletanks " + Gdx.graphics.getFramesPerSecond() + " fps");
+		Gdx.graphics.setTitle(BattleTanks.getPreferences().getString("title", "Battletanks"));
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -167,7 +167,7 @@ public class GameScreen implements Screen {
 		time -= delta;
 		if (time <= 0) {
 			game.setScreen(new EndScreen());
-			this.dispose();
+			//this.dispose();
 		}
 		
 		camera.update();
