@@ -1,8 +1,4 @@
 TODO
-
-TextureAtlas im Menü verwenden  
-Gute Texturen finden (auf Lizenzen achten)
-Schüsse implementieren  
+Kollisionserkennung bei Schüssen  
 Spielstände anzeigen  
 Spiel beenden  
-Settings aus Datei laden  
