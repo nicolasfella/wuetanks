@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
 import de.uniwuerzburg.battletanks.entity.Bullet;
+import de.uniwuerzburg.battletanks.entity.Direction;
 import de.uniwuerzburg.battletanks.entity.Entity;
 import de.uniwuerzburg.battletanks.entity.Obstacle;
 import de.uniwuerzburg.battletanks.entity.Player;
@@ -59,6 +60,8 @@ public class GameScreen implements Screen {
 	private List<Player> players;
 
 	private float time;
+
+	private int startOffset = 20;
 
 	public GameScreen(final BattleTanks game, int time) {
 		instance = this;
@@ -120,20 +123,24 @@ public class GameScreen implements Screen {
 			float y = 0;
 			switch (p.getNumber()) {
 			case 1:
-				x = 0;
-				y = height;
+				x = startOffset;
+				y = height-startOffset-p.getHeight();
+				p.setDirection(Direction.DOWNRIGHT);
 				break;
 			case 2:
-				x = width;
-				y = height;
+				x = width-p.getWidth()-startOffset;
+				y = height-p.getHeight()-startOffset;
+				p.setDirection(Direction.DOWNLEFT);
 				break;
 			case 3:
-				x = 0;
-				y = 0;
+				x = startOffset;
+				y = startOffset;
+				p.setDirection(Direction.UPRIGHT);
 				break;
 			case 4:
-				x = width;
-				y = 0;
+				x = width-p.getWidth()-startOffset;
+				y = startOffset;
+				p.setDirection(Direction.UPLEFT);
 			}
 			p.setPosition(x, y);
 		}
