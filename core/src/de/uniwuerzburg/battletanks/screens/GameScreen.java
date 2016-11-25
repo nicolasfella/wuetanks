@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
@@ -63,6 +64,8 @@ public class GameScreen implements Screen {
 
 	private int startOffset = 20;
 
+	private ShapeRenderer shapeRenderer;
+
 	public GameScreen(final BattleTanks game, int time) {
 		instance = this;
 		this.game = game;
@@ -112,6 +115,8 @@ public class GameScreen implements Screen {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, width, height);
 		viewPort = new FitViewport(width, height, camera);
+        shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setProjectionMatrix(camera.combined);
 
 		entities = new ArrayList<Entity>();
 
@@ -202,6 +207,7 @@ public class GameScreen implements Screen {
 
 			// auflösung der kollisionen zwischen playern und obstacles
 			if (p instanceof Player) {
+                //((Player) p).setCurrentHitpoints(((Player) p).getTank().getMaxHitpoints()*(float)Math.abs(Math.sin(time)));
 				for (Entity e : entities) {
 					if (e instanceof Obstacle && p != e) {
 						detectCollisionAndResponse(p, e);
@@ -240,8 +246,16 @@ public class GameScreen implements Screen {
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
 
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            for (Player p: players){
+                p.renderLifeBar(shapeRenderer);
+            }
+        shapeRenderer.end();
+
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
+
 
 		for (Entity entity : entities) {
 			entity.render(batch);
@@ -251,22 +265,15 @@ public class GameScreen implements Screen {
 			p.renderGun(batch);
 		}
 
-		String timeLeft = "Time left: " + (int) time;
+
+
+		String timeLeft = "Time left: " + formatTime(time);
 
 		layout.setText(font, timeLeft);
 		font.draw(batch, timeLeft, width / 2 - layout.width / 2, height - 10);
 
-		// font.draw(batch, "Player 1: 7 hits 3 kills", 10, 20);
-		/*
-		 * font.draw(batch, "Player 3: 3 hits 3 kills", 10, 25);
-		 * font.draw(batch, "Player 1: 5 hits 8 kills", 10, height - 10);
-		 * layout.setText(font, "Player 2: 5 hits 8 kills"); font.draw(batch,
-		 * "Player 2: 5 hits 8 kills", width - layout.width - 10, height - 10);
-		 * layout.setText(font, "Player 4: 10 hits 6 kills"); font.draw(batch,
-		 * "Player 4: 10 hits 6 kills", width - layout.width - 10, 25);
-		 */
-
 		batch.end();
+
 
 	}
 
@@ -425,6 +432,18 @@ public class GameScreen implements Screen {
 		return translations;
 	}
 
+    public String formatTime(float time){
+
+        int minutes = (int) time/60;
+        int seconds = (int) time % 60;
+
+        if(seconds<10){
+            return minutes+":0"+seconds;
+        }
+
+        return minutes+":"+seconds;
+    }
+
 	@Override
 	public void resize(int width, int height) {
 		viewPort.update(width, height);
@@ -453,6 +472,7 @@ public class GameScreen implements Screen {
 		if (tiledMapFileHandle != null) {
 			tiledMapFileHandle.delete();
 		}
+        shapeRenderer.dispose();
 
 	}
 

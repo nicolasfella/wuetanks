@@ -4,9 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
@@ -33,6 +35,8 @@ public class Player extends Entity {
 	private Tanks tank;
 	
 	private List<Entity> entities;
+
+	private float currentHitpoints;
 
 	
 	public Player(Tanks tank, List<Entity> entities, int key_up, int key_down, int key_left, int key_right, int key_shoot) {
@@ -64,6 +68,8 @@ public class Player extends Entity {
 		gunSprite = BattleTanks.getTextureAtlas().createSprite("barrel"+tank.getName());
 		gunSprite.setSize(BattleTanks.getPreferences().getInteger("gun_width", 10), BattleTanks.getPreferences().getInteger("gun_height", 40));
 		gunSprite.setOrigin(gunSprite.getWidth()/2, 0);
+
+		currentHitpoints = tank.getMaxHitpoints();
 	}
 
 	@Override
@@ -243,5 +249,22 @@ public class Player extends Entity {
         this.direction = direction;
     }
 
+	public void renderLifeBar(ShapeRenderer r){
 
+		float percentage = currentHitpoints/tank.getMaxHitpoints();
+
+		r.setColor(Color.RED);
+		r.rect(getX(), getY()-10, getWidth(), 5);
+		r.setColor(Color.GREEN);
+		r.rect(getX(), getY()-10,getWidth()*percentage, 5);
+
+	}
+
+	public float getCurrentHitpoints() {
+		return currentHitpoints;
+	}
+
+	public void setCurrentHitpoints(float currentHitpoints) {
+		this.currentHitpoints = currentHitpoints;
+	}
 }

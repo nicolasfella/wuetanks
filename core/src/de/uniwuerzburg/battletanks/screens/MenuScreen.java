@@ -312,7 +312,7 @@ public class MenuScreen implements Screen {
 
 		Image tankImage = new Image(atlas.createSprite("tank" + tank.getName()));
 
-		Label hp = new Label("HP: " + tank.getHealth(), skin);
+		Label hp = new Label("HP: " + tank.getMaxHitpoints(), skin);
 		Label damage = new Label("DMG: " + tank.getDamage(), skin);
 		Label armor = new Label("Armor: " + tank.getArmor(), skin);
 

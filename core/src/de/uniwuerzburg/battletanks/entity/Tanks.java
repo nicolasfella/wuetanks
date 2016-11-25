@@ -16,7 +16,7 @@ public enum Tanks {
 	/** high hp/armor, low damage */
 	RED("Red", 300f, 10f, 0.75f, 0.35f);
 
-	private float health;
+	private float maxHitpoints;
 	private float damage;
 	private String name;
 	
@@ -26,9 +26,9 @@ public enum Tanks {
 	/** Reducing incoming dmg before hp subtraction */
 	private float armor;
 
-	private Tanks(String name, float health, float damage, float armor, float reloadTime) {
+	private Tanks(String name, float maxHitpoints, float damage, float armor, float reloadTime) {
 		this.name = name;
-		this.health = health;
+		this.maxHitpoints = maxHitpoints;
 		this.damage = damage;
 		this.armor = armor;
 		this.reloadTime = reloadTime;
@@ -38,8 +38,8 @@ public enum Tanks {
 
 	}
 
-	public void setHealth(float health) {
-		this.health = health;
+	public void setMaxHitpoints(float maxHitpoints) {
+		this.maxHitpoints = maxHitpoints;
 	}
 
 	public void setDamage(float damage) {
@@ -54,8 +54,8 @@ public enum Tanks {
 		return name;
 	}
 
-	public float getHealth() {
-		return health;
+	public float getMaxHitpoints() {
+		return maxHitpoints;
 	}
 
 	public float getDamage() {
