@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
@@ -45,6 +46,7 @@ public class GameScreen implements Screen {
 
 	private SpriteBatch batch;
 	private BitmapFont font;
+	private int fontSize = BattleTanks.getPreferences().getInteger("game_font_size", 14);
 
 	private OrthographicCamera camera;
 	private Viewport viewPort;
@@ -64,6 +66,8 @@ public class GameScreen implements Screen {
 	private int spawnOffset = BattleTanks.getPreferences().getInteger("spawn_offset", 20);
 
 	private ShapeRenderer shapeRenderer;
+    private FreeTypeFontGenerator generator;
+
 
 	public GameScreen(final BattleTanks game, int time) {
 		instance = this;
@@ -87,12 +91,6 @@ public class GameScreen implements Screen {
 	@Override
 	public void show() {
 		batch = new SpriteBatch();
-
-		font = new BitmapFont();
-		font.setColor(Color.WHITE);
-
-		layout = new GlyphLayout();
-		layout.setText(font, "");
 
 		if (tiledMapFileHandle != null) {
 			tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
@@ -169,7 +167,17 @@ public class GameScreen implements Screen {
 			}
 		}
 
-	}
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Vera.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = fontSize;
+        parameter.color = Color.WHITE;
+        font = generator.generateFont(parameter);
+
+        layout = new GlyphLayout();
+        layout.setText(font, "");
+
+
+    }
 
 	@Override
 	public void render(float delta) {
@@ -275,6 +283,39 @@ public class GameScreen implements Screen {
 		layout.setText(font, timeLeft);
 		font.draw(batch, timeLeft, width / 2 - layout.width / 2, height - 10);
 
+		String text = "";
+		int offset = 10;
+
+		for(Player p: players){
+
+
+
+			switch (p.getNumber()){
+				case 1:
+					text = "Player 1: "+p.getKills()+" kills";
+					layout.setText(font, text);
+					font.draw(batch, text, offset, height - offset);
+					break;
+				case 2:
+					text = "Player 2: "+p.getKills()+" kills";
+					layout.setText(font, text);
+					font.draw(batch, text, width - layout.width - offset, height - offset);
+					break;
+				case 3:
+					text = "Player 3: "+p.getKills()+" kills";
+					layout.setText(font, text);
+					font.draw(batch, text, offset, layout.height + offset);
+					break;
+				case 4:
+					text = "Player 4: "+p.getKills()+" kills";
+					layout.setText(font, text);
+					font.draw(batch, text, width - layout.width - offset, layout.height + offset);
+					break;
+
+			}
+
+		}
+
 		batch.end();
 
 	}
@@ -300,7 +341,7 @@ public class GameScreen implements Screen {
 		// richtung
 		if ((bRY >= pLY && bLY < pRY) && (bRX >= pLX && bLX < pRX) && b.getPlayer() != p && b != p) {
 			if (p instanceof Player) {
-				((Player) p).hitPlayer(b.getDamage());
+				((Player) p).hitPlayer(b);
 			}
 
 			return true;
@@ -505,6 +546,7 @@ public class GameScreen implements Screen {
 			tiledMapFileHandle.delete();
 		}
 		shapeRenderer.dispose();
+        generator.dispose();
 
 	}
 

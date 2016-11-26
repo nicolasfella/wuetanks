@@ -40,6 +40,8 @@ public class Player extends Entity {
 
 	private float currentHitpoints;
 
+    private int kills;
+
 	public Player(Tanks tank, List<Entity> entities, int key_up, int key_down, int key_left, int key_right,
 			int key_shoot) {
 		this(tank, key_up, key_down, key_left, key_right, key_shoot);
@@ -315,13 +317,21 @@ public class Player extends Entity {
 		return currentHitpoints;
 	}
 
-	public void hitPlayer(float dmg) {
-		float realDamage = tank.calculateDamage(dmg);
+	public void hitPlayer(Bullet bullet) {
+		float realDamage = tank.calculateDamage(bullet.getDamage());
 		currentHitpoints -= realDamage;
 		if (currentHitpoints < 0) {
 			currentHitpoints = 0.f;
+            bullet.getPlayer().setKills(bullet.getPlayer().getKills()+1);
 		}
 
 	}
 
+    public int getKills() {
+        return kills;
+    }
+
+    public void setKills(int kills) {
+        this.kills = kills;
+    }
 }
