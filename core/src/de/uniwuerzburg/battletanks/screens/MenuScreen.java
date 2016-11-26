@@ -242,10 +242,10 @@ public class MenuScreen implements Screen {
 
 		Tanks[] tanks = Tanks.values();
 		
-		/*
+		
 		for(Tanks t: tanks){
-			System.out.println(t.getName() + ": " + t.getStrength());
-		}*/
+			System.out.println(t.getName() + ": " + t.getStrength() + "( " + t.getDPS() + " * " + t.getLife() + " )");
+		}
 		
 		List<Tanks> tankList = new ArrayList<Tanks>(Arrays.asList(tanks));
 

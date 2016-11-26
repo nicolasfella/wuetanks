@@ -4,20 +4,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 
 public enum Tanks {
-	/** low hp/armor, high damage */
-	BEIGE("Beige", 100f, 70f, 0.25f, 0.8f),
+	
+	BEIGE("Beige", 100f, 72f, 0.25f, 0.85f),
 
-	/** medium hp/armor/damage */
-	BLACK("Black", 150f, 21f, 0.25f, 0.38f),
+	
+	BLACK("Black", 155f, 20f, 0.2f, 0.38f),
 
-	/** medium hp/armor/damage */
-	BLUE("Blue", 200f, 18f, 0.5f, 0.5f),
+	
+	BLUE("Blue", 179f, 20f, 0.4f, 0.5f),
 
-	/** medium hp/armor/damage */
-	GREEN("Green", 250f, 14f, 0.75f, 0.6f),
+	
+	GREEN("Green", 100f, 30f, 0.66f, 0.5f),
 
-	/** high hp/armor, low damage */
-	RED("Red", 300f, 5f, 0.75f, 0.25f);
+	
+	RED("Red", 150f, 10f, 0.66f, 0.25f);
 
 	private float maxHitpoints;
 	private float damage;
@@ -47,11 +47,11 @@ public enum Tanks {
 		// einstufen, da eine höhere präzision benötigt wird
 
 		// schaden pro sekunde
-		float dps = damage / reloadTime;
+		float dps = getDPS();
 
 		// mehr armor wirkt sich genauso aus wie eine prozentuale erhöhung der
 		// hp
-		float life = maxHitpoints * (1f + armor);
+		float life = getLife();
 
 		// das verhältnis zwischen schaden und leben sollte indirekt
 		// proportional sein
@@ -60,6 +60,16 @@ public enum Tanks {
 		return dps * life;
 
 	}
+	
+	public float getDPS(){
+		return damage/reloadTime;
+	}
+	
+	public float getLife(){
+		return maxHitpoints * (1f + armor);
+	}
+	
+	
 
 	public float calculateDamage(float dmg) {
 		return (1.f - armor) * dmg;

@@ -105,7 +105,7 @@ public class Player extends Entity {
 			}
 
 			shootTimer += Gdx.graphics.getDeltaTime();
-			if (Gdx.input.isKeyPressed(key_shoot) && shootTimer > tank.getReloadTime()) {
+			if (Gdx.input.isKeyPressed(key_shoot) && shootTimer >= tank.getReloadTime()) {
 				createBullet();
 				shootTimer = 0.f;
 			}
