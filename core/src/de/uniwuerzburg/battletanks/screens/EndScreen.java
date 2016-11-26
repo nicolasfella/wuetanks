@@ -36,7 +36,7 @@ public class EndScreen implements Screen {
 
 		for (Player p : players) {
 			Label playerLabel = new Label(
-					"Player " + p.getNumber() + " Deaths :" + p.getDeathCount() + " Kills :" + p.getKills(), skin);
+					"Player " + p.getNumber() + " Deaths: " + p.getDeathCount() + " Kills: " + p.getKills(), skin);
 			mainTable.row();
 			mainTable.add(playerLabel).pad(5);
 		}
