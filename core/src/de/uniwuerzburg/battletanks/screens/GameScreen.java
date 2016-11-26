@@ -29,6 +29,7 @@ import de.uniwuerzburg.battletanks.entity.Direction;
 import de.uniwuerzburg.battletanks.entity.Entity;
 import de.uniwuerzburg.battletanks.entity.Obstacle;
 import de.uniwuerzburg.battletanks.entity.Player;
+import de.uniwuerzburg.battletanks.entity.Tanks;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -115,8 +116,8 @@ public class GameScreen implements Screen {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, width, height);
 		viewPort = new FitViewport(width, height, camera);
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setProjectionMatrix(camera.combined);
+		shapeRenderer = new ShapeRenderer();
+		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		entities = new ArrayList<Entity>();
 
@@ -129,12 +130,12 @@ public class GameScreen implements Screen {
 			switch (p.getNumber()) {
 			case 1:
 				x = startOffset;
-				y = height-startOffset-p.getHeight();
+				y = height - startOffset - p.getHeight();
 				p.setDirection(Direction.DOWNRIGHT);
 				break;
 			case 2:
-				x = width-p.getWidth()-startOffset;
-				y = height-p.getHeight()-startOffset;
+				x = width - p.getWidth() - startOffset;
+				y = height - p.getHeight() - startOffset;
 				p.setDirection(Direction.DOWNLEFT);
 				break;
 			case 3:
@@ -143,7 +144,7 @@ public class GameScreen implements Screen {
 				p.setDirection(Direction.UPRIGHT);
 				break;
 			case 4:
-				x = width-p.getWidth()-startOffset;
+				x = width - p.getWidth() - startOffset;
 				y = startOffset;
 				p.setDirection(Direction.UPLEFT);
 			}
@@ -201,36 +202,43 @@ public class GameScreen implements Screen {
 			entity.update();
 		}
 
-		List<Integer> deleteIndices = new LinkedList<Integer>();
-		
 		for (Entity p : entities) {
 
 			// auflösung der kollisionen zwischen playern und obstacles
 			if (p instanceof Player) {
-                //((Player) p).setCurrentHitpoints(((Player) p).getTank().getMaxHitpoints()*(float)Math.abs(Math.sin(time)));
+				// ((Player) p).setCurrentHitpoints(((Player)
+				// p).getTank().getMaxHitpoints()*(float)Math.abs(Math.sin(time)));
 				for (Entity e : entities) {
 					if (e instanceof Obstacle && p != e) {
 						detectCollisionAndResponse(p, e);
 					}
 				}
 			}
+		}
 
-			// speichern der indizes der bullets die nicht mehr auf dem
-			// spielfeld sind
-			if (p instanceof Bullet) {
-				Bullet b = (Bullet) p;
+		List<Entity> bulletsToDelete = new LinkedList<Entity>();
+
+		for (Entity b : entities) {
+			if (b instanceof Bullet) {
+
+				// bullets die das spielfeld verlassen werden gelöscht
 				if (isOutOfGame(b)) {
-					deleteIndices.add(entities.indexOf(b));
+					bulletsToDelete.add(b);
+				} else {
+					// bullets die auf eine entity treffen werden gelöscht
+					for (Entity e : entities) {
+						if (detectBulletHitAndDamage((Bullet) b, e)) {
+							bulletsToDelete.add(b);
+						}
+					}
 				}
 			}
 		}
-		
-		
-		// lösche markierte entities
-		for(int i : deleteIndices){
-			entities.remove(i);
+
+		// lösche bullets
+		for (Entity b : bulletsToDelete) {
+			entities.remove(b);
 		}
-		
 
 		// auflösung der kollisionen zwischen playern und playern
 		for (Entity p : entities) {
@@ -246,16 +254,15 @@ public class GameScreen implements Screen {
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
 
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            for (Player p: players){
-                p.renderLifeBar(shapeRenderer);
-            }
-        shapeRenderer.end();
+		shapeRenderer.setProjectionMatrix(camera.combined);
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+		for (Player p : players) {
+			p.renderLifeBar(shapeRenderer);
+		}
+		shapeRenderer.end();
 
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-
 
 		for (Entity entity : entities) {
 			entity.render(batch);
@@ -265,8 +272,6 @@ public class GameScreen implements Screen {
 			p.renderGun(batch);
 		}
 
-
-
 		String timeLeft = "Time left: " + formatTime(time);
 
 		layout.setText(font, timeLeft);
@@ -274,7 +279,36 @@ public class GameScreen implements Screen {
 
 		batch.end();
 
+	}
 
+	private boolean detectBulletHitAndDamage(Bullet b, Entity p) {
+		// variablen für bullet
+
+		float bRX = b.getX() + b.getWidth();
+		float bLX = b.getX();
+
+		float bRY = b.getY() + b.getHeight();
+		float bLY = b.getY();
+
+		// variablen für player
+
+		float pRX = p.getX() + p.getWidth();
+		float pLX = p.getX();
+
+		float pRY = p.getY() + p.getHeight();
+		float pLY = p.getY();
+
+		// kollision nur bei überschneidung in vertikaler sowie horizontaler
+		// richtung
+		if ((bRY >= pLY && bLY < pRY) && (bRX >= pLX && bLX < pRX) && b.getPlayer() != p) {
+			if (p instanceof Player) {
+				((Player) p).hitPlayer(b.getDamage());
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	private boolean isOutOfGame(Entity e) {
@@ -432,17 +466,17 @@ public class GameScreen implements Screen {
 		return translations;
 	}
 
-    public String formatTime(float time){
+	public String formatTime(float time) {
 
-        int minutes = (int) time/60;
-        int seconds = (int) time % 60;
+		int minutes = (int) time / 60;
+		int seconds = (int) time % 60;
 
-        if(seconds<10){
-            return minutes+":0"+seconds;
-        }
+		if (seconds < 10) {
+			return minutes + ":0" + seconds;
+		}
 
-        return minutes+":"+seconds;
-    }
+		return minutes + ":" + seconds;
+	}
 
 	@Override
 	public void resize(int width, int height) {
@@ -472,7 +506,7 @@ public class GameScreen implements Screen {
 		if (tiledMapFileHandle != null) {
 			tiledMapFileHandle.delete();
 		}
-        shapeRenderer.dispose();
+		shapeRenderer.dispose();
 
 	}
 

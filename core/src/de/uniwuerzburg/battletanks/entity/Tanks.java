@@ -19,6 +19,7 @@ public enum Tanks {
 	private float maxHitpoints;
 	private float damage;
 	private String name;
+	//private float currentHitpoints;
 	
 	/** reloadTime is in seconds */
 	private float reloadTime;
@@ -29,13 +30,24 @@ public enum Tanks {
 	private Tanks(String name, float maxHitpoints, float damage, float armor, float reloadTime) {
 		this.name = name;
 		this.maxHitpoints = maxHitpoints;
+		//currentHitpoints = maxHitpoints;
 		this.damage = damage;
 		this.armor = armor;
 		this.reloadTime = reloadTime;
+		
 	}
 
-	public void calculateDamage() {
-
+	/*
+	public void calculateDamage(float dmg) {
+		currentHitpoints -= armor*dmg;
+		if(currentHitpoints < 0.f){
+			currentHitpoints = 0.f;
+		}
+	}*/
+	
+	
+	public float calculateDamage(float dmg){
+		return armor*dmg;
 	}
 
 	public void setMaxHitpoints(float maxHitpoints) {
@@ -57,6 +69,10 @@ public enum Tanks {
 	public float getMaxHitpoints() {
 		return maxHitpoints;
 	}
+	
+	/*public float getCurrentHitpoints(){
+		return currentHitpoints;
+	}*/
 
 	public float getDamage() {
 		return damage;
