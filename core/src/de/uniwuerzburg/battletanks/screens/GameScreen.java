@@ -89,7 +89,7 @@ public class GameScreen implements Screen {
 		this.players = new ArrayList<>(players);
 		this.tiledMapFileHandle = tiledMapFileHandle;
 
-		// music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
+		 music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
 		// music.play();
 		// music.setLooping(true);
 
@@ -538,6 +538,11 @@ public class GameScreen implements Screen {
 		}
 		shapeRenderer.dispose();
 		generator.dispose();
+        music.dispose();
+
+        for(Entity e : entities){
+            e.dispose();
+        }
 
 	}
 

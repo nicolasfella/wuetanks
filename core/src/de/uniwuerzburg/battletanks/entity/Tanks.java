@@ -37,7 +37,7 @@ public enum Tanks {
 		this.damage = damage;
 		this.armor = armor;
 		this.reloadTime = reloadTime;
-		// shotSound = Gdx.audio.newSound(Gdx.files.internal("shot.wav"));
+		shotSound = Gdx.audio.newSound(Gdx.files.internal("shot.wav"));
 	}
 
 	/** funktion zur berechnung der stärke eines tanks */

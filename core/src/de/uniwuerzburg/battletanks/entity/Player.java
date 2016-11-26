@@ -224,7 +224,7 @@ public class Player extends Entity {
 		Bullet bullet = new Bullet(this, pos);
 		entities.add(entities.size(), bullet);
 
-		// tank.getShotSound().play();
+		 tank.getShotSound().play();
 	}
 
 	public void setEntities(List<Entity> entities) {
@@ -344,4 +344,9 @@ public class Player extends Entity {
 	public int getDeathCount() {
 		return deathCount;
 	}
+
+    @Override
+    public void dispose() {
+        tank.getShotSound().dispose();
+    }
 }

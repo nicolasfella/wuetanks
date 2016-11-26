@@ -4,13 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
 
 /**
  * Represents an object in the game world.
  */
-public class Entity {
+public class Entity implements Disposable{
 
     /**
      * The position of the entity
@@ -147,5 +148,9 @@ public class Entity {
 
     public void setSprite(String spriteName){
         sprite = BattleTanks.getTextureAtlas().createSprite(spriteName);
+    }
+
+    @Override
+    public void dispose() {
     }
 }
