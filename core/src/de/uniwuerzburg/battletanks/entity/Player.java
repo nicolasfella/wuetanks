@@ -326,7 +326,7 @@ public class Player extends Entity {
 		float realDamage = tank.calculateDamage(bullet.getDamage());
 
 		currentHitpoints -= realDamage;
-		if (currentHitpoints < 0) {
+		if (currentHitpoints <= 0) {
 			currentHitpoints = 0.f;
 			bullet.getPlayer().setKills(bullet.getPlayer().getKills() + 1);
 		}

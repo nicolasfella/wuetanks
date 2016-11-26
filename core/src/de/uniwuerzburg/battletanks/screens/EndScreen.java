@@ -35,9 +35,10 @@ public class EndScreen implements Screen {
 		mainTable.add(test);
 
 		for (Player p : players) {
-			Label playerLabel = new Label("Player " + p.getNumber() + " Deaths :" + p.getDeathCount(), skin);
+			Label playerLabel = new Label(
+					"Player " + p.getNumber() + " Deaths :" + p.getDeathCount() + " Kills :" + p.getKills(), skin);
 			mainTable.row();
-			mainTable.add(playerLabel);
+			mainTable.add(playerLabel).pad(5);
 		}
 
 		stage.addActor(mainTable);

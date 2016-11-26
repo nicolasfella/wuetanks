@@ -283,25 +283,22 @@ public class GameScreen implements Screen {
 		int offset = 10;
 
 		for (Player p : players) {
+			text = "Player "+p.getNumber()+" : " + p.getKills() + " kills" + "\n"+p.getDeathCount()+" deaths";
 
 			switch (p.getNumber()) {
 			case 1:
-				text = "Player 1: " + p.getKills() + " kills";
 				layout.setText(font, text);
 				font.draw(batch, text, offset, height - offset);
 				break;
 			case 2:
-				text = "Player 2: " + p.getKills() + " kills";
 				layout.setText(font, text);
 				font.draw(batch, text, width - layout.width - offset, height - offset);
 				break;
 			case 3:
-				text = "Player 3: " + p.getKills() + " kills";
 				layout.setText(font, text);
 				font.draw(batch, text, offset, layout.height + offset);
 				break;
 			case 4:
-				text = "Player 4: " + p.getKills() + " kills";
 				layout.setText(font, text);
 				font.draw(batch, text, width - layout.width - offset, layout.height + offset);
 				break;
