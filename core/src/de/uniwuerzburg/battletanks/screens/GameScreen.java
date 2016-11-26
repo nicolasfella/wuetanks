@@ -189,7 +189,7 @@ public class GameScreen implements Screen {
 		// time -= deltaTime;
 		time -= delta;
 		if (time <= 0) {
-			game.setScreen(new EndScreen());
+			game.setScreen(new EndScreen(players));
 			// this.dispose();
 		}
 

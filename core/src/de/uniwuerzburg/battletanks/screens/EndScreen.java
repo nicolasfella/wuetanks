@@ -1,5 +1,6 @@
 package de.uniwuerzburg.battletanks.screens;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
@@ -21,7 +22,9 @@ public class EndScreen implements Screen {
 	private Skin skin;
 	private Table mainTable;
 
-	public EndScreen() {
+	public EndScreen(List<Player> players) {
+		this.players = new ArrayList<>(players);
+
 		this.skin = new Skin(Gdx.files.internal("data/uiskin.json"));
 		this.stage = new Stage(new FitViewport(1024, 768));
 		Gdx.input.setInputProcessor(stage);
@@ -29,8 +32,14 @@ public class EndScreen implements Screen {
 		Label test = new Label("ENDE DES SPIELS!", skin);
 		this.mainTable = new Table();
 		mainTable.setFillParent(true);
-
 		mainTable.add(test);
+
+		for (Player p : players) {
+			Label playerLabel = new Label("Player " + p.getNumber() + " Deaths :" + p.getDeathCount(), skin);
+			mainTable.row();
+			mainTable.add(playerLabel);
+		}
+
 		stage.addActor(mainTable);
 	}
 

@@ -41,6 +41,7 @@ public class Player extends Entity {
 	private float currentHitpoints;
 
     private int kills;
+	private int deathCount;
 
 	public Player(Tanks tank, List<Entity> entities, int key_up, int key_down, int key_left, int key_right,
 			int key_shoot) {
@@ -77,6 +78,7 @@ public class Player extends Entity {
 	public void update() {
 
 		if (currentHitpoints == 0.f) {
+			deathCount++;
 			initForSpawn();
 			position = getSpawnPoint().cpy();
 			oldPosition = position.cpy();
@@ -173,7 +175,7 @@ public class Player extends Entity {
 
 		Vector2[] spawnPoints = new Vector2[4];
 		spawnPoints[0] = new Vector2(spawnOffset, spawnOffset);
-		spawnPoints[1] = new Vector2(spawnOffset, gameHeight - height-spawnOffset);
+		spawnPoints[1] = new Vector2(spawnOffset, gameHeight - height - spawnOffset);
 		spawnPoints[2] = new Vector2(gameWidth - width - spawnOffset, spawnOffset);
 		spawnPoints[3] = new Vector2(gameWidth - width - spawnOffset, gameHeight - height - spawnOffset);
 
@@ -319,6 +321,7 @@ public class Player extends Entity {
 
 	public void hitPlayer(Bullet bullet) {
 		float realDamage = tank.calculateDamage(bullet.getDamage());
+
 		currentHitpoints -= realDamage;
 		if (currentHitpoints < 0) {
 			currentHitpoints = 0.f;
@@ -333,5 +336,9 @@ public class Player extends Entity {
 
     public void setKills(int kills) {
         this.kills = kills;
+    }
+
+    public int getDeathCount() {
+        return deathCount;
     }
 }
