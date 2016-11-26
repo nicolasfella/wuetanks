@@ -106,8 +106,8 @@ public class MenuScreen implements Screen {
 	 */
 	private void startGame() {
 		if (time != 0 && !players.isEmpty()) {
-            GameScreen g = new GameScreen(game, time, tiledMapFileHandle, players);
-            BattleTanks.addScreen(g);
+			GameScreen g = new GameScreen(game, time, tiledMapFileHandle, players);
+			BattleTanks.addScreen(g);
 			game.setScreen(g);
 		} else {
 			final Button close = new TextButton("close", skin);
@@ -131,13 +131,17 @@ public class MenuScreen implements Screen {
 		HorizontalGroup mapLoader = createMapLoader();
 		HorizontalGroup timeTextField = createTimeTextField();
 
+		Tanks[] tanks = Tanks.values();
+		List<Tanks> tankList = new ArrayList<Tanks>(Arrays.asList(tanks));
+
 		mainTable.add(mapLoader, timeTextField);
 		mainTable.row().padTop(10);
-		mainTable.add(createTankChooser(1, Keys.W, Keys.S, Keys.A, Keys.D, Keys.E)).expand();
-		mainTable.add(createTankChooser(2, Keys.UP, Keys.DOWN, Keys.LEFT, Keys.RIGHT, Keys.CONTROL_RIGHT)).expand();
+		mainTable.add(createTankChooser(1, Keys.W, Keys.S, Keys.A, Keys.D, Keys.E, tankList)).expand();
+		mainTable.add(createTankChooser(2, Keys.UP, Keys.DOWN, Keys.LEFT, Keys.RIGHT, Keys.CONTROL_RIGHT, tankList))
+				.expand();
 		mainTable.row();
-		mainTable.add(createTankChooser(3, Keys.T, Keys.G, Keys.F, Keys.H, Keys.Z)).expand();
-		mainTable.add(createTankChooser(4, Keys.I, Keys.K, Keys.J, Keys.L, Keys.O)).expand();
+		mainTable.add(createTankChooser(3, Keys.T, Keys.G, Keys.F, Keys.H, Keys.Z, tankList)).expand();
+		mainTable.add(createTankChooser(4, Keys.I, Keys.K, Keys.J, Keys.L, Keys.O, tankList)).expand();
 		mainTable.row();
 		mainTable.add(start).colspan(2).padBottom(20).width(100);
 
@@ -234,27 +238,23 @@ public class MenuScreen implements Screen {
 	 * @return Table
 	 */
 	private Table createTankChooser(int playerNumber, int key_up, int key_down, int key_left, int key_right,
-			int key_shoot) {
+			int key_shoot, List<Tanks> tankList) {
 		Table tankChooser = new Table();
 
 		HorizontalGroup tankCycle = new HorizontalGroup();
 		Button next = new TextButton(" >> ", skin);
 		Button previous = new TextButton(" << ", skin);
 
-		Tanks[] tanks = Tanks.values();
-		
-		
-		for(Tanks t: tanks){
-			System.out.println(t.getName() + ": " + t.getStrength() + "( " + t.getDPS() + " * " + t.getLife() + " )");
-		}
-		
-		List<Tanks> tankList = new ArrayList<Tanks>(Arrays.asList(tanks));
+		// for(Tanks t: tanks){
+		// System.out.println(t.getName() + ": " + t.getStrength() + "( " +
+		// t.getDPS() + " * " + t.getLife() + " )");
+		// }
 
 		VerticalGroup[] tankInfo = new VerticalGroup[5];
 		for (int i = 0; i < tankInfo.length; i++) {
 			tankInfo[i] = createTankInfo(tankList.get(i));
 		}
-		
+
 		next.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {

@@ -193,7 +193,7 @@ public class GameScreen implements Screen {
 
 		time -= delta;
 		if (time <= 0) {
-            EndScreen e = new EndScreen(players);
+            EndScreen e = new EndScreen(game, players);
             BattleTanks.addScreen(e);
 			game.setScreen(e);
 		}
