@@ -241,6 +241,12 @@ public class MenuScreen implements Screen {
 		Button previous = new TextButton(" << ", skin);
 
 		Tanks[] tanks = Tanks.values();
+		
+		/*
+		for(Tanks t: tanks){
+			System.out.println(t.getName() + ": " + t.getStrength());
+		}*/
+		
 		List<Tanks> tankList = new ArrayList<Tanks>(Arrays.asList(tanks));
 
 		VerticalGroup[] tankInfo = new VerticalGroup[5];
@@ -315,11 +321,13 @@ public class MenuScreen implements Screen {
 		Label hp = new Label("HP: " + tank.getMaxHitpoints(), skin);
 		Label damage = new Label("DMG: " + tank.getDamage(), skin);
 		Label armor = new Label("Armor: " + tank.getArmor(), skin);
+		Label reloadTime = new Label("Reload: " + tank.getReloadTime() + " sec", skin);
 
 		tankInfo.addActor(damage);
 		tankInfo.addActor(tankImage);
 		tankInfo.addActor(hp);
 		tankInfo.addActor(armor);
+		tankInfo.addActor(reloadTime);
 
 		tankInfo.padLeft(5).padRight(5);
 		tankInfo.space(5);

@@ -212,16 +212,11 @@ public class GameScreen implements Screen {
 			entity.update();
 		}
 
-		for (Entity p : entities) {
-
-			// auflösung der kollisionen zwischen playern und obstacles
-			if (p instanceof Player) {
-				// ((Player) p).setCurrentHitpoints(((Player)
-				// p).getTank().getMaxHitpoints()*(float)Math.abs(Math.sin(time)));
-				for (Entity e : entities) {
-					if (e instanceof Obstacle && p != e) {
-						detectCollisionAndResponse(p, e);
-					}
+		// auflösung der kollisionen zwischen playern und obstacles
+		for (Player p : players) {
+			for (Entity e : entities) {
+				if (e instanceof Obstacle && p != e) {
+					detectCollisionAndResponse(p, e);
 				}
 			}
 		}
@@ -230,7 +225,6 @@ public class GameScreen implements Screen {
 
 		for (Entity b : entities) {
 			if (b instanceof Bullet) {
-
 				// bullets die das spielfeld verlassen werden gelöscht
 				if (isOutOfGame(b)) {
 					bulletsToDelete.add(b);
@@ -251,12 +245,10 @@ public class GameScreen implements Screen {
 		}
 
 		// auflösung der kollisionen zwischen playern und playern
-		for (Entity p : entities) {
-			if (p instanceof Player) {
-				for (Entity e : entities) {
-					if (e instanceof Player && p != e) {
-						detectCollisionAndResponse(p, e);
-					}
+		for (Player p : players) {
+			for (Player e : players) {
+				if (p != e) {
+					detectCollisionAndResponse(p, e);
 				}
 			}
 		}

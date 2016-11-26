@@ -10,9 +10,9 @@ public class Bullet extends Entity {
 	private float dmg;
 	private Player player;
 
-	public Bullet(Player player, Vector2 position, Direction direction) {
+	public Bullet(Player player, Vector2 position) {
 		super("bullet" + player.getTank().getName());
-		
+
 		this.player = player;
 		dmg = player.getTank().getDamage();
 
@@ -22,30 +22,28 @@ public class Bullet extends Entity {
 
 		this.position = position.cpy();
 		this.position.x -= width / 2.f;
-		// this.position.y -= height/2.f;
 
-		speed.x = (float) -Math.sin(Math.toRadians(direction.getRotation()));
-		speed.y = (float) Math.cos(Math.toRadians(direction.getRotation()));
-		
+		speed.x = (float) -Math.sin(Math.toRadians(player.getDirection().getRotation()));
+		speed.y = (float) Math.cos(Math.toRadians(player.getDirection().getRotation()));
 
 		sprite.setOrigin(sprite.getWidth() / 2.f, 0.f);
-		sprite.setRotation(direction.getRotation());
+		sprite.setRotation(player.getDirection().getRotation());
 
 	}
 
 	public void update() {
-		
+
 		speed.nor();
 		speed.scl(movingSpeed);
-		
+
 		super.update();
 	}
 
 	public float getDamage() {
 		return dmg;
 	}
-	
-	public Player getPlayer(){
+
+	public Player getPlayer() {
 		return player;
 	}
 

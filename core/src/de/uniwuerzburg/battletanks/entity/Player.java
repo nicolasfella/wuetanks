@@ -221,7 +221,7 @@ public class Player extends Entity {
 		pos.x -= Math.sin(Math.toRadians(direction.getRotation())) * gunSprite.getHeight();
 		pos.y += Math.cos(Math.toRadians(direction.getRotation())) * gunSprite.getHeight();
 
-		Bullet bullet = new Bullet(this, pos, direction);
+		Bullet bullet = new Bullet(this, pos);
 		entities.add(entities.size(), bullet);
 
 		// tank.getShotSound().play();

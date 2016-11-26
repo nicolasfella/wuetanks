@@ -5,24 +5,23 @@ import com.badlogic.gdx.audio.Sound;
 
 public enum Tanks {
 	/** low hp/armor, high damage */
-	BEIGE("Beige", 100f, 50f, 0.25f, 1.f),
+	BEIGE("Beige", 100f, 70f, 0.25f, 0.8f),
 
 	/** medium hp/armor/damage */
-	BLACK("Black", 150f, 40f, 0.25f, 0.8f),
+	BLACK("Black", 150f, 21f, 0.25f, 0.38f),
 
 	/** medium hp/armor/damage */
-	BLUE("Blue", 200f, 30f, 0.5f, 0.5f),
+	BLUE("Blue", 200f, 18f, 0.5f, 0.5f),
 
 	/** medium hp/armor/damage */
-	GREEN("Green", 250f, 20f, 0.75f, 0.35f),
+	GREEN("Green", 250f, 14f, 0.75f, 0.6f),
 
 	/** high hp/armor, low damage */
-	RED("Red", 300f, 10f, 0.75f, 0.35f);
+	RED("Red", 300f, 5f, 0.75f, 0.25f);
 
 	private float maxHitpoints;
 	private float damage;
 	private String name;
-	// private float currentHitpoints;
 
 	/** reloadTime is in seconds */
 	private float reloadTime;
@@ -35,20 +34,35 @@ public enum Tanks {
 	private Tanks(String name, float maxHitpoints, float damage, float armor, float reloadTime) {
 		this.name = name;
 		this.maxHitpoints = maxHitpoints;
-		// currentHitpoints = maxHitpoints;
 		this.damage = damage;
 		this.armor = armor;
 		this.reloadTime = reloadTime;
-		//shotSound = Gdx.audio.newSound(Gdx.files.internal("shot.wav"));
+		// shotSound = Gdx.audio.newSound(Gdx.files.internal("shot.wav"));
 	}
 
-	/*
-	 * public void calculateDamage(float dmg) { currentHitpoints -= armor*dmg;
-	 * if(currentHitpoints < 0.f){ currentHitpoints = 0.f; } }
-	 */
+	/** funktion zur berechnung der stärke eines tanks */
+	public float getStrength() {
+
+		// eventuell kann man eine höhere nachladezeit noch als weniger stark
+		// einstufen, da eine höhere präzision benötigt wird
+
+		// schaden pro sekunde
+		float dps = damage / reloadTime;
+
+		// mehr armor wirkt sich genauso aus wie eine prozentuale erhöhung der
+		// hp
+		float life = maxHitpoints * (1f + armor);
+
+		// das verhältnis zwischen schaden und leben sollte indirekt
+		// proportional sein
+		// -> mehr leben gleicht weniger schaden aus
+
+		return dps * life;
+
+	}
 
 	public float calculateDamage(float dmg) {
-		return armor * dmg;
+		return (1.f - armor) * dmg;
 	}
 
 	public void setMaxHitpoints(float maxHitpoints) {
@@ -70,10 +84,6 @@ public enum Tanks {
 	public float getMaxHitpoints() {
 		return maxHitpoints;
 	}
-
-	/*
-	 * public float getCurrentHitpoints(){ return currentHitpoints; }
-	 */
 
 	public float getDamage() {
 		return damage;
