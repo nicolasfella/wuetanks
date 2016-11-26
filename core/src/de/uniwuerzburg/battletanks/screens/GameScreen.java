@@ -300,7 +300,7 @@ public class GameScreen implements Screen {
 
 		// kollision nur bei überschneidung in vertikaler sowie horizontaler
 		// richtung
-		if ((bRY >= pLY && bLY < pRY) && (bRX >= pLX && bLX < pRX) && b.getPlayer() != p) {
+		if ((bRY >= pLY && bLY < pRY) && (bRX >= pLX && bLX < pRX) && b.getPlayer() != p && b != p) {
 			if (p instanceof Player) {
 				((Player) p).hitPlayer(b.getDamage());
 			}
