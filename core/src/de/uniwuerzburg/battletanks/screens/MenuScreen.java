@@ -106,8 +106,9 @@ public class MenuScreen implements Screen {
 	 */
 	private void startGame() {
 		if (time != 0 && !players.isEmpty()) {
-			game.setScreen(new GameScreen(game, time, tiledMapFileHandle, players));
-			this.dispose();
+            GameScreen g = new GameScreen(game, time, tiledMapFileHandle, players);
+            BattleTanks.addScreen(g);
+			game.setScreen(g);
 		} else {
 			final Button close = new TextButton("close", skin);
 			Dialog error = new Dialog("Error", skin);

@@ -193,9 +193,9 @@ public class GameScreen implements Screen {
 
 		time -= delta;
 		if (time <= 0) {
-			game.setScreen(new EndScreen(players));
-            this.dispose();
-            return;
+            EndScreen e = new EndScreen(players);
+            BattleTanks.addScreen(e);
+			game.setScreen(e);
 		}
 
 		camera.update();
@@ -544,7 +544,6 @@ public class GameScreen implements Screen {
         for(Entity e : entities){
             e.dispose();
         }
-        System.out.println("dispose");
 	}
 
 	public int getWidth() {

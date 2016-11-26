@@ -3,7 +3,11 @@ package de.uniwuerzburg.battletanks;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.uniwuerzburg.battletanks.screens.MenuScreen;
 
@@ -12,8 +16,12 @@ public class BattleTanks extends Game {
     private static TextureAtlas atlas;
     private static Preferences prefs;
 
+    private static List<Screen> screens;
+
     @Override
     public void create() {
+
+        screens = new ArrayList<>();
 
         prefs = Gdx.app.getPreferences("BattleTanks_Preferences");
 
@@ -34,8 +42,14 @@ public class BattleTanks extends Game {
 
     @Override
     public void dispose() {
+
+        for(Screen s: screens){
+            s.dispose();
+        }
+
         atlas.dispose();
         super.dispose();
+
     }
 
     public static TextureAtlas getTextureAtlas() {
@@ -64,4 +78,9 @@ public class BattleTanks extends Game {
         prefs.putInteger("player_speed", 150);
         prefs.flush();
     }
+
+    public static void addScreen(Screen s){
+        screens.add(s);
+    }
+
 }
