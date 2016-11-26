@@ -65,7 +65,10 @@ public class EndScreen implements Screen {
 		start.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				game.setScreen(new MenuScreen(game));
+
+				MenuScreen m = new MenuScreen(game);
+				BattleTanks.addScreen(m);
+				game.setScreen(m);
 			}
 		});
 		return start;
