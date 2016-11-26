@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -40,7 +41,7 @@ public class Player extends Entity {
 
 	private float currentHitpoints;
 
-    private int kills;
+	private int kills;
 	private int deathCount;
 
 	public Player(Tanks tank, List<Entity> entities, int key_up, int key_down, int key_left, int key_right,
@@ -222,6 +223,8 @@ public class Player extends Entity {
 
 		Bullet bullet = new Bullet(this, pos, direction);
 		entities.add(entities.size(), bullet);
+
+		// tank.getShotSound().play();
 	}
 
 	public void setEntities(List<Entity> entities) {
@@ -325,20 +328,20 @@ public class Player extends Entity {
 		currentHitpoints -= realDamage;
 		if (currentHitpoints < 0) {
 			currentHitpoints = 0.f;
-            bullet.getPlayer().setKills(bullet.getPlayer().getKills()+1);
+			bullet.getPlayer().setKills(bullet.getPlayer().getKills() + 1);
 		}
 
 	}
 
-    public int getKills() {
-        return kills;
-    }
+	public int getKills() {
+		return kills;
+	}
 
-    public void setKills(int kills) {
-        this.kills = kills;
-    }
+	public void setKills(int kills) {
+		this.kills = kills;
+	}
 
-    public int getDeathCount() {
-        return deathCount;
-    }
+	public int getDeathCount() {
+		return deathCount;
+	}
 }

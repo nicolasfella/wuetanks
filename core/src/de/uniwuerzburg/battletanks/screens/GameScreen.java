@@ -3,6 +3,7 @@ package de.uniwuerzburg.battletanks.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.resolvers.AbsoluteFileHandleResolver;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -66,8 +67,9 @@ public class GameScreen implements Screen {
 	private int spawnOffset = BattleTanks.getPreferences().getInteger("spawn_offset", 20);
 
 	private ShapeRenderer shapeRenderer;
-    private FreeTypeFontGenerator generator;
+	private FreeTypeFontGenerator generator;
 
+	private Music music;
 
 	public GameScreen(final BattleTanks game, int time) {
 		instance = this;
@@ -86,6 +88,11 @@ public class GameScreen implements Screen {
 		this.time = time;
 		this.players = new ArrayList<>(players);
 		this.tiledMapFileHandle = tiledMapFileHandle;
+
+		// music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
+		// music.play();
+		// music.setLooping(true);
+
 	}
 
 	@Override
@@ -167,17 +174,16 @@ public class GameScreen implements Screen {
 			}
 		}
 
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Vera.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = fontSize;
-        parameter.color = Color.WHITE;
-        font = generator.generateFont(parameter);
+		generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Vera.ttf"));
+		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		parameter.size = fontSize;
+		parameter.color = Color.WHITE;
+		font = generator.generateFont(parameter);
 
-        layout = new GlyphLayout();
-        layout.setText(font, "");
+		layout = new GlyphLayout();
+		layout.setText(font, "");
 
-
-    }
+	}
 
 	@Override
 	public void render(float delta) {
@@ -185,8 +191,6 @@ public class GameScreen implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		// float deltaTime = Gdx.graphics.getDeltaTime();
-		// time -= deltaTime;
 		time -= delta;
 		if (time <= 0) {
 			game.setScreen(new EndScreen(players));
@@ -286,31 +290,29 @@ public class GameScreen implements Screen {
 		String text = "";
 		int offset = 10;
 
-		for(Player p: players){
+		for (Player p : players) {
 
-
-
-			switch (p.getNumber()){
-				case 1:
-					text = "Player 1: "+p.getKills()+" kills";
-					layout.setText(font, text);
-					font.draw(batch, text, offset, height - offset);
-					break;
-				case 2:
-					text = "Player 2: "+p.getKills()+" kills";
-					layout.setText(font, text);
-					font.draw(batch, text, width - layout.width - offset, height - offset);
-					break;
-				case 3:
-					text = "Player 3: "+p.getKills()+" kills";
-					layout.setText(font, text);
-					font.draw(batch, text, offset, layout.height + offset);
-					break;
-				case 4:
-					text = "Player 4: "+p.getKills()+" kills";
-					layout.setText(font, text);
-					font.draw(batch, text, width - layout.width - offset, layout.height + offset);
-					break;
+			switch (p.getNumber()) {
+			case 1:
+				text = "Player 1: " + p.getKills() + " kills";
+				layout.setText(font, text);
+				font.draw(batch, text, offset, height - offset);
+				break;
+			case 2:
+				text = "Player 2: " + p.getKills() + " kills";
+				layout.setText(font, text);
+				font.draw(batch, text, width - layout.width - offset, height - offset);
+				break;
+			case 3:
+				text = "Player 3: " + p.getKills() + " kills";
+				layout.setText(font, text);
+				font.draw(batch, text, offset, layout.height + offset);
+				break;
+			case 4:
+				text = "Player 4: " + p.getKills() + " kills";
+				layout.setText(font, text);
+				font.draw(batch, text, width - layout.width - offset, layout.height + offset);
+				break;
 
 			}
 
@@ -546,7 +548,7 @@ public class GameScreen implements Screen {
 			tiledMapFileHandle.delete();
 		}
 		shapeRenderer.dispose();
-        generator.dispose();
+		generator.dispose();
 
 	}
 

@@ -1,5 +1,8 @@
 package de.uniwuerzburg.battletanks.entity;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
+
 public enum Tanks {
 	/** low hp/armor, high damage */
 	BEIGE("Beige", 100f, 50f, 0.25f, 1.f),
@@ -19,35 +22,33 @@ public enum Tanks {
 	private float maxHitpoints;
 	private float damage;
 	private String name;
-	//private float currentHitpoints;
-	
+	// private float currentHitpoints;
+
 	/** reloadTime is in seconds */
 	private float reloadTime;
-	
+
 	/** Reducing incoming dmg before hp subtraction */
 	private float armor;
+
+	private Sound shotSound;
 
 	private Tanks(String name, float maxHitpoints, float damage, float armor, float reloadTime) {
 		this.name = name;
 		this.maxHitpoints = maxHitpoints;
-		//currentHitpoints = maxHitpoints;
+		// currentHitpoints = maxHitpoints;
 		this.damage = damage;
 		this.armor = armor;
 		this.reloadTime = reloadTime;
-		
+		//shotSound = Gdx.audio.newSound(Gdx.files.internal("shot.wav"));
 	}
 
 	/*
-	public void calculateDamage(float dmg) {
-		currentHitpoints -= armor*dmg;
-		if(currentHitpoints < 0.f){
-			currentHitpoints = 0.f;
-		}
-	}*/
-	
-	
-	public float calculateDamage(float dmg){
-		return armor*dmg;
+	 * public void calculateDamage(float dmg) { currentHitpoints -= armor*dmg;
+	 * if(currentHitpoints < 0.f){ currentHitpoints = 0.f; } }
+	 */
+
+	public float calculateDamage(float dmg) {
+		return armor * dmg;
 	}
 
 	public void setMaxHitpoints(float maxHitpoints) {
@@ -69,10 +70,10 @@ public enum Tanks {
 	public float getMaxHitpoints() {
 		return maxHitpoints;
 	}
-	
-	/*public float getCurrentHitpoints(){
-		return currentHitpoints;
-	}*/
+
+	/*
+	 * public float getCurrentHitpoints(){ return currentHitpoints; }
+	 */
 
 	public float getDamage() {
 		return damage;
@@ -81,9 +82,13 @@ public enum Tanks {
 	public float getArmor() {
 		return armor;
 	}
-	
-	public float getReloadTime(){
+
+	public float getReloadTime() {
 		return reloadTime;
+	}
+
+	public Sound getShotSound() {
+		return shotSound;
 	}
 
 }
