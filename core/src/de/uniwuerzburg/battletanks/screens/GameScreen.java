@@ -29,10 +29,8 @@ import de.uniwuerzburg.battletanks.entity.Direction;
 import de.uniwuerzburg.battletanks.entity.Entity;
 import de.uniwuerzburg.battletanks.entity.Obstacle;
 import de.uniwuerzburg.battletanks.entity.Player;
-import de.uniwuerzburg.battletanks.entity.Tanks;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -63,7 +61,7 @@ public class GameScreen implements Screen {
 
 	private float time;
 
-	private int startOffset = 20;
+	private int spawnOffset = BattleTanks.getPreferences().getInteger("spawn_offset", 20);
 
 	private ShapeRenderer shapeRenderer;
 
@@ -129,23 +127,23 @@ public class GameScreen implements Screen {
 			float y = 0;
 			switch (p.getNumber()) {
 			case 1:
-				x = startOffset;
-				y = height - startOffset - p.getHeight();
+				x = spawnOffset;
+				y = height - spawnOffset - p.getHeight();
 				p.setDirection(Direction.DOWNRIGHT);
 				break;
 			case 2:
-				x = width - p.getWidth() - startOffset;
-				y = height - p.getHeight() - startOffset;
+				x = width - p.getWidth() - spawnOffset;
+				y = height - p.getHeight() - spawnOffset;
 				p.setDirection(Direction.DOWNLEFT);
 				break;
 			case 3:
-				x = startOffset;
-				y = startOffset;
+				x = spawnOffset;
+				y = spawnOffset;
 				p.setDirection(Direction.UPRIGHT);
 				break;
 			case 4:
-				x = width - p.getWidth() - startOffset;
-				y = startOffset;
+				x = width - p.getWidth() - spawnOffset;
+				y = spawnOffset;
 				p.setDirection(Direction.UPLEFT);
 			}
 			p.setPosition(x, y);

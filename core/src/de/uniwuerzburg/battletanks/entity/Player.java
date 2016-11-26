@@ -160,7 +160,6 @@ public class Player extends Entity {
 	public void initForSpawn() {
 		currentHitpoints = tank.getMaxHitpoints();
 		speed.set(0, 0);
-		direction = Direction.UP;
 		shootTimer = tank.getReloadTime();
 	}
 
@@ -168,11 +167,13 @@ public class Player extends Entity {
 		float gameWidth = GameScreen.instance.getWidth();
 		float gameHeight = GameScreen.instance.getHeight();
 
+		int spawnOffset = BattleTanks.getPreferences().getInteger("spawn_offset", 20);
+
 		Vector2[] spawnPoints = new Vector2[4];
-		spawnPoints[0] = new Vector2(0.f, 0.f);
-		spawnPoints[1] = new Vector2(0.f, gameHeight - height);
-		spawnPoints[2] = new Vector2(gameWidth - width, 0.f);
-		spawnPoints[3] = new Vector2(gameWidth - width, gameHeight - height);
+		spawnPoints[0] = new Vector2(spawnOffset, spawnOffset);
+		spawnPoints[1] = new Vector2(spawnOffset, gameHeight - height-spawnOffset);
+		spawnPoints[2] = new Vector2(gameWidth - width - spawnOffset, spawnOffset);
+		spawnPoints[3] = new Vector2(gameWidth - width - spawnOffset, gameHeight - height - spawnOffset);
 
 		List<Vector2> playerPositions = new LinkedList<Vector2>();
 		for (Entity e : entities) {
