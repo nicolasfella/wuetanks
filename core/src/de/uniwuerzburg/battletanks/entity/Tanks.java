@@ -6,19 +6,15 @@ import com.badlogic.gdx.audio.Sound;
 import de.uniwuerzburg.battletanks.BattleTanks;
 
 public enum Tanks {
-	
+
 	BEIGE("Beige", 100f, 72f, 0.25f, 0.85f),
 
-	
 	BLACK("Black", 155f, 20f, 0.2f, 0.38f),
 
-	
 	BLUE("Blue", 179f, 20f, 0.4f, 0.5f),
 
-	
 	GREEN("Green", 100f, 30f, 0.66f, 0.5f),
 
-	
 	RED("Red", 150f, 10f, 0.66f, 0.25f);
 
 	private float maxHitpoints;
@@ -39,7 +35,8 @@ public enum Tanks {
 		this.damage = damage;
 		this.armor = armor;
 		this.reloadTime = reloadTime;
-		shotSound = Gdx.audio.newSound(Gdx.files.internal(BattleTanks.getPreferences().getString("shot_sound", "shot.wav")));
+		shotSound = Gdx.audio
+				.newSound(Gdx.files.internal(BattleTanks.getPreferences().getString("shot_sound", "shot.wav")));
 	}
 
 	/** funktion zur berechnung der stärke eines tanks */
@@ -62,16 +59,14 @@ public enum Tanks {
 		return dps * life;
 
 	}
-	
-	public float getDPS(){
-		return damage/reloadTime;
+
+	public float getDPS() {
+		return damage / reloadTime;
 	}
-	
-	public float getLife(){
+
+	public float getLife() {
 		return maxHitpoints * (1f + armor);
 	}
-	
-	
 
 	public float calculateDamage(float dmg) {
 		return (1.f - armor) * dmg;

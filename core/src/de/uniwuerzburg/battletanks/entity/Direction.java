@@ -6,11 +6,11 @@ public enum Direction {
 
 	float rotation;
 
-	Direction(float rotation){
+	Direction(float rotation) {
 		this.rotation = rotation;
 	}
 
-	public float getRotation(){
+	public float getRotation() {
 		return rotation;
 	}
 

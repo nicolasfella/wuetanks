@@ -1,7 +1,8 @@
 package de.uniwuerzburg.battletanks.screens;
 
-import java.util.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;

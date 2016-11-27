@@ -28,8 +28,6 @@ public class Player extends Entity {
 
 	private Sprite gunSprite;
 
-	private TextureAtlas atlas;
-
 	private Tanks tank;
 
 	private float currentHitpoints;
@@ -37,7 +35,6 @@ public class Player extends Entity {
 	private int kills;
 
 	private int deathCount;
-
 
 	public Player(Tanks tank, int key_up, int key_down, int key_left, int key_right, int key_shoot) {
 		super("tank" + tank.getName());
@@ -212,7 +209,7 @@ public class Player extends Entity {
 		Bullet bullet = new Bullet(this, pos);
 		GameScreen.instance.getEntities().add(bullet);
 
-		 tank.getShotSound().play();
+		tank.getShotSound().play();
 	}
 
 	public void renderGun(SpriteBatch batch) {
@@ -295,17 +292,17 @@ public class Player extends Entity {
 
 		float percentage = currentHitpoints / tank.getMaxHitpoints();
 
-        if(getY() > 15) {
-            r.setColor(Color.RED);
-            r.rect(getX(), getY() - 10, getWidth(), 5);
-            r.setColor(Color.GREEN);
-            r.rect(getX(), getY() - 10, getWidth() * percentage, 5);
-        }else {
-            r.setColor(Color.RED);
-            r.rect(getX(), getY() + getHeight() + 5, getWidth(), 5);
-            r.setColor(Color.GREEN);
-            r.rect(getX(), getY() + getHeight() + 5, getWidth() * percentage, 5);
-        }
+		if (getY() > 15) {
+			r.setColor(Color.RED);
+			r.rect(getX(), getY() - 10, getWidth(), 5);
+			r.setColor(Color.GREEN);
+			r.rect(getX(), getY() - 10, getWidth() * percentage, 5);
+		} else {
+			r.setColor(Color.RED);
+			r.rect(getX(), getY() + getHeight() + 5, getWidth(), 5);
+			r.setColor(Color.GREEN);
+			r.rect(getX(), getY() + getHeight() + 5, getWidth() * percentage, 5);
+		}
 	}
 
 	public float getCurrentHitpoints() {
@@ -335,8 +332,8 @@ public class Player extends Entity {
 		return deathCount;
 	}
 
-    @Override
-    public void dispose() {
-        tank.getShotSound().dispose();
-    }
+	@Override
+	public void dispose() {
+		tank.getShotSound().dispose();
+	}
 }

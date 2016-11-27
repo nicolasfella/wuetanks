@@ -1,5 +1,9 @@
 package de.uniwuerzburg.battletanks.screens;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.resolvers.AbsoluteFileHandleResolver;
@@ -32,10 +36,6 @@ import de.uniwuerzburg.battletanks.entity.Entity;
 import de.uniwuerzburg.battletanks.entity.Obstacle;
 import de.uniwuerzburg.battletanks.entity.Player;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 public class GameScreen implements Screen {
 
 	public static GameScreen instance;
@@ -47,12 +47,12 @@ public class GameScreen implements Screen {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	private Viewport viewPort;
-    private ShapeRenderer shapeRenderer;
+	private ShapeRenderer shapeRenderer;
 
-    private BitmapFont font;
-    private int fontSize = BattleTanks.getPreferences().getInteger("game_font_size", 14);
-    private GlyphLayout layout;
-    private FreeTypeFontGenerator generator;
+	private BitmapFont font;
+	private int fontSize = BattleTanks.getPreferences().getInteger("game_font_size", 14);
+	private GlyphLayout layout;
+	private FreeTypeFontGenerator generator;
 
 	private TiledMap tiledMap;
 	private TiledMapRenderer tiledMapRenderer;
@@ -61,9 +61,9 @@ public class GameScreen implements Screen {
 	private List<Entity> entities;
 	private List<Player> players;
 
-    private int spawnOffset = BattleTanks.getPreferences().getInteger("spawn_offset", 20);
+	private int spawnOffset = BattleTanks.getPreferences().getInteger("spawn_offset", 20);
 
-    private Music music;
+	private Music music;
 
 	private float time;
 
@@ -73,73 +73,75 @@ public class GameScreen implements Screen {
 		this.time = time;
 		this.players = new ArrayList<>(players);
 		this.tiledMapFileHandle = tiledMapFileHandle;
-        entities = new ArrayList<Entity>();
-    }
+		entities = new ArrayList<Entity>();
+	}
 
-    @Override
+	@Override
 	public void show() {
-        loadMAp();
-        setUpGraphics();
-        spawnPlayers();
-        loadMusic();
-    }
+		loadMAp();
+		setUpGraphics();
+		spawnPlayers();
+		loadMusic();
+	}
 
-    private void spawnPlayers() {
-        for (Player p : players) {
-            entities.add(p);
+	private void spawnPlayers() {
+		for (Player p : players) {
+			entities.add(p);
 
-            float x = 0;
-            float y = 0;
-            switch (p.getNumber()) {
-            case 1:
-                x = spawnOffset;
-                y = height - spawnOffset - p.getHeight();
-                p.setDirection(Direction.DOWNRIGHT);
-                break;
-            case 2:
-                x = width - p.getWidth() - spawnOffset;
-                y = height - p.getHeight() - spawnOffset;
-                p.setDirection(Direction.DOWNLEFT);
-                break;
-            case 3:
-                x = spawnOffset;
-                y = spawnOffset;
-                p.setDirection(Direction.UPRIGHT);
-                break;
-            case 4:
-                x = width - p.getWidth() - spawnOffset;
-                y = spawnOffset;
-                p.setDirection(Direction.UPLEFT);
-            }
-            p.setPosition(x, y);
-        }
-    }
+			float x = 0;
+			float y = 0;
+			switch (p.getNumber()) {
+			case 1:
+				x = spawnOffset;
+				y = height - spawnOffset - p.getHeight();
+				p.setDirection(Direction.DOWNRIGHT);
+				break;
+			case 2:
+				x = width - p.getWidth() - spawnOffset;
+				y = height - p.getHeight() - spawnOffset;
+				p.setDirection(Direction.DOWNLEFT);
+				break;
+			case 3:
+				x = spawnOffset;
+				y = spawnOffset;
+				p.setDirection(Direction.UPRIGHT);
+				break;
+			case 4:
+				x = width - p.getWidth() - spawnOffset;
+				y = spawnOffset;
+				p.setDirection(Direction.UPLEFT);
+			}
+			p.setPosition(x, y);
+		}
+	}
 
-    private void setUpGraphics() {
-        batch = new SpriteBatch();
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, width, height);
-        viewPort = new FitViewport(width, height, camera);
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setProjectionMatrix(camera.combined);
+	private void setUpGraphics() {
+		batch = new SpriteBatch();
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, width, height);
+		viewPort = new FitViewport(width, height, camera);
+		shapeRenderer = new ShapeRenderer();
+		shapeRenderer.setProjectionMatrix(camera.combined);
 
-        //Loading font
-        generator = new FreeTypeFontGenerator(Gdx.files.internal(BattleTanks.getPreferences().getString("game_font", "fonts/Vera.ttf")));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = fontSize;
-        parameter.color = Color.WHITE;
-        font = generator.generateFont(parameter);
-        layout = new GlyphLayout();
-        layout.setText(font, "");
-    }
+		// Loading font
+		generator = new FreeTypeFontGenerator(
+				Gdx.files.internal(BattleTanks.getPreferences().getString("game_font", "fonts/Vera.ttf")));
+		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		parameter.size = fontSize;
+		parameter.color = Color.WHITE;
+		font = generator.generateFont(parameter);
+		layout = new GlyphLayout();
+		layout.setText(font, "");
+	}
 
-    private void loadMusic() {
-        music = Gdx.audio.newMusic(Gdx.files.internal(BattleTanks.getPreferences().getString("background_music", "music.mp3")));
-        // music.play();
-        // music.setLooping(true);
-    }
+	private void loadMusic() {
+		music = Gdx.audio
+				.newMusic(Gdx.files.internal(BattleTanks.getPreferences().getString("background_music", "music.mp3")));
+		// music.play();
+		// music.setLooping(true);
+	}
 
-    @Override
+	@Override
 	public void render(float delta) {
 		Gdx.graphics.setTitle(BattleTanks.getPreferences().getString("title", "Battletanks"));
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -147,177 +149,175 @@ public class GameScreen implements Screen {
 
 		time -= delta;
 		if (time <= 0) {
-            EndScreen e = new EndScreen(game, players);
-            BattleTanks.addScreen(e);
+			EndScreen e = new EndScreen(game, players);
+			BattleTanks.addScreen(e);
 			game.setScreen(e);
 		}
 
 		camera.update();
-        updateEntities();
+		updateEntities();
 
-
-        tiledMapRenderer.setView(camera);
+		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
 
-        renderEntities();
+		renderEntities();
 
-        renderText();
+		renderText();
 
 		batch.end();
 
 	}
 
-    private void renderText() {
-        String timeLeft = "Time left: " + formatTime(time);
+	private void renderText() {
+		String timeLeft = "Time left: " + formatTime(time);
 
-        layout.setText(font, timeLeft);
-        font.draw(batch, timeLeft, width / 2 - layout.width / 2, height - 10);
+		layout.setText(font, timeLeft);
+		font.draw(batch, timeLeft, width / 2 - layout.width / 2, height - 10);
 
-        String text = "";
-        int offset = 10;
+		String text = "";
+		int offset = 10;
 
-        for (Player p : players) {
-            text = "Player "+p.getNumber()+" : " + p.getKills() + " kills" + "\n"+p.getDeathCount()+" deaths";
+		for (Player p : players) {
+			text = "Player " + p.getNumber() + " : " + p.getKills() + " kills" + "\n" + p.getDeathCount() + " deaths";
 
-            switch (p.getNumber()) {
-            case 1:
-                layout.setText(font, text);
-                font.draw(batch, text, offset, height - offset);
-                break;
-            case 2:
-                layout.setText(font, text);
-                font.draw(batch, text, width - layout.width - offset, height - offset);
-                break;
-            case 3:
-                layout.setText(font, text);
-                font.draw(batch, text, offset, layout.height + offset);
-                break;
-            case 4:
-                layout.setText(font, text);
-                font.draw(batch, text, width - layout.width - offset, layout.height + offset);
-                break;
+			switch (p.getNumber()) {
+			case 1:
+				layout.setText(font, text);
+				font.draw(batch, text, offset, height - offset);
+				break;
+			case 2:
+				layout.setText(font, text);
+				font.draw(batch, text, width - layout.width - offset, height - offset);
+				break;
+			case 3:
+				layout.setText(font, text);
+				font.draw(batch, text, offset, layout.height + offset);
+				break;
+			case 4:
+				layout.setText(font, text);
+				font.draw(batch, text, width - layout.width - offset, layout.height + offset);
+				break;
 
-            }
+			}
 
-        }
-    }
+		}
+	}
 
-    private void renderEntities() {
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+	private void renderEntities() {
+		shapeRenderer.setProjectionMatrix(camera.combined);
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        for (Player p : players) {
-            p.renderLifeBar(shapeRenderer);
-        }
-        shapeRenderer.end();
+		for (Player p : players) {
+			p.renderLifeBar(shapeRenderer);
+		}
+		shapeRenderer.end();
 
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
 
-        for (Entity entity : entities) {
-            entity.render(batch);
-        }
+		for (Entity entity : entities) {
+			entity.render(batch);
+		}
 
-        for (Player p : players) {
-            p.renderGun(batch);
-        }
-    }
+		for (Player p : players) {
+			p.renderGun(batch);
+		}
+	}
 
-    private void updateEntities() {
-        // updated zuerst die ursprünglichen entities
-        int n = entities.size();
-        for (int i = 0; i < n; i++) {
-            Entity entity = entities.get(i);
-            entity.update();
-        }
+	private void updateEntities() {
+		// updated zuerst die ursprünglichen entities
+		int n = entities.size();
+		for (int i = 0; i < n; i++) {
+			Entity entity = entities.get(i);
+			entity.update();
+		}
 
-        // updated neu hinzugekommene entities
-        for (int i = n; i < entities.size(); i++) {
-            Entity entity = entities.get(i);
-            entity.update();
-        }
+		// updated neu hinzugekommene entities
+		for (int i = n; i < entities.size(); i++) {
+			Entity entity = entities.get(i);
+			entity.update();
+		}
 
-        // auflösung der kollisionen zwischen playern und obstacles
-        for (Player p : players) {
-            for (Entity e : entities) {
-                if (e instanceof Obstacle && p != e) {
-                    detectCollisionAndResponse(p, e);
-                }
-            }
-        }
+		// auflösung der kollisionen zwischen playern und obstacles
+		for (Player p : players) {
+			for (Entity e : entities) {
+				if (e instanceof Obstacle && p != e) {
+					detectCollisionAndResponse(p, e);
+				}
+			}
+		}
 
-        List<Entity> bulletsToDelete = new LinkedList<Entity>();
+		List<Entity> bulletsToDelete = new LinkedList<Entity>();
 
-        for (Entity b : entities) {
-            if (b instanceof Bullet) {
-                // bullets die das spielfeld verlassen werden gelöscht
-                if (isOutOfGame(b)) {
-                    bulletsToDelete.add(b);
-                } else {
-                    // bullets die auf eine entity treffen werden gelöscht
-                    for (Entity e : entities) {
-                        if (detectBulletHitAndDamage((Bullet) b, e)) {
-                            bulletsToDelete.add(b);
-                        }
-                    }
-                }
-            }
-        }
+		for (Entity b : entities) {
+			if (b instanceof Bullet) {
+				// bullets die das spielfeld verlassen werden gelöscht
+				if (isOutOfGame(b)) {
+					bulletsToDelete.add(b);
+				} else {
+					// bullets die auf eine entity treffen werden gelöscht
+					for (Entity e : entities) {
+						if (detectBulletHitAndDamage((Bullet) b, e)) {
+							bulletsToDelete.add(b);
+						}
+					}
+				}
+			}
+		}
 
-        // lösche bullets
-        for (Entity b : bulletsToDelete) {
-            entities.remove(b);
-        }
+		// lösche bullets
+		for (Entity b : bulletsToDelete) {
+			entities.remove(b);
+		}
 
-        // auflösung der kollisionen zwischen playern und playern
-        for (Player p : players) {
-            for (Player e : players) {
-                if (p != e) {
-                    detectCollisionAndResponse(p, e);
-                }
-            }
-        }
-    }
+		// auflösung der kollisionen zwischen playern und playern
+		for (Player p : players) {
+			for (Player e : players) {
+				if (p != e) {
+					detectCollisionAndResponse(p, e);
+				}
+			}
+		}
+	}
 
-    private void loadMAp() {
-        if (tiledMapFileHandle != null) {
-            tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
-        } else {
-            tiledMap = new TmxMapLoader()
-                    .load(BattleTanks.getPreferences().getString("default_map", "maps/TestMap.tmx"));
-        }
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
-        MapProperties tiledMapProps = tiledMap.getProperties();
+	private void loadMAp() {
+		if (tiledMapFileHandle != null) {
+			tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
+		} else {
+			tiledMap = new TmxMapLoader()
+					.load(BattleTanks.getPreferences().getString("default_map", "maps/TestMap.tmx"));
+		}
+		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+		MapProperties tiledMapProps = tiledMap.getProperties();
 
-        int mapWidth = tiledMapProps.get("width", Integer.class);
-        int mapHeight = tiledMapProps.get("height", Integer.class);
-        int tilePixelWidth = tiledMapProps.get("tilewidth", Integer.class);
-        int tilePixelHeight = tiledMapProps.get("tileheight", Integer.class);
+		int mapWidth = tiledMapProps.get("width", Integer.class);
+		int mapHeight = tiledMapProps.get("height", Integer.class);
+		int tilePixelWidth = tiledMapProps.get("tilewidth", Integer.class);
+		int tilePixelHeight = tiledMapProps.get("tileheight", Integer.class);
 
-        width = mapWidth * tilePixelWidth;
-        height = mapHeight * tilePixelHeight;
+		width = mapWidth * tilePixelWidth;
+		height = mapHeight * tilePixelHeight;
 
+		// einlesen der objects aus dem objects layer der tilemap und erstellung
+		// der obstacles
 
-        // einlesen der objects aus dem objects layer der tilemap und erstellung
-        // der obstacles
+		MapLayer objectsLayer = tiledMap.getLayers().get("objects");
 
-        MapLayer objectsLayer = tiledMap.getLayers().get("objects");
+		if (objectsLayer != null) {
+			for (MapObject object : objectsLayer.getObjects()) {
 
-        if (objectsLayer != null) {
-            for (MapObject object : objectsLayer.getObjects()) {
-
-                if (object instanceof RectangleMapObject) {
-                    RectangleMapObject rectObject = (RectangleMapObject) object;
-                    Rectangle rect = rectObject.getRectangle();
-                    Obstacle obst = new Obstacle();
-                    obst.setPosition((int) rect.getX(), (int) rect.getY());
-                    obst.setWidth((int) rect.getWidth());
-                    obst.setHeight((int) rect.getHeight());
-                    entities.add(obst);
-                }
-            }
-        }
-    }
+				if (object instanceof RectangleMapObject) {
+					RectangleMapObject rectObject = (RectangleMapObject) object;
+					Rectangle rect = rectObject.getRectangle();
+					Obstacle obst = new Obstacle();
+					obst.setPosition((int) rect.getX(), (int) rect.getY());
+					obst.setWidth((int) rect.getWidth());
+					obst.setHeight((int) rect.getHeight());
+					entities.add(obst);
+				}
+			}
+		}
+	}
 
 	private boolean detectBulletHitAndDamage(Bullet b, Entity p) {
 		// variablen für bullet
@@ -546,11 +546,11 @@ public class GameScreen implements Screen {
 		}
 		shapeRenderer.dispose();
 		generator.dispose();
-        music.dispose();
+		music.dispose();
 
-        for(Entity e : entities){
-            e.dispose();
-        }
+		for (Entity e : entities) {
+			e.dispose();
+		}
 	}
 
 	public int getWidth() {
@@ -561,7 +561,7 @@ public class GameScreen implements Screen {
 		return height;
 	}
 
-    public List<Entity> getEntities() {
-        return entities;
-    }
+	public List<Entity> getEntities() {
+		return entities;
+	}
 }

@@ -1,9 +1,8 @@
 package de.uniwuerzburg.battletanks.desktop;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+
 import de.uniwuerzburg.battletanks.BattleTanks;
 
 public class DesktopLauncher {
