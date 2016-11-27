@@ -75,6 +75,12 @@ public class BattleTanks extends Game {
         prefs.putInteger("bullet_height", 26);
         prefs.putInteger("bullet_speed", 450);
         prefs.putInteger("player_speed", 150);
+        prefs.putString("shot_sound", "shot.wav");
+        prefs.putInteger("game_font_size", 14);
+        prefs.getInteger("spawn_offset", 20);
+        prefs.putString("game_font", "fonts/Vera.ttf");
+        prefs.putString("background", "background.png");
+        prefs.putString("background_music", "music.mp3");
         prefs.flush();
     }
 

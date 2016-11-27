@@ -46,7 +46,7 @@ public class EndScreen implements Screen {
 		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
 		this.stage = new Stage(
 				new FitViewport(prefs.getInteger("window_width", 1024), prefs.getInteger("window_height", 768)));
-		background = new Texture(Gdx.files.internal("background.png"));
+		background = new Texture(Gdx.files.internal(prefs.getString("background", "background.png")));
 		Gdx.input.setInputProcessor(stage);
 
 		create();

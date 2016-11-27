@@ -3,6 +3,8 @@ package de.uniwuerzburg.battletanks.entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 
+import de.uniwuerzburg.battletanks.BattleTanks;
+
 public enum Tanks {
 	
 	BEIGE("Beige", 100f, 72f, 0.25f, 0.85f),
@@ -37,7 +39,7 @@ public enum Tanks {
 		this.damage = damage;
 		this.armor = armor;
 		this.reloadTime = reloadTime;
-		shotSound = Gdx.audio.newSound(Gdx.files.internal("shot.wav"));
+		shotSound = Gdx.audio.newSound(Gdx.files.internal(BattleTanks.getPreferences().getString("shot_sound", "shot.wav")));
 	}
 
 	/** funktion zur berechnung der stärke eines tanks */

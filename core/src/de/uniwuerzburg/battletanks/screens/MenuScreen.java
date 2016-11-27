@@ -76,7 +76,7 @@ public class MenuScreen implements Screen {
 		this.game = game;
 		prefs = BattleTanks.getPreferences();
 		tiledMapFileHandle = null;
-		background = new Texture(Gdx.files.internal("background.png"));
+		background = new Texture(Gdx.files.internal(prefs.getString("background", "background.png")));
 		this.atlas = BattleTanks.getTextureAtlas();
 
 		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
