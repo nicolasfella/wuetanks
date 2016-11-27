@@ -1,7 +1,6 @@
 TODO  
 Konkrete Sachen/Bugs:
 
-- HP Leiste ist außerhalb des Bildes wenn Tanks ganz unten
 - Größe des TankChoosers im Menü abh. von Stringlänge d. Tankeigenschaften
 - Hintergrund
 - Weitere Maps erstellen

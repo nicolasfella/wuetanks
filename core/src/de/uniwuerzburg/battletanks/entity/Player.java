@@ -311,11 +311,17 @@ public class Player extends Entity {
 
 		float percentage = currentHitpoints / tank.getMaxHitpoints();
 
-		r.setColor(Color.RED);
-		r.rect(getX(), getY() - 10, getWidth(), 5);
-		r.setColor(Color.GREEN);
-		r.rect(getX(), getY() - 10, getWidth() * percentage, 5);
-
+        if(getY() > 15) {
+            r.setColor(Color.RED);
+            r.rect(getX(), getY() - 10, getWidth(), 5);
+            r.setColor(Color.GREEN);
+            r.rect(getX(), getY() - 10, getWidth() * percentage, 5);
+        }else {
+            r.setColor(Color.RED);
+            r.rect(getX(), getY() + getHeight() + 5, getWidth(), 5);
+            r.setColor(Color.GREEN);
+            r.rect(getX(), getY() + getHeight() + 5, getWidth() * percentage, 5);
+        }
 	}
 
 	public float getCurrentHitpoints() {
