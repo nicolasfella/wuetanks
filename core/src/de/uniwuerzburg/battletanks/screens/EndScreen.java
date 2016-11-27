@@ -54,7 +54,7 @@ public class EndScreen implements Screen {
 	}
 
 	private void create() {
-		Label test = new Label("ENDE DES SPIELS!", skin);
+		Label test = new Label("Scoreboard:", skin);
 		this.mainTable = new Table();
 		mainTable.setFillParent(true);
 		mainTable.add(test).padBottom(20);
@@ -138,6 +138,8 @@ public class EndScreen implements Screen {
 				return o2.getKills() - o1.getKills();
 			} else if (o1.getDeathCount() != o2.getDeathCount()) {
 				return o1.getDeathCount() - o2.getDeathCount();
+			} else if (o1.getNumber() != o2.getNumber()) {
+				return o1.getNumber() - o2.getNumber();
 			}
 
 			return 0;
