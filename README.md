@@ -1,8 +1,6 @@
 TODO  
 Konkrete Sachen/Bugs:
 
-- Größe des TankChoosers im Menü abh. von Stringlänge d. Tankeigenschaften
-- Hintergrund
 - Weitere Maps erstellen
 - ...
 

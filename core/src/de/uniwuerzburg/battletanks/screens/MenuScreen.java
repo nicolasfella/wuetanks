@@ -247,13 +247,15 @@ public class MenuScreen implements Screen {
 	 * @param key_shoot
 	 * @return Table
 	 */
-	private Table createTankChooser(int playerNumber, int key_up, int key_down, int key_left, int key_right,
+	private VerticalGroup createTankChooser(int playerNumber, int key_up, int key_down, int key_left, int key_right,
 			int key_shoot, List<Tanks> tankList) {
-		Table tankChooser = new Table();
 
-		HorizontalGroup tankCycle = new HorizontalGroup();
+		VerticalGroup tankChooser = new VerticalGroup();
+		Table temp = new Table();
+
 		Button next = new TextButton(" >> ", skin);
 		Button previous = new TextButton(" << ", skin);
+		TextButton lockButton = new TextButton("Lock tank choice", skin);
 
 		VerticalGroup[] tankInfo = new VerticalGroup[5];
 		for (int i = 0; i < tankInfo.length; i++) {
@@ -264,10 +266,10 @@ public class MenuScreen implements Screen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				for (int i = 0; i < tankInfo.length; i++) {
-					if (tankCycle.getChildren().contains(tankInfo[i], false)) {
-						tankCycle.removeActor(tankInfo[i]);
+					if (tankChooser.getChildren().contains(tankInfo[i], false)) {
+						tankChooser.removeActor(tankInfo[i]);
 						int mod = Math.floorMod((i + 1), tankInfo.length);
-						tankCycle.addActorAt(1, tankInfo[mod]);
+						tankChooser.addActorAt(0, tankInfo[mod]);
 						break;
 					}
 				}
@@ -278,24 +280,20 @@ public class MenuScreen implements Screen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				for (int i = 0; i < tankInfo.length; i++) {
-					if (tankCycle.getChildren().contains(tankInfo[i], false)) {
-						tankCycle.removeActor(tankInfo[i]);
+					if (tankChooser.getChildren().contains(tankInfo[i], false)) {
+						tankChooser.removeActor(tankInfo[i]);
 						int mod = Math.floorMod((i - 1), tankInfo.length);
-						tankCycle.addActorAt(1, tankInfo[mod]);
+						tankChooser.addActorAt(0, tankInfo[mod]);
 						break;
 					}
 				}
 			}
 		});
-		tankCycle.addActorAt(0, previous);
-		tankCycle.addActorAt(1, tankInfo[0]);
-		tankCycle.addActorAt(2, next);
 
-		TextButton lockButton = new TextButton("Lock tank choice", skin);
 		lockButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				String tankName = tankCycle.getChildren().get(1).getName();
+				String tankName = tankChooser.getChildren().get(0).getName();
 				Tanks tank = tankList.stream().filter(t -> t.getName().equals(tankName)).findAny().get();
 
 				Player player = new Player(tank, key_up, key_down, key_left, key_right, key_shoot);
@@ -308,11 +306,16 @@ public class MenuScreen implements Screen {
 			}
 		});
 
-		tankChooser.add(tankCycle);
-		tankChooser.row();
-		tankChooser.add(lockButton).padTop(5);
-		tankChooser.row();
-		tankChooser.add(createKeys(playerNumber)).expand();
+		temp.add(previous).expand();
+		temp.add(lockButton).expand();
+		temp.add(next).expand();
+		temp.row();
+		temp.add(createKeys(playerNumber)).colspan(3);
+
+		tankChooser.addActorAt(0, tankInfo[0]);
+		tankChooser.addActorAt(1, temp);
+		tankChooser.space(5);
+
 		return tankChooser;
 
 	}
