@@ -1,12 +1,9 @@
 package de.uniwuerzburg.battletanks.entity;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,8 +15,6 @@ import de.uniwuerzburg.battletanks.BattleTanks;
 import de.uniwuerzburg.battletanks.screens.GameScreen;
 
 public class Player extends Entity {
-
-	// private static final int WIDTH = 40, HEIGHT = 40;
 
 	private int key_up, key_down, key_left, key_right, key_shoot;
 
@@ -37,21 +32,14 @@ public class Player extends Entity {
 
 	private Tanks tank;
 
-	private List<Entity> entities;
-
 	private float currentHitpoints;
 
 	private int kills;
+
 	private int deathCount;
 
-	public Player(Tanks tank, List<Entity> entities, int key_up, int key_down, int key_left, int key_right,
-			int key_shoot) {
-		this(tank, key_up, key_down, key_left, key_right, key_shoot);
-		this.entities = entities;
-	}
 
 	public Player(Tanks tank, int key_up, int key_down, int key_left, int key_right, int key_shoot) {
-		// super("player");
 		super("tank" + tank.getName());
 
 		this.tank = tank;
@@ -181,7 +169,7 @@ public class Player extends Entity {
 		spawnPoints[3] = new Vector2(gameWidth - width - spawnOffset, gameHeight - height - spawnOffset);
 
 		List<Vector2> playerPositions = new LinkedList<Vector2>();
-		for (Entity e : entities) {
+		for (Entity e : GameScreen.instance.getEntities()) {
 			if (e instanceof Player && e != this) {
 				playerPositions.add(e.getPosition().cpy());
 			}
@@ -222,13 +210,9 @@ public class Player extends Entity {
 		pos.y += Math.cos(Math.toRadians(direction.getRotation())) * gunSprite.getHeight();
 
 		Bullet bullet = new Bullet(this, pos);
-		entities.add(entities.size(), bullet);
+		GameScreen.instance.getEntities().add(bullet);
 
 		 tank.getShotSound().play();
-	}
-
-	public void setEntities(List<Entity> entities) {
-		this.entities = entities;
 	}
 
 	public void renderGun(SpriteBatch batch) {

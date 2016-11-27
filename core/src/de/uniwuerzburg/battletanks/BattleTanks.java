@@ -32,7 +32,6 @@ public class BattleTanks extends Game {
         atlas = new TextureAtlas(Gdx.files.internal(prefs.getString("texture_atlas_path", "textures/textures.atlas")));
 
         setScreen(new MenuScreen(this));
-        //setScreen(new GameScreen(this, 0, null));
     }
 
     @Override

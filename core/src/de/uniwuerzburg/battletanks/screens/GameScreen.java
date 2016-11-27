@@ -41,151 +41,105 @@ public class GameScreen implements Screen {
 	public static GameScreen instance;
 
 	private int width;
-
 	private int height;
 	private final BattleTanks game;
 
 	private SpriteBatch batch;
-	private BitmapFont font;
-	private int fontSize = BattleTanks.getPreferences().getInteger("game_font_size", 14);
-
 	private OrthographicCamera camera;
 	private Viewport viewPort;
+    private ShapeRenderer shapeRenderer;
+
+    private BitmapFont font;
+    private int fontSize = BattleTanks.getPreferences().getInteger("game_font_size", 14);
+    private GlyphLayout layout;
+    private FreeTypeFontGenerator generator;
 
 	private TiledMap tiledMap;
 	private TiledMapRenderer tiledMapRenderer;
 	private FileHandle tiledMapFileHandle;
 
-	private GlyphLayout layout;
-
 	private List<Entity> entities;
-
 	private List<Player> players;
+
+    private int spawnOffset = BattleTanks.getPreferences().getInteger("spawn_offset", 20);
+
+    private Music music;
 
 	private float time;
 
-	private int spawnOffset = BattleTanks.getPreferences().getInteger("spawn_offset", 20);
-
-	private ShapeRenderer shapeRenderer;
-	private FreeTypeFontGenerator generator;
-
-	private Music music;
-
-	public GameScreen(final BattleTanks game, int time) {
-		instance = this;
-		this.game = game;
-	}
-
-	/**
-	 * @param game
-	 * @param time
-	 * @param tiledMapFileHandle
-	 * @param players
-	 */
 	public GameScreen(final BattleTanks game, float time, FileHandle tiledMapFileHandle, List<Player> players) {
 		instance = this;
 		this.game = game;
 		this.time = time;
 		this.players = new ArrayList<>(players);
 		this.tiledMapFileHandle = tiledMapFileHandle;
+        entities = new ArrayList<Entity>();
+    }
 
-		 music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
-		// music.play();
-		// music.setLooping(true);
-
-	}
-
-	@Override
+    @Override
 	public void show() {
-		batch = new SpriteBatch();
+        loadMAp();
+        setUpGraphics();
+        spawnPlayers();
+        loadMusic();
+    }
 
-		if (tiledMapFileHandle != null) {
-			tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
-		} else {
-			tiledMap = new TmxMapLoader()
-					.load(BattleTanks.getPreferences().getString("default_map", "maps/TestMap.tmx"));
-		}
-		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
-		MapProperties tiledMapProps = tiledMap.getProperties();
+    private void spawnPlayers() {
+        for (Player p : players) {
+            entities.add(p);
 
-		int mapWidth = tiledMapProps.get("width", Integer.class);
-		int mapHeight = tiledMapProps.get("height", Integer.class);
-		int tilePixelWidth = tiledMapProps.get("tilewidth", Integer.class);
-		int tilePixelHeight = tiledMapProps.get("tileheight", Integer.class);
+            float x = 0;
+            float y = 0;
+            switch (p.getNumber()) {
+            case 1:
+                x = spawnOffset;
+                y = height - spawnOffset - p.getHeight();
+                p.setDirection(Direction.DOWNRIGHT);
+                break;
+            case 2:
+                x = width - p.getWidth() - spawnOffset;
+                y = height - p.getHeight() - spawnOffset;
+                p.setDirection(Direction.DOWNLEFT);
+                break;
+            case 3:
+                x = spawnOffset;
+                y = spawnOffset;
+                p.setDirection(Direction.UPRIGHT);
+                break;
+            case 4:
+                x = width - p.getWidth() - spawnOffset;
+                y = spawnOffset;
+                p.setDirection(Direction.UPLEFT);
+            }
+            p.setPosition(x, y);
+        }
+    }
 
-		width = mapWidth * tilePixelWidth;
-		height = mapHeight * tilePixelHeight;
+    private void setUpGraphics() {
+        batch = new SpriteBatch();
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, width, height);
+        viewPort = new FitViewport(width, height, camera);
+        shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setProjectionMatrix(camera.combined);
 
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, width, height);
-		viewPort = new FitViewport(width, height, camera);
-		shapeRenderer = new ShapeRenderer();
-		shapeRenderer.setProjectionMatrix(camera.combined);
+        //Loading font
+        generator = new FreeTypeFontGenerator(Gdx.files.internal(BattleTanks.getPreferences().getString("game_font", "fonts/Vera.ttf")));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = fontSize;
+        parameter.color = Color.WHITE;
+        font = generator.generateFont(parameter);
+        layout = new GlyphLayout();
+        layout.setText(font, "");
+    }
 
-		entities = new ArrayList<Entity>();
+    private void loadMusic() {
+        music = Gdx.audio.newMusic(Gdx.files.internal(BattleTanks.getPreferences().getString("background_music", "music.mp3")));
+        // music.play();
+        // music.setLooping(true);
+    }
 
-		for (Player p : players) {
-			entities.add(p);
-			p.setEntities(entities);
-
-			float x = 0;
-			float y = 0;
-			switch (p.getNumber()) {
-			case 1:
-				x = spawnOffset;
-				y = height - spawnOffset - p.getHeight();
-				p.setDirection(Direction.DOWNRIGHT);
-				break;
-			case 2:
-				x = width - p.getWidth() - spawnOffset;
-				y = height - p.getHeight() - spawnOffset;
-				p.setDirection(Direction.DOWNLEFT);
-				break;
-			case 3:
-				x = spawnOffset;
-				y = spawnOffset;
-				p.setDirection(Direction.UPRIGHT);
-				break;
-			case 4:
-				x = width - p.getWidth() - spawnOffset;
-				y = spawnOffset;
-				p.setDirection(Direction.UPLEFT);
-			}
-			p.setPosition(x, y);
-		}
-
-		// einlesen der objects aus dem objects layer der tilemap und erstellung
-		// der obstacles
-
-		MapLayer objectsLayer = tiledMap.getLayers().get("objects");
-
-		if (objectsLayer != null) {
-			for (MapObject object : objectsLayer.getObjects()) {
-
-				if (object instanceof RectangleMapObject) {
-					RectangleMapObject rectObject = (RectangleMapObject) object;
-					Rectangle rect = rectObject.getRectangle();
-					Obstacle obst = new Obstacle();
-					obst.setPosition((int) rect.getX(), (int) rect.getY());
-					obst.setWidth((int) rect.getWidth());
-					obst.setHeight((int) rect.getHeight());
-					entities.add(obst);
-				}
-			}
-		}
-
-		generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Vera.ttf"));
-		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		parameter.size = fontSize;
-		parameter.color = Color.WHITE;
-		font = generator.generateFont(parameter);
-
-		layout = new GlyphLayout();
-		layout.setText(font, "");
-
-	}
-
-	@Override
+    @Override
 	public void render(float delta) {
 		Gdx.graphics.setTitle(BattleTanks.getPreferences().getString("title", "Battletanks"));
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -199,118 +153,171 @@ public class GameScreen implements Screen {
 		}
 
 		camera.update();
+        updateEntities();
 
-		// updated zuerst die ursprünglichen entities
-		int n = entities.size();
-		for (int i = 0; i < n; i++) {
-			Entity entity = entities.get(i);
-			entity.update();
-		}
 
-		// updated neu hinzugekommene entities
-		for (int i = n; i < entities.size(); i++) {
-			Entity entity = entities.get(i);
-			entity.update();
-		}
-
-		// auflösung der kollisionen zwischen playern und obstacles
-		for (Player p : players) {
-			for (Entity e : entities) {
-				if (e instanceof Obstacle && p != e) {
-					detectCollisionAndResponse(p, e);
-				}
-			}
-		}
-
-		List<Entity> bulletsToDelete = new LinkedList<Entity>();
-
-		for (Entity b : entities) {
-			if (b instanceof Bullet) {
-				// bullets die das spielfeld verlassen werden gelöscht
-				if (isOutOfGame(b)) {
-					bulletsToDelete.add(b);
-				} else {
-					// bullets die auf eine entity treffen werden gelöscht
-					for (Entity e : entities) {
-						if (detectBulletHitAndDamage((Bullet) b, e)) {
-							bulletsToDelete.add(b);
-						}
-					}
-				}
-			}
-		}
-
-		// lösche bullets
-		for (Entity b : bulletsToDelete) {
-			entities.remove(b);
-		}
-
-		// auflösung der kollisionen zwischen playern und playern
-		for (Player p : players) {
-			for (Player e : players) {
-				if (p != e) {
-					detectCollisionAndResponse(p, e);
-				}
-			}
-		}
-
-		tiledMapRenderer.setView(camera);
+        tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
 
-		shapeRenderer.setProjectionMatrix(camera.combined);
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		for (Player p : players) {
-			p.renderLifeBar(shapeRenderer);
-		}
-		shapeRenderer.end();
+        renderEntities();
 
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-
-		for (Entity entity : entities) {
-			entity.render(batch);
-		}
-
-		for (Player p : players) {
-			p.renderGun(batch);
-		}
-
-		String timeLeft = "Time left: " + formatTime(time);
-
-		layout.setText(font, timeLeft);
-		font.draw(batch, timeLeft, width / 2 - layout.width / 2, height - 10);
-
-		String text = "";
-		int offset = 10;
-
-		for (Player p : players) {
-			text = "Player "+p.getNumber()+" : " + p.getKills() + " kills" + "\n"+p.getDeathCount()+" deaths";
-
-			switch (p.getNumber()) {
-			case 1:
-				layout.setText(font, text);
-				font.draw(batch, text, offset, height - offset);
-				break;
-			case 2:
-				layout.setText(font, text);
-				font.draw(batch, text, width - layout.width - offset, height - offset);
-				break;
-			case 3:
-				layout.setText(font, text);
-				font.draw(batch, text, offset, layout.height + offset);
-				break;
-			case 4:
-				layout.setText(font, text);
-				font.draw(batch, text, width - layout.width - offset, layout.height + offset);
-				break;
-
-			}
-
-		}
+        renderText();
 
 		batch.end();
 
 	}
+
+    private void renderText() {
+        String timeLeft = "Time left: " + formatTime(time);
+
+        layout.setText(font, timeLeft);
+        font.draw(batch, timeLeft, width / 2 - layout.width / 2, height - 10);
+
+        String text = "";
+        int offset = 10;
+
+        for (Player p : players) {
+            text = "Player "+p.getNumber()+" : " + p.getKills() + " kills" + "\n"+p.getDeathCount()+" deaths";
+
+            switch (p.getNumber()) {
+            case 1:
+                layout.setText(font, text);
+                font.draw(batch, text, offset, height - offset);
+                break;
+            case 2:
+                layout.setText(font, text);
+                font.draw(batch, text, width - layout.width - offset, height - offset);
+                break;
+            case 3:
+                layout.setText(font, text);
+                font.draw(batch, text, offset, layout.height + offset);
+                break;
+            case 4:
+                layout.setText(font, text);
+                font.draw(batch, text, width - layout.width - offset, layout.height + offset);
+                break;
+
+            }
+
+        }
+    }
+
+    private void renderEntities() {
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        for (Player p : players) {
+            p.renderLifeBar(shapeRenderer);
+        }
+        shapeRenderer.end();
+
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+
+        for (Entity entity : entities) {
+            entity.render(batch);
+        }
+
+        for (Player p : players) {
+            p.renderGun(batch);
+        }
+    }
+
+    private void updateEntities() {
+        // updated zuerst die ursprünglichen entities
+        int n = entities.size();
+        for (int i = 0; i < n; i++) {
+            Entity entity = entities.get(i);
+            entity.update();
+        }
+
+        // updated neu hinzugekommene entities
+        for (int i = n; i < entities.size(); i++) {
+            Entity entity = entities.get(i);
+            entity.update();
+        }
+
+        // auflösung der kollisionen zwischen playern und obstacles
+        for (Player p : players) {
+            for (Entity e : entities) {
+                if (e instanceof Obstacle && p != e) {
+                    detectCollisionAndResponse(p, e);
+                }
+            }
+        }
+
+        List<Entity> bulletsToDelete = new LinkedList<Entity>();
+
+        for (Entity b : entities) {
+            if (b instanceof Bullet) {
+                // bullets die das spielfeld verlassen werden gelöscht
+                if (isOutOfGame(b)) {
+                    bulletsToDelete.add(b);
+                } else {
+                    // bullets die auf eine entity treffen werden gelöscht
+                    for (Entity e : entities) {
+                        if (detectBulletHitAndDamage((Bullet) b, e)) {
+                            bulletsToDelete.add(b);
+                        }
+                    }
+                }
+            }
+        }
+
+        // lösche bullets
+        for (Entity b : bulletsToDelete) {
+            entities.remove(b);
+        }
+
+        // auflösung der kollisionen zwischen playern und playern
+        for (Player p : players) {
+            for (Player e : players) {
+                if (p != e) {
+                    detectCollisionAndResponse(p, e);
+                }
+            }
+        }
+    }
+
+    private void loadMAp() {
+        if (tiledMapFileHandle != null) {
+            tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
+        } else {
+            tiledMap = new TmxMapLoader()
+                    .load(BattleTanks.getPreferences().getString("default_map", "maps/TestMap.tmx"));
+        }
+        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+        MapProperties tiledMapProps = tiledMap.getProperties();
+
+        int mapWidth = tiledMapProps.get("width", Integer.class);
+        int mapHeight = tiledMapProps.get("height", Integer.class);
+        int tilePixelWidth = tiledMapProps.get("tilewidth", Integer.class);
+        int tilePixelHeight = tiledMapProps.get("tileheight", Integer.class);
+
+        width = mapWidth * tilePixelWidth;
+        height = mapHeight * tilePixelHeight;
+
+
+        // einlesen der objects aus dem objects layer der tilemap und erstellung
+        // der obstacles
+
+        MapLayer objectsLayer = tiledMap.getLayers().get("objects");
+
+        if (objectsLayer != null) {
+            for (MapObject object : objectsLayer.getObjects()) {
+
+                if (object instanceof RectangleMapObject) {
+                    RectangleMapObject rectObject = (RectangleMapObject) object;
+                    Rectangle rect = rectObject.getRectangle();
+                    Obstacle obst = new Obstacle();
+                    obst.setPosition((int) rect.getX(), (int) rect.getY());
+                    obst.setWidth((int) rect.getWidth());
+                    obst.setHeight((int) rect.getHeight());
+                    entities.add(obst);
+                }
+            }
+        }
+    }
 
 	private boolean detectBulletHitAndDamage(Bullet b, Entity p) {
 		// variablen für bullet
@@ -497,7 +504,7 @@ public class GameScreen implements Screen {
 		return translations;
 	}
 
-	public String formatTime(float time) {
+	private String formatTime(float time) {
 
 		int minutes = (int) time / 60;
 		int seconds = (int) time % 60;
@@ -554,4 +561,7 @@ public class GameScreen implements Screen {
 		return height;
 	}
 
+    public List<Entity> getEntities() {
+        return entities;
+    }
 }
