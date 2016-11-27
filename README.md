@@ -1,7 +1,6 @@
 TODO  
 Konkrete Sachen/Bugs:
 
-- Größe des TankChoosers im Menü abh. von Stringlänge d. Tankeigenschaften
 - Weitere Maps erstellen
 - Sounds im Menü (de)aktivierbar machen
 - Button um default-Werte in config zu speichern (Battletanks.setDefaultPrefs())
