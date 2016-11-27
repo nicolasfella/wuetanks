@@ -4,6 +4,7 @@ Konkrete Sachen/Bugs:
 - Weitere Maps erstellen
 - Sounds im Menü (de)aktivierbar machen
 - Button um default-Werte in config zu speichern (Battletanks.setDefaultPrefs())
+- Kanone im Menü zeichnen
 
 
 Sonstiges:
