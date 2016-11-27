@@ -6,8 +6,11 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -31,14 +34,26 @@ public class EndScreen implements Screen {
 	private Table mainTable;
 	private BattleTanks game;
 
+	private Preferences prefs;
+
+	private Texture background;
+
 	public EndScreen(final BattleTanks game, List<Player> players) {
 		this.players = new ArrayList<>(players);
 		this.game = game;
+		prefs = BattleTanks.getPreferences();
 
-		this.skin = new Skin(Gdx.files.internal("data/uiskin.json"));
-		this.stage = new Stage(new FitViewport(1024, 768));
+		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
+		this.stage = new Stage(
+				new FitViewport(prefs.getInteger("window_width", 1024), prefs.getInteger("window_height", 768)));
+		background = new Texture(Gdx.files.internal("background.png"));
 		Gdx.input.setInputProcessor(stage);
 
+		create();
+
+	}
+
+	private void create() {
 		Label test = new Label("ENDE DES SPIELS!", skin);
 		this.mainTable = new Table();
 		mainTable.setFillParent(true);
@@ -65,7 +80,6 @@ public class EndScreen implements Screen {
 		start.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-
 				MenuScreen m = new MenuScreen(game);
 				BattleTanks.addScreen(m);
 				game.setScreen(m);
@@ -81,10 +95,16 @@ public class EndScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0.3f, 1);
+		// Gdx.gl.glClearColor(0, 0, 0.3f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		stage.act(Gdx.graphics.getDeltaTime());
+
+		stage.getBatch().begin();
+		Color c = stage.getBatch().getColor();
+		stage.getBatch().setColor(c.r, c.g, c.b, 0.6f);
+		stage.getBatch().draw(background, 0, 0, stage.getWidth(), stage.getHeight());
+		stage.getBatch().end();
 		stage.draw();
 	}
 

@@ -8,7 +8,9 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -62,6 +64,8 @@ public class MenuScreen implements Screen {
 
 	private Preferences prefs;
 
+	private Texture background;
+
 	/**
 	 * New MenuScreen for a BattleTanks game; sets atlas, skin, stage, mainTable
 	 * and creates the UI
@@ -72,6 +76,7 @@ public class MenuScreen implements Screen {
 		this.game = game;
 		prefs = BattleTanks.getPreferences();
 		tiledMapFileHandle = null;
+		background = new Texture(Gdx.files.internal("background.png"));
 		this.atlas = BattleTanks.getTextureAtlas();
 
 		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
@@ -81,17 +86,22 @@ public class MenuScreen implements Screen {
 
 		mainTable = new Table();
 		mainTable.setFillParent(true);
-
 		// stage.setDebugAll(true);
 		create();
 	}
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0.3f, 1);
+		// Gdx.gl.glClearColor(0, 0, 0.3f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 		stage.act(Gdx.graphics.getDeltaTime());
+
+		stage.getBatch().begin();
+		Color c = stage.getBatch().getColor();
+		stage.getBatch().setColor(c.r, c.g, c.b, 0.6f);
+		stage.getBatch().draw(background, 0, 0, stage.getWidth(), stage.getHeight());
+		stage.getBatch().end();
+
 		stage.draw();
 	}
 
@@ -143,7 +153,7 @@ public class MenuScreen implements Screen {
 		mainTable.add(createTankChooser(3, Keys.T, Keys.G, Keys.F, Keys.H, Keys.Z, tankList)).expand();
 		mainTable.add(createTankChooser(4, Keys.I, Keys.K, Keys.J, Keys.L, Keys.O, tankList)).expand();
 		mainTable.row();
-		mainTable.add(start).colspan(2).padBottom(20).width(100);
+		mainTable.add(start).colspan(2).padBottom(20).width(200).height(50);
 
 		stage.addActor(mainTable);
 	}
@@ -245,11 +255,6 @@ public class MenuScreen implements Screen {
 		Button next = new TextButton(" >> ", skin);
 		Button previous = new TextButton(" << ", skin);
 
-		// for(Tanks t: tanks){
-		// System.out.println(t.getName() + ": " + t.getStrength() + "( " +
-		// t.getDPS() + " * " + t.getLife() + " )");
-		// }
-
 		VerticalGroup[] tankInfo = new VerticalGroup[5];
 		for (int i = 0; i < tankInfo.length; i++) {
 			tankInfo[i] = createTankInfo(tankList.get(i));
@@ -276,7 +281,6 @@ public class MenuScreen implements Screen {
 					if (tankCycle.getChildren().contains(tankInfo[i], false)) {
 						tankCycle.removeActor(tankInfo[i]);
 						int mod = Math.floorMod((i - 1), tankInfo.length);
-						System.out.println(mod);
 						tankCycle.addActorAt(1, tankInfo[mod]);
 						break;
 					}
@@ -313,6 +317,12 @@ public class MenuScreen implements Screen {
 
 	}
 
+	/**
+	 * Creates the UI Element for showing the tank model and its stats
+	 * 
+	 * @param tank
+	 * @return Table
+	 */
 	private VerticalGroup createTankInfo(Tanks tank) {
 		VerticalGroup tankInfo = new VerticalGroup();
 		tankInfo.setName(tank.getName());
@@ -324,15 +334,14 @@ public class MenuScreen implements Screen {
 		Label armor = new Label("Armor: " + tank.getArmor(), skin);
 		Label reloadTime = new Label("Reload: " + tank.getReloadTime() + " sec", skin);
 
-		tankInfo.addActor(damage);
 		tankInfo.addActor(tankImage);
+		tankInfo.addActor(damage);
 		tankInfo.addActor(hp);
 		tankInfo.addActor(armor);
 		tankInfo.addActor(reloadTime);
 
 		tankInfo.padLeft(5).padRight(5);
-		tankInfo.space(5);
-
+		tankInfo.space(2);
 		return tankInfo;
 	}
 
