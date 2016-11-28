@@ -242,7 +242,7 @@ public class GameScreen implements Screen {
 		// auflösung der kollisionen zwischen playern und obstacles
 		for (Player p : players) {
 			for (Entity e : entities) {
-				if (e instanceof Obstacle && p != e) {
+				if (e instanceof Obstacle) {
 					detectCollisionAndResponse(p, e);
 				}
 			}
@@ -274,11 +274,10 @@ public class GameScreen implements Screen {
 		// auflösung der kollisionen zwischen playern und playern
 		for (Player p : players) {
 			for (Player e : players) {
-				if (p != e) {
-					detectCollisionAndResponse(p, e);
-				}
+				detectCollisionAndResponse(p, e);
 			}
 		}
+
 	}
 
 	private void loadMap() {
@@ -322,30 +321,24 @@ public class GameScreen implements Screen {
 
 	private boolean detectBulletHitAndDamage(Bullet b, Entity p) {
 
+		if (b == p || b.getPlayer() == p) {
+			return false;
+		}
+
 		// variablen für bullet
 
-		float bRX = b.getBottomLeftCornerX() + b.getRenderWidth();
-		float bLX = b.getBottomLeftCornerX();
-
-		float bRY = b.getBottomLeftCornerY() + b.getRenderHeight();
-		float bLY = b.getBottomLeftCornerY();
+		Rectangle bRect = b.getCollisionRectangle();
 
 		// variablen für player
 
-		float pRX = p.getBottomLeftCornerX() + p.getRenderWidth();
-		float pLX = p.getBottomLeftCornerX();
-
-		float pRY = p.getBottomLeftCornerY() + p.getRenderHeight();
-		float pLY = p.getBottomLeftCornerY();
+		Rectangle pRect = p.getCollisionRectangle();
 
 		// kollision nur bei überschneidung in vertikaler sowie horizontaler
 		// richtung
-		if ((bRY >= pLY && bLY < pRY) && (bRX >= pLX && bLX < pRX) && b.getPlayer() != p && b != p) {
-
+		if (bRect.overlaps(pRect)) {
 			if (p instanceof Player) {
 				((Player) p).hitPlayer(b);
 			}
-
 			return true;
 		}
 
@@ -353,39 +346,50 @@ public class GameScreen implements Screen {
 	}
 
 	private boolean isOutOfGame(Entity e) {
-		
-		if (e.getBottomLeftCornerX() < 0 - e.getRenderWidth() || e.getBottomLeftCornerX() > width + e.getRenderWidth() || e.getBottomLeftCornerY() < 0 - e.getRenderHeight() || e.getBottomLeftCornerY() > height + e.getRenderHeight()) {
-			return true;
+
+		Rectangle playField = new Rectangle(0, 0, width, height);
+		Rectangle eRect = e.getCollisionRectangle();
+
+		if (eRect.overlaps(playField)) {
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 	private void detectCollisionAndResponse(Entity p, Entity o) {
 
+		if (p == o) {
+			return;
+		}
+
 		// variablen für 1. entity
 
-		float pRX = p.getBottomLeftCornerX() + p.getRenderWidth();
-		float pLX = p.getBottomLeftCornerX();
+		Rectangle pRect = p.getCollisionRectangle();
+
+		float pRX = pRect.getX() + pRect.getWidth();
+		float pLX = pRect.getX();
 		float pVX = p.getSpeed().x;
 
-		float pRY = p.getBottomLeftCornerY() + p.getRenderHeight();
-		float pLY = p.getBottomLeftCornerY();
+		float pRY = pRect.getY() + pRect.getHeight();
+		float pLY = pRect.getY();
 		float pVY = p.getSpeed().y;
 
 		// variablen für 2. entity
 
-		float oRX = o.getBottomLeftCornerX() + o.getRenderWidth();
-		float oLX = o.getBottomLeftCornerX();
+		Rectangle oRect = o.getCollisionRectangle();
+
+		float oRX = oRect.getX() + oRect.getWidth();
+		float oLX = oRect.getX();
 		float oVX = o.getSpeed().x;
 
-		float oRY = o.getBottomLeftCornerY() + o.getRenderHeight();
-		float oLY = o.getBottomLeftCornerY();
+		float oRY = oRect.getY() + oRect.getHeight();
+		float oLY = oRect.getY();
 		float oVY = o.getSpeed().y;
 
 		// kollision nur bei überschneidung in vertikaler sowie horizontaler
 		// richtung
-		if ((pRY >= oLY && pLY < oRY) && (pRX >= oLX && pLX < oRX)) {
+		if (pRect.overlaps(oRect)) {
 
 			// berechnung wie stark sich die entities in x und y richtung
 			// überlappen
@@ -414,12 +418,12 @@ public class GameScreen implements Screen {
 				translations = solveOverlap(pVX, oVX, overlapX);
 
 				if (translations[0] != 0) {
-					p.setX(pLX + translations[0]);
+					p.setX(p.getX() + translations[0]);
 					p.getSpeed().x = 0;
 				}
 
 				if (translations[1] != 0) {
-					o.setX(oLX + translations[1]);
+					o.setX(o.getX() + translations[1]);
 					o.getSpeed().x = 0;
 				}
 
@@ -428,12 +432,12 @@ public class GameScreen implements Screen {
 				translations = solveOverlap(pVY, oVY, overlapY);
 
 				if (translations[0] != 0) {
-					p.setY(pLY + translations[0]);
+					p.setY(p.getY() + translations[0]);
 					p.getSpeed().y = 0;
 				}
 
 				if (translations[1] != 0) {
-					o.setY(oLY + translations[1]);
+					o.setY(o.getY() + translations[1]);
 					o.getSpeed().y = 0;
 				}
 

@@ -3,6 +3,7 @@ package de.uniwuerzburg.battletanks.entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -17,6 +18,15 @@ public class Entity implements Disposable {
 	 * The position of the entity
 	 */
 	protected Vector2 position;
+
+	/** The vector to the position of the rectangle which defines the collision object */
+	protected Vector2 toCollisionRectangleVector;
+
+	/** The width of the collision rectangle */
+	protected float collisionRectangleWidth;
+
+	/** The height of the collision rectangle */
+	protected float collisionRectangleHeight;
 
 	/**
 	 * The position of the entity in the previous frame
@@ -60,7 +70,15 @@ public class Entity implements Disposable {
 
 		position = new Vector2();
 		oldPosition = new Vector2();
+		toCollisionRectangleVector = new Vector2();
 		speed = new Vector2();
+		
+		width = 0;
+		height = 0;
+		
+		collisionRectangleWidth = 0;
+		collisionRectangleHeight = 0;
+		
 
 		sprite = BattleTanks.getTextureAtlas().createSprite(spriteName);
 		sprite.setPosition(position.x, position.y);
@@ -100,6 +118,9 @@ public class Entity implements Disposable {
 
 	public void setHeight(int height) {
 		this.height = height;
+		if(collisionRectangleHeight == 0){
+			collisionRectangleHeight = height;
+		}
 	}
 
 	public int getWidth() {
@@ -108,6 +129,9 @@ public class Entity implements Disposable {
 
 	public void setWidth(int width) {
 		this.width = width;
+		if(collisionRectangleWidth == 0){
+			collisionRectangleWidth = width;
+		}
 	}
 
 	public Vector2 getSpeed() {
@@ -134,26 +158,11 @@ public class Entity implements Disposable {
 		position.y = y;
 	}
 
-	public float getBottomLeftCornerX(){
-		return getX();
+	public Rectangle getCollisionRectangle(){
+		Vector2 rectPos = position.cpy().add(toCollisionRectangleVector);		
+		return new Rectangle(rectPos.x, rectPos.y, collisionRectangleWidth, collisionRectangleHeight);
 	}
-	
-	public float getBottomLeftCornerY(){
-		return getY();
-	}
-	
-	public Vector2 getBottomLeftCorner(){
-		return getPosition();
-	}
-	
-	public float getRenderWidth(){
-		return getWidth();
-	}
-	
-	public float getRenderHeight(){
-		return getHeight();
-	}
-	
+
 	public void setPosition(float x, float y) {
 		position.set(x, y);
 	}

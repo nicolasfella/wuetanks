@@ -1,5 +1,6 @@
 package de.uniwuerzburg.battletanks.entity;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
@@ -9,10 +10,6 @@ public class Bullet extends Entity {
 	private int movingSpeed;
 	private float dmg;
 	private Player player;
-
-	private Vector2 toLeftBottomCorner;
-	private float renderWidth;
-	private float renderHeight;
 
 	private Direction direction;
 
@@ -36,7 +33,7 @@ public class Bullet extends Entity {
 		sprite.setOrigin(width / 2.f, 0);
 		sprite.setRotation(direction.getRotation());
 
-		calculateRenderSize();
+		calculateCollisionRectangleSize();
 		calculateVectorToLeftBottomCorner();
 
 	}
@@ -48,31 +45,28 @@ public class Bullet extends Entity {
 		super.update();
 	}
 
-	/**
-	 * vertauscht width und height bei links und rechtsdrehung oder berechnet die
-	 * breite und höhe eines quadrates, das den großteil der kugel abdeckt
-	 */
-	private void calculateRenderSize() {
+	/** berechnet die breite und höhe des kollisionsrechtecks */
+	private void calculateCollisionRectangleSize() {
 
 		switch (direction) {
 
 		case LEFT:
 		case RIGHT:
-			renderWidth = height;
-			renderHeight = width;
+			collisionRectangleWidth = height;
+			collisionRectangleHeight = width;
 			break;
 
 		case UPLEFT:
 		case UPRIGHT:
 		case DOWNLEFT:
 		case DOWNRIGHT:
-			renderWidth = (float) (height / Math.sqrt(2));
-			renderHeight = renderWidth;
+			collisionRectangleWidth = (float) (height / Math.sqrt(2));
+			collisionRectangleHeight = collisionRectangleWidth;
 			break;
 
 		default:
-			renderWidth = width;
-			renderHeight = height;
+			collisionRectangleWidth = width;
+			collisionRectangleHeight = height;
 			break;
 		}
 
@@ -80,43 +74,40 @@ public class Bullet extends Entity {
 
 	/**
 	 * berechnet einen vektor der ausgehend von der aktuellen position zur
-	 * unteren linken ecke der kugel bzw. dem quadrat, das die kugel
-	 * abdeckt, verläuft
+	 * unteren linken ecke des kollisions-rechtsecks führt
 	 */
 	private void calculateVectorToLeftBottomCorner() {
-		toLeftBottomCorner = new Vector2();
-
 		switch (direction) {
 		case RIGHT:
-			toLeftBottomCorner.x = width / 2.f;
-			toLeftBottomCorner.y = -width / 2.f;
+			toCollisionRectangleVector.x = width / 2.f;
+			toCollisionRectangleVector.y = -width / 2.f;
 			break;
 
 		case DOWN:
-			toLeftBottomCorner.y = -height;
+			toCollisionRectangleVector.y = -height;
 			break;
 
 		case LEFT:
-			toLeftBottomCorner.x = -height + width / 2f;
-			toLeftBottomCorner.y = -width / 2f;
+			toCollisionRectangleVector.x = -height + width / 2f;
+			toCollisionRectangleVector.y = -width / 2f;
 			break;
 
 		case UPRIGHT:
-			toLeftBottomCorner.x = width / 2f;
+			toCollisionRectangleVector.x = width / 2f;
 			break;
 
 		case DOWNRIGHT:
-			toLeftBottomCorner.x = width / 2f;
-			toLeftBottomCorner.y = -renderHeight;
+			toCollisionRectangleVector.x = width / 2f;
+			toCollisionRectangleVector.y = -collisionRectangleHeight;
 			break;
 
 		case DOWNLEFT:
-			toLeftBottomCorner.x = width / 2f - renderWidth;
-			toLeftBottomCorner.y = -renderHeight;
+			toCollisionRectangleVector.x = width / 2f - collisionRectangleWidth;
+			toCollisionRectangleVector.y = -collisionRectangleHeight;
 			break;
 
 		case UPLEFT:
-			toLeftBottomCorner.x = width / 2f - renderWidth;
+			toCollisionRectangleVector.x = width / 2f - collisionRectangleWidth;
 			break;
 
 		case UP:
@@ -130,28 +121,6 @@ public class Bullet extends Entity {
 
 	public Player getPlayer() {
 		return player;
-	}
-
-	public Vector2 getBottomLeftCorner() {
-		return position.cpy().add(toLeftBottomCorner);
-	}
-
-	public float getBottomLeftCornerX() {
-		return position.x + toLeftBottomCorner.x;
-	}
-
-	public float getBottomLeftCornerY() {
-		return position.y + toLeftBottomCorner.y;
-	}
-
-	public float getRenderWidth() {
-
-		return renderWidth;
-	}
-
-	public float getRenderHeight() {
-
-		return renderHeight;
 	}
 
 }

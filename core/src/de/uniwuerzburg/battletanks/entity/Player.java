@@ -51,6 +51,9 @@ public class Player extends Entity {
 
 		width = BattleTanks.getPreferences().getInteger("player_width", 40);
 		height = BattleTanks.getPreferences().getInteger("player_height", 40);
+		
+		collisionRectangleWidth = width;
+		collisionRectangleHeight = height;
 
 		movingSpeed = BattleTanks.getPreferences().getInteger("player_speed", 150);
 
