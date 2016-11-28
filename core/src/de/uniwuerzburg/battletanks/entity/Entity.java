@@ -158,6 +158,7 @@ public class Entity implements Disposable {
 		position.y = y;
 	}
 
+	/** gibt ein rechteck zurück, das für die kollisionserkennung verwendet wird */
 	public Rectangle getCollisionRectangle(){
 		Vector2 rectPos = position.cpy().add(toCollisionRectangleVector);		
 		return new Rectangle(rectPos.x, rectPos.y, collisionRectangleWidth, collisionRectangleHeight);

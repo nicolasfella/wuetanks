@@ -1,6 +1,5 @@
 package de.uniwuerzburg.battletanks.entity;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
@@ -34,7 +33,7 @@ public class Bullet extends Entity {
 		sprite.setRotation(direction.getRotation());
 
 		calculateCollisionRectangleSize();
-		calculateVectorToLeftBottomCorner();
+		calculateCollisionRectangleVector();
 
 	}
 
@@ -76,7 +75,7 @@ public class Bullet extends Entity {
 	 * berechnet einen vektor der ausgehend von der aktuellen position zur
 	 * unteren linken ecke des kollisions-rechtsecks führt
 	 */
-	private void calculateVectorToLeftBottomCorner() {
+	private void calculateCollisionRectangleVector() {
 		switch (direction) {
 		case RIGHT:
 			toCollisionRectangleVector.x = width / 2.f;
