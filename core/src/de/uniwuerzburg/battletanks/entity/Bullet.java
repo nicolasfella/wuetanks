@@ -1,15 +1,5 @@
 package de.uniwuerzburg.battletanks.entity;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
@@ -46,7 +36,7 @@ public class Bullet extends Entity {
 		sprite.setOrigin(width / 2.f, 0);
 		sprite.setRotation(direction.getRotation());
 
-		calculateRealSize();
+		calculateRenderSize();
 		calculateVectorToLeftBottomCorner();
 
 	}
@@ -62,7 +52,7 @@ public class Bullet extends Entity {
 	 * vertauscht width und height bei links und rechtsdrehung oder berechnet die
 	 * breite und höhe eines quadrates, das den großteil der kugel abdeckt
 	 */
-	private void calculateRealSize() {
+	private void calculateRenderSize() {
 
 		switch (direction) {
 
