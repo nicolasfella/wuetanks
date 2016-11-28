@@ -11,6 +11,8 @@ Sonstiges:
 - Code verschönern/verkürzen/verbessern
 - Menü verschönern, evtl neuer/eigener uiskin für font, buttons etc
 - Kommentieren/Dokumentieren
+- Panzer in Fahrtrichung drehen (?)
+- Kurzes Tippen dreht nur die Waffe (?)
 - Memory Management: bullets poolen, screens wiederverwenden (?)
 - Tests?
 - ...
