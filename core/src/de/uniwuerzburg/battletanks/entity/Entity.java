@@ -134,6 +134,26 @@ public class Entity implements Disposable {
 		position.y = y;
 	}
 
+	public float getBottomLeftCornerX(){
+		return getX();
+	}
+	
+	public float getBottomLeftCornerY(){
+		return getY();
+	}
+	
+	public Vector2 getBottomLeftCorner(){
+		return getPosition();
+	}
+	
+	public float getRenderWidth(){
+		return getWidth();
+	}
+	
+	public float getRenderHeight(){
+		return getHeight();
+	}
+	
 	public void setPosition(float x, float y) {
 		position.set(x, y);
 	}

@@ -78,7 +78,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		loadMAp();
+		loadMap();
 		setUpGraphics();
 		spawnPlayers();
 		loadMusic();
@@ -210,6 +210,7 @@ public class GameScreen implements Screen {
 		for (Player p : players) {
 			p.renderLifeBar(shapeRenderer);
 		}
+
 		shapeRenderer.end();
 
 		batch.setProjectionMatrix(camera.combined);
@@ -280,7 +281,7 @@ public class GameScreen implements Screen {
 		}
 	}
 
-	private void loadMAp() {
+	private void loadMap() {
 		if (tiledMapFileHandle != null) {
 			tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
 		} else {
@@ -320,25 +321,27 @@ public class GameScreen implements Screen {
 	}
 
 	private boolean detectBulletHitAndDamage(Bullet b, Entity p) {
+
 		// variablen für bullet
 
-		float bRX = b.getX() + b.getWidth();
-		float bLX = b.getX();
+		float bRX = b.getBottomLeftCornerX() + b.getRenderWidth();
+		float bLX = b.getBottomLeftCornerX();
 
-		float bRY = b.getY() + b.getHeight();
-		float bLY = b.getY();
+		float bRY = b.getBottomLeftCornerY() + b.getRenderHeight();
+		float bLY = b.getBottomLeftCornerY();
 
 		// variablen für player
 
-		float pRX = p.getX() + p.getWidth();
-		float pLX = p.getX();
+		float pRX = p.getBottomLeftCornerX() + p.getRenderWidth();
+		float pLX = p.getBottomLeftCornerX();
 
-		float pRY = p.getY() + p.getHeight();
-		float pLY = p.getY();
+		float pRY = p.getBottomLeftCornerY() + p.getRenderHeight();
+		float pLY = p.getBottomLeftCornerY();
 
 		// kollision nur bei überschneidung in vertikaler sowie horizontaler
 		// richtung
 		if ((bRY >= pLY && bLY < pRY) && (bRX >= pLX && bLX < pRX) && b.getPlayer() != p && b != p) {
+
 			if (p instanceof Player) {
 				((Player) p).hitPlayer(b);
 			}
@@ -350,9 +353,8 @@ public class GameScreen implements Screen {
 	}
 
 	private boolean isOutOfGame(Entity e) {
-		float max = Math.max(e.getHeight(), e.getWidth());
-
-		if (e.getX() < 0 - max || e.getX() > width + max || e.getY() < 0 - max || e.getY() > height + max) {
+		
+		if (e.getBottomLeftCornerX() < 0 - e.getRenderWidth() || e.getBottomLeftCornerX() > width + e.getRenderWidth() || e.getBottomLeftCornerY() < 0 - e.getRenderHeight() || e.getBottomLeftCornerY() > height + e.getRenderHeight()) {
 			return true;
 		}
 
@@ -363,22 +365,22 @@ public class GameScreen implements Screen {
 
 		// variablen für 1. entity
 
-		float pRX = p.getX() + p.getWidth();
-		float pLX = p.getX();
+		float pRX = p.getBottomLeftCornerX() + p.getRenderWidth();
+		float pLX = p.getBottomLeftCornerX();
 		float pVX = p.getSpeed().x;
 
-		float pRY = p.getY() + p.getHeight();
-		float pLY = p.getY();
+		float pRY = p.getBottomLeftCornerY() + p.getRenderHeight();
+		float pLY = p.getBottomLeftCornerY();
 		float pVY = p.getSpeed().y;
 
 		// variablen für 2. entity
 
-		float oRX = o.getX() + o.getWidth();
-		float oLX = o.getX();
+		float oRX = o.getBottomLeftCornerX() + o.getRenderWidth();
+		float oLX = o.getBottomLeftCornerX();
 		float oVX = o.getSpeed().x;
 
-		float oRY = o.getY() + o.getHeight();
-		float oLY = o.getY();
+		float oRY = o.getBottomLeftCornerY() + o.getRenderHeight();
+		float oLY = o.getBottomLeftCornerY();
 		float oVY = o.getSpeed().y;
 
 		// kollision nur bei überschneidung in vertikaler sowie horizontaler
