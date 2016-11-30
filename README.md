@@ -13,7 +13,6 @@ Sonstiges:
 - Kommentieren/Dokumentieren
 - Panzer in Fahrtrichung drehen (?)
 - Kurzes Tippen dreht nur die Waffe (?)
-- Memory Management: bullets poolen, screens wiederverwenden (?)
 - Tests?
 - ...
 
