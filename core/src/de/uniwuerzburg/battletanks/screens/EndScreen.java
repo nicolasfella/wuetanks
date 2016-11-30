@@ -35,7 +35,11 @@ public class EndScreen implements Screen {
 
 	private Texture background;
 
-	public EndScreen() {
+	/**
+	 * Creates a new EndScreen
+	 * @param players List of players for ranking
+	 */
+	public EndScreen(List<Player> players) {
 		prefs = BattleTanks.getPreferences();
 
 		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
@@ -43,14 +47,19 @@ public class EndScreen implements Screen {
 				new FitViewport(prefs.getInteger("window_width", 1024), prefs.getInteger("window_height", 768)));
 		background = new Texture(Gdx.files.internal(prefs.getString("background", "background.png")));
 		Gdx.input.setInputProcessor(stage);
+		
+		reset(players);
 	}
 
-	public void reset(List<Player> players){
+	/**
+	 * Resets the EndScreen
+	 * @param players List of players for ranking
+	 */
+	public void reset(List<Player> players) {
 		this.players = new ArrayList<>(players);
 		create();
 	}
-	
-	
+
 	private void create() {
 		Label test = new Label("Scoreboard:", skin);
 		this.mainTable = new Table();
@@ -84,11 +93,21 @@ public class EndScreen implements Screen {
 		return start;
 	}
 
+	/**
+	 * Called when Screen is shown. For further information see
+	 * <a href="https://github.com/libgdx/libgdx/wiki/The-life-cycle">libGDX
+	 * Wiki</a>
+	 */
 	@Override
 	public void show() {
 
 	}
 
+	/**
+	 * Called each frame. For further information see
+	 * <a href="https://github.com/libgdx/libgdx/wiki/The-life-cycle">libGDX
+	 * Wiki</a>
+	 */
 	@Override
 	public void render(float delta) {
 		// Gdx.gl.glClearColor(0, 0, 0.3f, 1);

@@ -13,8 +13,12 @@ import de.uniwuerzburg.battletanks.screens.EndScreen;
 import de.uniwuerzburg.battletanks.screens.GameScreen;
 import de.uniwuerzburg.battletanks.screens.MenuScreen;
 
+/**
+ * Central class. Only one instance at a time
+ * 
+ */
 public class BattleTanks extends Game {
-	
+
 	private static BattleTanks instance;
 
 	private static TextureAtlas atlas;
@@ -23,11 +27,11 @@ public class BattleTanks extends Game {
 	private static MenuScreen menu;
 	private static GameScreen game;
 	private static EndScreen end;
-	
+
 	public BattleTanks() {
 		instance = this;
 	}
-	
+
 	@Override
 	public void create() {
 
@@ -50,13 +54,13 @@ public class BattleTanks extends Game {
 	@Override
 	public void dispose() {
 
-		if(menu!=null){
+		if (menu != null) {
 			menu.dispose();
 		}
-		if(game!=null){
+		if (game != null) {
 			game.dispose();
 		}
-		if(end!=null){
+		if (end != null) {
 			end.dispose();
 		}
 		atlas.dispose();
@@ -97,34 +101,72 @@ public class BattleTanks extends Game {
 		prefs.flush();
 	}
 
-	public static void showMenu(){
-		if(menu==null){
+	/**
+	 * Launches the menu screen
+	 */
+	public static void showMenu() {
+		if (menu == null) {
 			menu = new MenuScreen();
+		} else {
+			menu.reset();
 		}
-		menu.reset();
-		
 		instance.setScreen(menu);
-		
 	}
-	
-	public static void showGame(float time, FileHandle tiledMapFileHandle, List<Player> players){
-		if(game==null){
-			game = new GameScreen();
+
+	/**
+	 * Launches the game
+	 * 
+	 * @param time
+	 *            The games length in seconds
+	 * @param tiledMapFileHandle
+	 *            Filehandle of the map to be loaded
+	 * @param players
+	 *            The games players
+	 */
+	public static void showGame(float time, FileHandle tiledMapFileHandle, List<Player> players) {
+
+		if (game == null) {
+			game = new GameScreen(time, tiledMapFileHandle, players);
+		} else {
+			game.reset(time, tiledMapFileHandle, players);
 		}
-		game.reset(time, tiledMapFileHandle, players);
 		instance.setScreen(game);
 	}
-	
-	public static void showEnd(List<Player> players){
-		if(end==null){
-			end = new EndScreen();
+
+	/**
+	 * Launches the endscreen
+	 * 
+	 * @param players
+	 *            List of players for ranking
+	 */
+	public static void showEnd(List<Player> players) {
+		if (end == null) {
+			end = new EndScreen(players);
+		} else {
+			end.reset(players);
 		}
-		end.reset(players);
 		instance.setScreen(end);
 	}
 
-	public static GameScreen getGame(){
+	/**
+	 * Returns the current GameScreen instance
+	 */
+	public static GameScreen getGame() {
 		return game;
+	}
+
+	/**
+	 * Returns the current MenuScreen instance
+	 */
+	public static MenuScreen getMenu() {
+		return menu;
+	}
+
+	/**
+	 * Returns the current EndScreen instance
+	 */
+	public static EndScreen getEndScreen() {
+		return end;
 	}
 
 }

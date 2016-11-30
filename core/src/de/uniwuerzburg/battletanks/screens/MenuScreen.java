@@ -69,8 +69,6 @@ public class MenuScreen implements Screen {
 	/**
 	 * New MenuScreen for a BattleTanks game; sets atlas, skin, stage, mainTable
 	 * and creates the UI
-	 * 
-	 * @param game
 	 */
 	public MenuScreen() {
 		prefs = BattleTanks.getPreferences();
@@ -81,9 +79,13 @@ public class MenuScreen implements Screen {
 		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
 		this.stage = new Stage(
 				new FitViewport(prefs.getInteger("window_width", 1024), prefs.getInteger("window_height", 768)));
-		}
-	
-	public void reset(){
+		reset();
+	}
+
+	/**
+	 * Resets the menu
+	 */
+	public void reset() {
 		stage.clear();
 		Gdx.input.setInputProcessor(stage);
 		create();
@@ -132,12 +134,12 @@ public class MenuScreen implements Screen {
 
 	/** Creates the entire Menu UI */
 	public void create() {
-		
+
 		players = new ArrayList<>(4);
 
 		mainTable = new Table();
 		mainTable.setFillParent(true);
-		
+
 		Button start = createStartButton();
 		HorizontalGroup mapLoader = createMapLoader();
 		HorizontalGroup timeTextField = createTimeTextField();

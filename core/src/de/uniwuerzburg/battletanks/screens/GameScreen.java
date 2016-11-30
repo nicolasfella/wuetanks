@@ -40,7 +40,7 @@ public class GameScreen implements Screen {
 
 	private int width;
 	private int height;
-	
+
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	private Viewport viewPort;
@@ -64,17 +64,59 @@ public class GameScreen implements Screen {
 
 	private float time;
 
-	public GameScreen() {
-		
+	/**
+	 * Creates a new GameScreen instance
+	 * 
+	 * @param time
+	 *            The games length in seconds
+	 * @param tiledMapFileHandle
+	 *            Filehandle of the map to be loaded
+	 * @param players
+	 *            The games players
+	 */
+	public GameScreen(float time, FileHandle tiledMapFileHandle, List<Player> players) {
+		reset(time, tiledMapFileHandle, players);
 	}
 
-	public void reset(float time, FileHandle tiledMapFileHandle, List<Player> players){
+	/**
+	 * Resets the game
+	 * 
+	 * @param time
+	 *            The games length in seconds
+	 * @param tiledMapFileHandle
+	 *            Filehandle of the map to be loaded
+	 * @param players
+	 *            The games players
+	 */
+	public void reset(float time, FileHandle tiledMapFileHandle, List<Player> players) {
+
+		if (time <= 0) {
+			throw new IllegalArgumentException("No valid time entered");
+		}
+
+		if (tiledMapFileHandle == null) {
+			throw new NullPointerException("No FileHandle given");
+		}
+
+		if (!tiledMapFileHandle.exists()) {
+			throw new IllegalArgumentException("This file does not exist");
+		}
+
+		if (players == null) {
+			throw new NullPointerException("No List of Players given");
+		}
+
 		this.time = time;
 		this.players = new ArrayList<>(players);
 		this.tiledMapFileHandle = tiledMapFileHandle;
 		entities = new ArrayList<Entity>();
 	}
-	
+
+	/**
+	 * Called when Screen is shown. For further information see
+	 * <a href="https://github.com/libgdx/libgdx/wiki/The-life-cycle">libGDX
+	 * Wiki</a>
+	 */
 	@Override
 	public void show() {
 		loadMap();
@@ -140,6 +182,11 @@ public class GameScreen implements Screen {
 		// music.setLooping(true);
 	}
 
+	/**
+	 * Called each frame. For further information see
+	 * <a href="https://github.com/libgdx/libgdx/wiki/The-life-cycle">libGDX
+	 * Wiki</a>
+	 */
 	@Override
 	public void render(float delta) {
 		Gdx.graphics.setTitle(BattleTanks.getPreferences().getString("title", "Battletanks"));
@@ -149,7 +196,7 @@ public class GameScreen implements Screen {
 		time -= delta;
 		if (time <= 0) {
 			BattleTanks.showEnd(players);
-			}
+		}
 
 		camera.update();
 		updateEntities();
@@ -519,26 +566,51 @@ public class GameScreen implements Screen {
 		return minutes + ":" + seconds;
 	}
 
+	/**
+	 * Called when window is resized. For further information see
+	 * <a href="https://github.com/libgdx/libgdx/wiki/The-life-cycle">libGDX
+	 * Wiki</a>
+	 */
 	@Override
 	public void resize(int width, int height) {
 		viewPort.update(width, height);
 	}
 
+	/**
+	 * For further information see
+	 * <a href="https://github.com/libgdx/libgdx/wiki/The-life-cycle">libGDX
+	 * Wiki</a>
+	 */
 	@Override
 	public void pause() {
 
 	}
 
+	/**
+	 * For further information see
+	 * <a href="https://github.com/libgdx/libgdx/wiki/The-life-cycle">libGDX
+	 * Wiki</a>
+	 */
 	@Override
 	public void resume() {
 
 	}
 
+	/**
+	 * For further information see
+	 * <a href="https://github.com/libgdx/libgdx/wiki/The-life-cycle">libGDX
+	 * Wiki</a>
+	 */
 	@Override
 	public void hide() {
 
 	}
 
+	/**
+	 * Called when the window is destroyed. For further information see
+	 * <a href="https://github.com/libgdx/libgdx/wiki/The-life-cycle">libGDX
+	 * Wiki</a>
+	 */
 	@Override
 	public void dispose() {
 		font.dispose();
@@ -556,14 +628,23 @@ public class GameScreen implements Screen {
 		}
 	}
 
+	/**
+	 * @return Returns the width of the game world in pixels
+	 */
 	public int getWidth() {
 		return width;
 	}
 
+	/**
+	 * @return Returns the height of the game world in pixels
+	 */
 	public int getHeight() {
 		return height;
 	}
 
+	/**
+	 * @return Returns the list of entities currently active in the game logic
+	 */
 	public List<Entity> getEntities() {
 		return entities;
 	}
