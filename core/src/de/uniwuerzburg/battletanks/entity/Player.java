@@ -131,8 +131,8 @@ public class Player extends Entity {
 				speed.x = 0;
 			}
 
-			if (position.x + speed.x * Gdx.graphics.getDeltaTime() + width > GameScreen.instance.getWidth()) {
-				position.x = GameScreen.instance.getWidth() - width;
+			if (position.x + speed.x * Gdx.graphics.getDeltaTime() + width > BattleTanks.getGame().getWidth()) {
+				position.x = BattleTanks.getGame().getWidth() - width;
 				speed.x = 0;
 			}
 
@@ -141,8 +141,8 @@ public class Player extends Entity {
 				speed.y = 0;
 			}
 
-			if (position.y + speed.y * Gdx.graphics.getDeltaTime() + height > GameScreen.instance.getHeight()) {
-				position.y = GameScreen.instance.getHeight() - height;
+			if (position.y + speed.y * Gdx.graphics.getDeltaTime() + height > BattleTanks.getGame().getHeight()) {
+				position.y = BattleTanks.getGame().getHeight() - height;
 				speed.y = 0;
 			}
 
@@ -157,8 +157,8 @@ public class Player extends Entity {
 	}
 
 	public Vector2 getSpawnPoint() {
-		float gameWidth = GameScreen.instance.getWidth();
-		float gameHeight = GameScreen.instance.getHeight();
+		float gameWidth = BattleTanks.getGame().getWidth();
+		float gameHeight = BattleTanks.getGame().getHeight();
 
 		int spawnOffset = BattleTanks.getPreferences().getInteger("spawn_offset", 20);
 
@@ -169,7 +169,7 @@ public class Player extends Entity {
 		spawnPoints[3] = new Vector2(gameWidth - width - spawnOffset, gameHeight - height - spawnOffset);
 
 		List<Vector2> playerPositions = new LinkedList<Vector2>();
-		for (Entity e : GameScreen.instance.getEntities()) {
+		for (Entity e : BattleTanks.getGame().getEntities()) {
 			if (e instanceof Player && e != this) {
 				playerPositions.add(e.getPosition().cpy());
 			}
@@ -210,7 +210,7 @@ public class Player extends Entity {
 		pos.y += Math.cos(Math.toRadians(direction.getRotation())) * gunSprite.getHeight();
 
 		Bullet bullet = new Bullet(this, pos);
-		GameScreen.instance.getEntities().add(bullet);
+		BattleTanks.getGame().getEntities().add(bullet);
 
 		tank.getShotSound().play();
 	}

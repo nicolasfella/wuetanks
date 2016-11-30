@@ -38,12 +38,9 @@ import de.uniwuerzburg.battletanks.entity.Player;
 
 public class GameScreen implements Screen {
 
-	public static GameScreen instance;
-
 	private int width;
 	private int height;
-	private final BattleTanks game;
-
+	
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	private Viewport viewPort;
@@ -67,15 +64,17 @@ public class GameScreen implements Screen {
 
 	private float time;
 
-	public GameScreen(final BattleTanks game, float time, FileHandle tiledMapFileHandle, List<Player> players) {
-		instance = this;
-		this.game = game;
+	public GameScreen() {
+		
+	}
+
+	public void reset(float time, FileHandle tiledMapFileHandle, List<Player> players){
 		this.time = time;
 		this.players = new ArrayList<>(players);
 		this.tiledMapFileHandle = tiledMapFileHandle;
 		entities = new ArrayList<Entity>();
 	}
-
+	
 	@Override
 	public void show() {
 		loadMap();
@@ -149,10 +148,8 @@ public class GameScreen implements Screen {
 
 		time -= delta;
 		if (time <= 0) {
-			EndScreen e = new EndScreen(game, players);
-			BattleTanks.addScreen(e);
-			game.setScreen(e);
-		}
+			BattleTanks.showEnd(players);
+			}
 
 		camera.update();
 		updateEntities();

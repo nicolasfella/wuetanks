@@ -25,20 +25,17 @@ import de.uniwuerzburg.battletanks.entity.Player;
 
 public class EndScreen implements Screen {
 
-	List<Player> players;
+	private List<Player> players;
 
 	private Stage stage;
 	private Skin skin;
 	private Table mainTable;
-	private BattleTanks game;
 
 	private Preferences prefs;
 
 	private Texture background;
 
-	public EndScreen(final BattleTanks game, List<Player> players) {
-		this.players = new ArrayList<>(players);
-		this.game = game;
+	public EndScreen() {
 		prefs = BattleTanks.getPreferences();
 
 		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
@@ -46,11 +43,14 @@ public class EndScreen implements Screen {
 				new FitViewport(prefs.getInteger("window_width", 1024), prefs.getInteger("window_height", 768)));
 		background = new Texture(Gdx.files.internal(prefs.getString("background", "background.png")));
 		Gdx.input.setInputProcessor(stage);
-
-		create();
-
 	}
 
+	public void reset(List<Player> players){
+		this.players = new ArrayList<>(players);
+		create();
+	}
+	
+	
 	private void create() {
 		Label test = new Label("Scoreboard:", skin);
 		this.mainTable = new Table();
@@ -78,9 +78,7 @@ public class EndScreen implements Screen {
 		start.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				MenuScreen m = new MenuScreen(game);
-				BattleTanks.addScreen(m);
-				game.setScreen(m);
+				BattleTanks.showMenu();
 			}
 		});
 		return start;

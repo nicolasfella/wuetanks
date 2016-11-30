@@ -38,7 +38,6 @@ import de.uniwuerzburg.battletanks.utility.FileChooser.ResultListener;
  * The main menu of the Game; For choosing tanks, a map and the match duration
  */
 public class MenuScreen implements Screen {
-	final BattleTanks game;
 
 	/** The skin.json for Buttons, Fonts etc */
 	private Skin skin;
@@ -73,8 +72,7 @@ public class MenuScreen implements Screen {
 	 * 
 	 * @param game
 	 */
-	public MenuScreen(final BattleTanks game) {
-		this.game = game;
+	public MenuScreen() {
 		prefs = BattleTanks.getPreferences();
 		tiledMapFileHandle = null;
 		background = new Texture(Gdx.files.internal(prefs.getString("background", "background.png")));
@@ -83,11 +81,11 @@ public class MenuScreen implements Screen {
 		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
 		this.stage = new Stage(
 				new FitViewport(prefs.getInteger("window_width", 1024), prefs.getInteger("window_height", 768)));
+		}
+	
+	public void reset(){
+		stage.clear();
 		Gdx.input.setInputProcessor(stage);
-
-		mainTable = new Table();
-		mainTable.setFillParent(true);
-		// stage.setDebugAll(true);
 		create();
 	}
 
@@ -117,9 +115,7 @@ public class MenuScreen implements Screen {
 	 */
 	private void startGame() {
 		if (time != 0 && !players.isEmpty()) {
-			GameScreen g = new GameScreen(game, time, tiledMapFileHandle, players);
-			BattleTanks.addScreen(g);
-			game.setScreen(g);
+			BattleTanks.showGame(time, tiledMapFileHandle, players);
 		} else {
 			final Button close = new TextButton("close", skin);
 			Dialog error = new Dialog("Error", skin);
@@ -136,15 +132,18 @@ public class MenuScreen implements Screen {
 
 	/** Creates the entire Menu UI */
 	public void create() {
+		
 		players = new ArrayList<>(4);
 
+		mainTable = new Table();
+		mainTable.setFillParent(true);
+		
 		Button start = createStartButton();
 		HorizontalGroup mapLoader = createMapLoader();
 		HorizontalGroup timeTextField = createTimeTextField();
 
 		Tanks[] tanks = Tanks.values();
 		List<Tanks> tankList = new ArrayList<Tanks>(Arrays.asList(tanks));
-
 		mainTable.add(mapLoader, timeTextField);
 		mainTable.row().padTop(10);
 		mainTable.add(createTankChooser(1, Keys.W, Keys.S, Keys.A, Keys.D, Keys.E, tankList)).expand();
