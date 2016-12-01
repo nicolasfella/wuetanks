@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
 import de.uniwuerzburg.battletanks.entity.Player;
@@ -83,7 +84,7 @@ public class MenuScreen implements Screen {
 		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
 		this.stage = new Stage(
 				new FitViewport(prefs.getInteger("window_width", 1024), prefs.getInteger("window_height", 768)));
-		this.bgStage = new Stage(new ScreenViewport());
+		this.bgStage = new Stage(new StretchViewport(1920, 1080));
 		reset();
 	}
 
@@ -92,6 +93,7 @@ public class MenuScreen implements Screen {
 	 */
 	public void reset() {
 		stage.clear();
+		bgStage.clear();
 		Gdx.input.setInputProcessor(stage);
 		create();
 	}

@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
 import de.uniwuerzburg.battletanks.entity.Player;
@@ -48,7 +49,7 @@ public class EndScreen implements Screen {
 		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
 		this.stage = new Stage(
 				new FitViewport(prefs.getInteger("window_width", 1024), prefs.getInteger("window_height", 768)));
-		this.bgStage = new Stage(new ScreenViewport());
+		this.bgStage = new Stage(new StretchViewport(1920, 1080));
 
 		Gdx.input.setInputProcessor(stage);
 		
@@ -60,6 +61,9 @@ public class EndScreen implements Screen {
 	 * @param players List of players for ranking
 	 */
 	public void reset(List<Player> players) {
+		stage.clear();
+		bgStage.clear();
+		Gdx.input.setInputProcessor(stage);
 		this.players = new ArrayList<>(players);
 		create();
 	}
