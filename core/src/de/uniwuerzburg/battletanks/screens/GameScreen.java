@@ -94,13 +94,9 @@ public class GameScreen implements Screen {
 			throw new IllegalArgumentException("No valid time entered");
 		}
 
-		if (tiledMapFileHandle == null) {
-			throw new NullPointerException("No FileHandle given");
-		}
-
-		if (!tiledMapFileHandle.exists()) {
-			throw new IllegalArgumentException("This file does not exist");
-		}
+		// if (tiledMapFileHandle == null) {
+		// throw new NullPointerException("No FileHandle given");
+		// }
 
 		if (players == null) {
 			throw new NullPointerException("No List of Players given");
@@ -326,6 +322,9 @@ public class GameScreen implements Screen {
 
 	private void loadMap() {
 		if (tiledMapFileHandle != null) {
+			if (!tiledMapFileHandle.exists()) {
+				throw new IllegalArgumentException("This file does not exist");
+			}
 			tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
 		} else {
 			tiledMap = new TmxMapLoader()

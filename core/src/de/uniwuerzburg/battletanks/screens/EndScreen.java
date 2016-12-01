@@ -13,12 +13,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
 import de.uniwuerzburg.battletanks.entity.Player;
@@ -28,12 +30,13 @@ public class EndScreen implements Screen {
 	private List<Player> players;
 
 	private Stage stage;
+	private Stage bgStage;
 	private Skin skin;
 	private Table mainTable;
 
 	private Preferences prefs;
 
-	private Texture background;
+	private Image background;
 
 	/**
 	 * Creates a new EndScreen
@@ -45,7 +48,8 @@ public class EndScreen implements Screen {
 		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
 		this.stage = new Stage(
 				new FitViewport(prefs.getInteger("window_width", 1024), prefs.getInteger("window_height", 768)));
-		background = new Texture(Gdx.files.internal(prefs.getString("background", "background.png")));
+		this.bgStage = new Stage(new ScreenViewport());
+
 		Gdx.input.setInputProcessor(stage);
 		
 		reset(players);
@@ -61,6 +65,11 @@ public class EndScreen implements Screen {
 	}
 
 	private void create() {
+		background = new Image(new Texture(Gdx.files.internal(prefs.getString("background", "background.png"))));
+		Color c = background.getColor();
+		background.setColor(c.r, c.g, c.b, 0.6f);
+		bgStage.addActor(background);
+		
 		Label test = new Label("Scoreboard:", skin);
 		this.mainTable = new Table();
 		mainTable.setFillParent(true);
@@ -113,18 +122,19 @@ public class EndScreen implements Screen {
 		// Gdx.gl.glClearColor(0, 0, 0.3f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		bgStage.act(Gdx.graphics.getDeltaTime());
 		stage.act(Gdx.graphics.getDeltaTime());
 
-		stage.getBatch().begin();
-		Color c = stage.getBatch().getColor();
-		stage.getBatch().setColor(c.r, c.g, c.b, 0.6f);
-		stage.getBatch().draw(background, 0, 0, stage.getWidth(), stage.getHeight());
-		stage.getBatch().end();
+		bgStage.getViewport().apply();
+		bgStage.draw();
+		stage.getViewport().apply();
 		stage.draw();
 	}
 
 	@Override
 	public void resize(int width, int height) {
+		bgStage.getViewport().update(width, height, true);
 		stage.getViewport().update(width, height, true);
 	}
 

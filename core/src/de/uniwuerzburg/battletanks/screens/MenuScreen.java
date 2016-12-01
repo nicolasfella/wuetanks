@@ -27,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
 import de.uniwuerzburg.battletanks.entity.Player;
@@ -48,6 +49,9 @@ public class MenuScreen implements Screen {
 	/** The main Stage; Provides environment for the main Table */
 	private Stage stage;
 
+	/**The background Stage. Contains only the bg image	 */
+	private Stage bgStage;
+
 	/** The mainTable; Contains every UI element */
 	private Table mainTable;
 
@@ -64,7 +68,7 @@ public class MenuScreen implements Screen {
 
 	private Preferences prefs;
 
-	private Texture background;
+	private Image background;
 
 	/**
 	 * New MenuScreen for a BattleTanks game; sets atlas, skin, stage, mainTable
@@ -73,12 +77,13 @@ public class MenuScreen implements Screen {
 	public MenuScreen() {
 		prefs = BattleTanks.getPreferences();
 		tiledMapFileHandle = null;
-		background = new Texture(Gdx.files.internal(prefs.getString("background", "background.png")));
+
 		this.atlas = BattleTanks.getTextureAtlas();
 
 		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
 		this.stage = new Stage(
 				new FitViewport(prefs.getInteger("window_width", 1024), prefs.getInteger("window_height", 768)));
+		this.bgStage = new Stage(new ScreenViewport());
 		reset();
 	}
 
@@ -95,19 +100,18 @@ public class MenuScreen implements Screen {
 	public void render(float delta) {
 		// Gdx.gl.glClearColor(0, 0, 0.3f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		bgStage.act(Gdx.graphics.getDeltaTime());
 		stage.act(Gdx.graphics.getDeltaTime());
 
-		stage.getBatch().begin();
-		Color c = stage.getBatch().getColor();
-		stage.getBatch().setColor(c.r, c.g, c.b, 0.6f);
-		stage.getBatch().draw(background, 0, 0, stage.getWidth(), stage.getHeight());
-		stage.getBatch().end();
-
+		bgStage.getViewport().apply();
+		bgStage.draw();
+		stage.getViewport().apply();
 		stage.draw();
 	}
 
 	@Override
 	public void resize(int width, int height) {
+		bgStage.getViewport().update(width, height, true);
 		stage.getViewport().update(width, height, true);
 	}
 
@@ -134,6 +138,10 @@ public class MenuScreen implements Screen {
 
 	/** Creates the entire Menu UI */
 	public void create() {
+		background = new Image(new Texture(Gdx.files.internal(prefs.getString("background", "background.png"))));
+		Color c = background.getColor();
+		background.setColor(c.r, c.g, c.b, 0.6f);
+		bgStage.addActor(background);
 
 		players = new ArrayList<>(4);
 
