@@ -225,7 +225,7 @@ public class MenuScreen implements Screen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				FileChooser dialog = FileChooser.createDialog("Load TileMap ...", skin,
-						Gdx.files.absolute(Gdx.files.getExternalStoragePath()));
+						Gdx.files.absolute(Gdx.files.getLocalStoragePath()+"/maps"));
 				dialog.setResultListener(new ResultListener() {
 					@Override
 					public boolean result(boolean success, FileHandle result) {

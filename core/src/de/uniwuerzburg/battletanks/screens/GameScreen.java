@@ -94,10 +94,6 @@ public class GameScreen implements Screen {
 			throw new IllegalArgumentException("No valid time entered");
 		}
 
-		// if (tiledMapFileHandle == null) {
-		// throw new NullPointerException("No FileHandle given");
-		// }
-
 		if (players == null) {
 			throw new NullPointerException("No List of Players given");
 		}
@@ -615,9 +611,9 @@ public class GameScreen implements Screen {
 		font.dispose();
 		batch.dispose();
 		tiledMap.dispose();
-		if (tiledMapFileHandle != null) {
-			tiledMapFileHandle.delete();
-		}
+//		if (tiledMapFileHandle != null) {
+//			tiledMapFileHandle.delete();
+//		}
 		shapeRenderer.dispose();
 		generator.dispose();
 		music.dispose();
