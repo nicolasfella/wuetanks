@@ -19,7 +19,10 @@ public class Entity implements Disposable {
 	 */
 	protected Vector2 position;
 
-	/** The vector to the position of the rectangle which defines the collision object */
+	/**
+	 * The vector to the position of the rectangle which defines the collision
+	 * object
+	 */
 	protected Vector2 toCollisionRectangleVector;
 
 	/** The width of the collision rectangle */
@@ -72,13 +75,12 @@ public class Entity implements Disposable {
 		oldPosition = new Vector2();
 		toCollisionRectangleVector = new Vector2();
 		speed = new Vector2();
-		
+
 		width = 0;
 		height = 0;
-		
+
 		collisionRectangleWidth = 0;
 		collisionRectangleHeight = 0;
-		
 
 		sprite = BattleTanks.getTextureAtlas().createSprite(spriteName);
 		sprite.setPosition(position.x, position.y);
@@ -118,7 +120,7 @@ public class Entity implements Disposable {
 
 	public void setHeight(int height) {
 		this.height = height;
-		if(collisionRectangleHeight == 0){
+		if (collisionRectangleHeight == 0) {
 			collisionRectangleHeight = height;
 		}
 	}
@@ -129,7 +131,7 @@ public class Entity implements Disposable {
 
 	public void setWidth(int width) {
 		this.width = width;
-		if(collisionRectangleWidth == 0){
+		if (collisionRectangleWidth == 0) {
 			collisionRectangleWidth = width;
 		}
 	}
@@ -158,9 +160,11 @@ public class Entity implements Disposable {
 		position.y = y;
 	}
 
-	/** gibt ein rechteck zurück, das für die kollisionserkennung verwendet wird */
-	public Rectangle getCollisionRectangle(){
-		Vector2 rectPos = position.cpy().add(toCollisionRectangleVector);		
+	/**
+	 * @return The Rectangle, which should be used for collision detection
+	 */
+	public Rectangle getCollisionRectangle() {
+		Vector2 rectPos = position.cpy().add(toCollisionRectangleVector);
 		return new Rectangle(rectPos.x, rectPos.y, collisionRectangleWidth, collisionRectangleHeight);
 	}
 

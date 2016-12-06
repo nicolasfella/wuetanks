@@ -261,21 +261,23 @@ public class GameScreen implements Screen {
 		}
 	}
 
+	// updates all entities in the game and solves collisions between them
+
 	private void updateEntities() {
-		// updated zuerst die ursprünglichen entities
+		// updates all current entities
 		int n = entities.size();
 		for (int i = 0; i < n; i++) {
 			Entity entity = entities.get(i);
 			entity.update();
 		}
 
-		// updated neu hinzugekommene entities
+		// updates new entities which were inserted by updating (eg: bullets)
 		for (int i = n; i < entities.size(); i++) {
 			Entity entity = entities.get(i);
 			entity.update();
 		}
 
-		// auflösung der kollisionen zwischen playern und obstacles
+		// solve collisions between players and obstacles
 		for (Player p : players) {
 			for (Entity e : entities) {
 				if (e instanceof Obstacle) {
@@ -284,15 +286,16 @@ public class GameScreen implements Screen {
 			}
 		}
 
+		// find bullets which can be deleted
 		List<Entity> bulletsToDelete = new LinkedList<Entity>();
 
 		for (Entity b : entities) {
 			if (b instanceof Bullet) {
-				// bullets die das spielfeld verlassen werden gelöscht
+				// bullets out of the game will be deleted
 				if (isOutOfGame(b)) {
 					bulletsToDelete.add(b);
 				} else {
-					// bullets die auf eine entity treffen werden gelöscht
+					// bullets hitting an entity will be deleted
 					for (Entity e : entities) {
 						if (detectBulletHitAndDamage((Bullet) b, e)) {
 							bulletsToDelete.add(b);
@@ -302,12 +305,12 @@ public class GameScreen implements Screen {
 			}
 		}
 
-		// lösche bullets
+		// delete marked bullets
 		for (Entity b : bulletsToDelete) {
 			entities.remove(b);
 		}
 
-		// auflösung der kollisionen zwischen playern und playern
+		// solve collisions between players and players
 		for (Player p : players) {
 			for (Player e : players) {
 				detectCollisionAndResponse(p, e);
@@ -316,7 +319,12 @@ public class GameScreen implements Screen {
 
 	}
 
+	// loads the given map
+
 	private void loadMap() {
+
+		// if map isn't null and exists: load it
+		// else use the default map
 		if (tiledMapFileHandle != null) {
 			if (!tiledMapFileHandle.exists()) {
 				throw new IllegalArgumentException("This file does not exist");
@@ -329,6 +337,7 @@ public class GameScreen implements Screen {
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		MapProperties tiledMapProps = tiledMap.getProperties();
 
+		// calculates the width and height of the map in pixels
 		int mapWidth = tiledMapProps.get("width", Integer.class);
 		int mapHeight = tiledMapProps.get("height", Integer.class);
 		int tilePixelWidth = tiledMapProps.get("tilewidth", Integer.class);
@@ -337,9 +346,8 @@ public class GameScreen implements Screen {
 		width = mapWidth * tilePixelWidth;
 		height = mapHeight * tilePixelHeight;
 
-		// einlesen der objects aus dem objects layer der tilemap und erstellung
-		// der obstacles
-
+		// reads the objects from the objects layer of the tilemap and creates
+		// obstacles
 		MapLayer objectsLayer = tiledMap.getLayers().get("objects");
 
 		if (objectsLayer != null) {
@@ -358,22 +366,22 @@ public class GameScreen implements Screen {
 		}
 	}
 
+	// detects collision between bullet and entity if entity is a player,
+	// perform damage on him
+	// @param b bullet
+	// @param p entity
+	// @return boolean whether there was a collision
+
 	private boolean detectBulletHitAndDamage(Bullet b, Entity p) {
 
 		if (b == p || b.getPlayer() == p) {
 			return false;
 		}
 
-		// variablen für bullet
-
+		// collision rectangles
 		Rectangle bRect = b.getCollisionRectangle();
-
-		// variablen für player
-
 		Rectangle pRect = p.getCollisionRectangle();
 
-		// kollision nur bei überschneidung in vertikaler sowie horizontaler
-		// richtung
 		if (bRect.overlaps(pRect)) {
 			if (p instanceof Player) {
 				((Player) p).hitPlayer(b);
@@ -383,6 +391,9 @@ public class GameScreen implements Screen {
 
 		return false;
 	}
+
+	// @param e entity
+	// @return boolean whether entity is out of game
 
 	private boolean isOutOfGame(Entity e) {
 
@@ -396,13 +407,18 @@ public class GameScreen implements Screen {
 		return true;
 	}
 
+	// Detects whether there is a collision between the entities. If yes, then
+	// move the entities to solve the collision.
+	// @param p entity
+	// @param o entity
+
 	private void detectCollisionAndResponse(Entity p, Entity o) {
 
 		if (p == o) {
 			return;
 		}
 
-		// variablen für 1. entity
+		// variables for the first entity
 
 		Rectangle pRect = p.getCollisionRectangle();
 
@@ -414,7 +430,7 @@ public class GameScreen implements Screen {
 		float pLY = pRect.getY();
 		float pVY = p.getSpeed().y;
 
-		// variablen für 2. entity
+		// variables for the second entity
 
 		Rectangle oRect = o.getCollisionRectangle();
 
@@ -426,12 +442,10 @@ public class GameScreen implements Screen {
 		float oLY = oRect.getY();
 		float oVY = o.getSpeed().y;
 
-		// kollision nur bei überschneidung in vertikaler sowie horizontaler
-		// richtung
+		// if the collision rectangles overlap then there is a collision
 		if (pRect.overlaps(oRect)) {
 
-			// berechnung wie stark sich die entities in x und y richtung
-			// überlappen
+			// calculates the horizontal and vertical overlap
 			float overlapX;
 			float overlapY;
 
@@ -449,8 +463,9 @@ public class GameScreen implements Screen {
 
 			float[] translations;
 
-			// es wird in richtung der kleineren überlappung aufgelöst ->
-			// kleinste verschiebung
+			// to solve the collision, move the entities in the direction of the
+			// smaller overlap
+			// --> moving with minimal distance to solve the collision
 
 			if (overlapY > overlapX) {
 
@@ -486,11 +501,18 @@ public class GameScreen implements Screen {
 
 	}
 
+	// calculates the translations for the entities based on the type of
+	// collision
+	// @param pSpeed speed of the first entity
+	// @param oSpeed speed of the second entity
+	// @param overlap of the entities
+	// @return float[0] is the translation for the first entity, float[1] is the
+	// translation for the second entity
+
 	private float[] solveOverlap(float pSpeed, float oSpeed, float overlap) {
 		float[] translations = new float[2];
 
-		// falls eine der beiden entities steht, wird der verursacher der
-		// kollision zurückgesetzt
+		// if a entity isn't moving, then the other entity will be moved back
 		if (pSpeed == 0 || oSpeed == 0) {
 			if (pSpeed > 0) {
 				translations[0] = -overlap;
@@ -507,11 +529,11 @@ public class GameScreen implements Screen {
 			}
 		}
 
-		// andernfalls gibt es nur noch folgende kollisionsursachen
+		// otherwise there are only the following possibilities
 		else {
 
-			// falls beide entities aufeinander zufahren muss der overlap auf
-			// beide aufgeteilt werden
+			// if both entities are driving towards each other, then both
+			// entities will be moved back
 			if (pSpeed > 0 && oSpeed < 0) {
 
 				translations[0] = -overlap / 2.f;
@@ -524,8 +546,8 @@ public class GameScreen implements Screen {
 
 			}
 
-			// falls eine entity schneller als die andere ist und ihr hinten
-			// auffährt, wird die schnellere ausgebremst
+			// if an entity is faster then the other one and hits the other one
+			// in the back, the faster one will be moved back
 			else if (pSpeed > 0 && oSpeed > 0) {
 
 				if (pSpeed > oSpeed) {
@@ -611,9 +633,9 @@ public class GameScreen implements Screen {
 		font.dispose();
 		batch.dispose();
 		tiledMap.dispose();
-//		if (tiledMapFileHandle != null) {
-//			tiledMapFileHandle.delete();
-//		}
+		// if (tiledMapFileHandle != null) {
+		// tiledMapFileHandle.delete();
+		// }
 		shapeRenderer.dispose();
 		generator.dispose();
 		music.dispose();
@@ -643,4 +665,13 @@ public class GameScreen implements Screen {
 	public List<Entity> getEntities() {
 		return entities;
 	}
+	
+	/**
+	 * 
+	 * @return Return the list of players currently active in the game logic
+	 */
+	public List<Player> getPlayers(){
+		return players;
+	}
+	
 }

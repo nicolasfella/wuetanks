@@ -7,9 +7,24 @@ public class FileListItem {
 
 	final String name;
 
+	/**
+	 * Creates a FileListItem which can be used for listing files. The name is
+	 * taken from the FileHandle.
+	 * 
+	 * @param file
+	 */
+
 	public FileListItem(FileHandle file) {
 		this(file.name(), file);
 	}
+
+	/**
+	 * Creates a FileListItem which can be used for listing files.
+	 * 
+	 * @param name
+	 *            of the file
+	 * @param file
+	 */
 
 	public FileListItem(String name, FileHandle file) {
 		if (file.isDirectory()) {

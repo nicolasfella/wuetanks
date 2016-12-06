@@ -12,6 +12,13 @@ public class Bullet extends Entity {
 
 	private Direction direction;
 
+	
+	/**
+	 * Creates a bullet flying in the direction of the player.
+	 * @param player who shot the bullet
+	 * @param position of the bottom center of the bullet
+	 */
+	
 	public Bullet(Player player, Vector2 position) {
 		super("bullet" + player.getTank().getName());
 
@@ -26,9 +33,11 @@ public class Bullet extends Entity {
 		this.position = position.cpy();
 		this.position.x -= width / 2.f;
 
+		// calculates the speed from the direction
 		speed.x = (float) -Math.sin(Math.toRadians(direction.getRotation()));
 		speed.y = (float) Math.cos(Math.toRadians(direction.getRotation()));
 
+		// sets the rotation center to the bottom center of the bullet and rotates it
 		sprite.setOrigin(width / 2.f, 0);
 		sprite.setRotation(direction.getRotation());
 
@@ -37,6 +46,10 @@ public class Bullet extends Entity {
 
 	}
 
+	/**
+	 * Called each frame, moves the bullet.
+	 */
+	
 	public void update() {
 		speed.nor();
 		speed.scl(movingSpeed);
@@ -44,7 +57,10 @@ public class Bullet extends Entity {
 		super.update();
 	}
 
-	/** berechnet die breite und höhe des kollisionsrechtecks */
+	// Calculates the width and height of the collision rectangle. If the bullet
+	// is rotated diagonal, then a horizontal collision rectangle is used which
+	// diagonal is as long as the height of the bullet.
+
 	private void calculateCollisionRectangleSize() {
 
 		switch (direction) {
@@ -71,10 +87,9 @@ public class Bullet extends Entity {
 
 	}
 
-	/**
-	 * berechnet einen vektor der ausgehend von der aktuellen position zur
-	 * unteren linken ecke des kollisions-rechtsecks führt
-	 */
+	// Calculates the vector from the current position to the bottom left corner
+	// of the collision rectangle.
+
 	private void calculateCollisionRectangleVector() {
 		switch (direction) {
 		case RIGHT:
@@ -114,9 +129,19 @@ public class Bullet extends Entity {
 		}
 	}
 
+	/**
+	 * 
+	 * @return damage of the bullet
+	 */
+	
 	public float getDamage() {
 		return dmg;
 	}
+	
+	/**
+	 * 
+	 * @return player who created the bullet
+	 */
 
 	public Player getPlayer() {
 		return player;

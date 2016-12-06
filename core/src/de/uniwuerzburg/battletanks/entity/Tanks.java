@@ -39,7 +39,9 @@ public enum Tanks {
 				.newSound(Gdx.files.internal(BattleTanks.getPreferences().getString("shot_sound", "shot.wav")));
 	}
 
-	/** funktion zur berechnung der stärke eines tanks */
+	/** 
+	 * @return a value representing the strength of a tank
+	 * */
 	public float getStrength() {
 
 		// eventuell kann man eine höhere nachladezeit noch als weniger stark
@@ -59,15 +61,31 @@ public enum Tanks {
 		return dps * life;
 
 	}
+	
+	/**
+	 * Calculates the damage per second
+	 * @return DPS value
+	 */
 
 	public float getDPS() {
 		return damage / reloadTime;
 	}
 
+	/**
+	 * Calculates the life of the Tank by transforming the armor in additional health points
+	 *  
+	 */
+	
 	public float getLife() {
 		return maxHitpoints * (1f + armor);
 	}
 
+	/**
+	 * Calculates the real Damage on the tank by reducing it with the armor value
+	 * @param dmg is the brutto damage
+	 * @return netto damage
+	 */
+	
 	public float calculateDamage(float dmg) {
 		return (1.f - armor) * dmg;
 	}

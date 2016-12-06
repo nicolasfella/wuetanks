@@ -88,6 +88,7 @@ public class Player extends Entity {
 	@Override
 	public void update() {
 
+		// player is dead and respawns
 		if (currentHitpoints == 0.f) {
 			deathCount++;
 			initForSpawn();
@@ -114,7 +115,11 @@ public class Player extends Entity {
 				direction = Direction.RIGHT;
 			}
 
+			// shootTimer will be increased by the time since the last frame
 			shootTimer += Gdx.graphics.getDeltaTime();
+
+			// if the reloadTime is over and key_shoot is pressed, then create
+			// bullet and reset shootTimer
 			if (Gdx.input.isKeyPressed(key_shoot) && shootTimer >= tank.getReloadTime()) {
 				createBullet();
 				shootTimer = 0.f;
@@ -148,6 +153,10 @@ public class Player extends Entity {
 			speed.nor();
 			speed.scl(movingSpeed);
 
+			// if the player would leave the playing field, then the speed is
+			// set to 0 and player's position is set to the border of the
+			// playing field
+			
 			if (position.x + speed.x * Gdx.graphics.getDeltaTime() < 0) {
 				position.x = 0;
 				speed.x = 0;
@@ -193,19 +202,22 @@ public class Player extends Entity {
 
 		int spawnOffset = BattleTanks.getPreferences().getInteger("spawn_offset", 20);
 
+		// possible spawn points are the corners of the game
 		Vector2[] spawnPoints = new Vector2[4];
 		spawnPoints[0] = new Vector2(spawnOffset, spawnOffset);
 		spawnPoints[1] = new Vector2(spawnOffset, gameHeight - height - spawnOffset);
 		spawnPoints[2] = new Vector2(gameWidth - width - spawnOffset, spawnOffset);
 		spawnPoints[3] = new Vector2(gameWidth - width - spawnOffset, gameHeight - height - spawnOffset);
 
+		// creates list of all positions of the other players
 		List<Vector2> playerPositions = new LinkedList<Vector2>();
-		for (Entity e : BattleTanks.getGame().getEntities()) {
-			if (e instanceof Player && e != this) {
-				playerPositions.add(e.getPosition().cpy());
+		for (Player p : BattleTanks.getGame().getPlayers()) {
+			if (p != this) {
+				playerPositions.add(p.getPosition().cpy());
 			}
 		}
 
+		// calculates the minimal distance to a player for each spawn point
 		float[] minDistances = new float[4];
 
 		for (int i = 0; i < spawnPoints.length; i++) {
@@ -219,6 +231,7 @@ public class Player extends Entity {
 
 		}
 
+		// calculates the index of the farthest spawn point
 		int max = 0;
 		for (int i = 1; i < minDistances.length; i++) {
 			if (minDistances[i] > minDistances[max]) {
@@ -235,11 +248,11 @@ public class Player extends Entity {
 	public void createBullet() {
 		Vector2 pos = position.cpy();
 
-		// pos wird zu mitte des players
+		// pos will be the middle of the player
 		pos.x += width / 2.f;
 		pos.y += height / 2.f;
 
-		// pos wird zu spitze der waffe
+		// pos will be the top of the gun
 		pos.x -= Math.sin(Math.toRadians(direction.getRotation())) * gunSprite.getHeight();
 		pos.y += Math.cos(Math.toRadians(direction.getRotation())) * gunSprite.getHeight();
 
@@ -391,7 +404,9 @@ public class Player extends Entity {
 
 	/**
 	 * Draws the lifebar
-	 * @param r The ShapeRenderer used to draw the lifebar
+	 * 
+	 * @param r
+	 *            The ShapeRenderer used to draw the lifebar
 	 */
 	public void renderLifeBar(ShapeRenderer r) {
 
@@ -420,7 +435,9 @@ public class Player extends Entity {
 
 	/**
 	 * Processes the hit of a Bullet
-	 * @param bullet The Bullet the player was hit by
+	 * 
+	 * @param bullet
+	 *            The Bullet the player was hit by
 	 */
 	public void hitPlayer(Bullet bullet) {
 		float realDamage = tank.calculateDamage(bullet.getDamage());
@@ -443,6 +460,7 @@ public class Player extends Entity {
 
 	/**
 	 * Sets the amount of kills the player made in the current round
+	 * 
 	 * @param kills
 	 */
 	public void setKills(int kills) {

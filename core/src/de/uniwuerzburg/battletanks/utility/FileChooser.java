@@ -24,6 +24,10 @@ import com.badlogic.gdx.utils.Array;
 
 public class FileChooser extends Dialog {
 
+	/**
+	 *  Interface of a result listener which is used to get the result of the FileChooser.
+	 *
+	 */
 	public interface ResultListener {
 		boolean result(boolean success, FileHandle result);
 	}
@@ -37,6 +41,8 @@ public class FileChooser extends Dialog {
 	private FileHandle currentDir;
 	private FileHandle baseDir;
 	private Label currentDirLabel;
+
+	// file filter to get only .tmx files
 	private FileFilter filter = new FileFilter() {
 		@Override
 		public boolean accept(File pathname) {
@@ -44,10 +50,10 @@ public class FileChooser extends Dialog {
 			return path.matches(".*\\.tmx");
 		}
 	};
+	
 	public ResultListener resultListener = null;
 
-	// comparator für die korrekte sortierung der files
-
+	// comparator to sort files in a directory (directories first)
 	private Comparator<FileListItem> fileListComp = new Comparator<FileListItem>() {
 		@Override
 		public int compare(FileListItem file1, FileListItem file2) {
@@ -99,11 +105,9 @@ public class FileChooser extends Dialog {
 
 	}
 
-	/**
-	 * wechselt auf das übergebene directory und aktualisiert die fileList
-	 *
-	 */
-
+	
+	 //changes the current directory and updates the filelist
+	
 	private void changeDirectory(FileHandle directory) {
 
 		currentDir = directory;
@@ -111,7 +115,7 @@ public class FileChooser extends Dialog {
 
 		Array<FileListItem> items = new Array<FileListItem>();
 
-		// hinzufügen aller directories
+		// add all directories to items
 
 		FileHandle[] list = directory.list();
 
@@ -121,7 +125,7 @@ public class FileChooser extends Dialog {
 			}
 		}
 
-		// hinzufügen aller dateien auf die der filter passt
+		// add all files filtered by our filter to items
 
 		list = directory.list(filter);
 
@@ -140,10 +144,9 @@ public class FileChooser extends Dialog {
 	}
 
 	/**
-	 * erstellt aus dem aktuellen directory pfad und der markierten datei ein
-	 * FileHandle
+	 * Creates a FileHandle from current directory path and marked file
 	 * 
-	 * @return
+	 * @return FileHandle of the marked item
 	 */
 
 	public FileHandle getResult() {
@@ -153,6 +156,10 @@ public class FileChooser extends Dialog {
 		}
 		return new FileHandle(path);
 	}
+
+	/**
+	 * shows a dialog window to choose a file
+	 */
 
 	@Override
 	public Dialog show(Stage stage, Action action) {
@@ -181,6 +188,15 @@ public class FileChooser extends Dialog {
 		return super.show(stage, action);
 	}
 
+	/**
+	 * Creates a FileChooser dialog.
+	 * @param title for the window
+	 * @param skin used for the style of the window
+	 * @param path to the base directory
+	 * @return the created FileChooser
+	 */
+	 
+
 	public static FileChooser createDialog(String title, final Skin skin, final FileHandle path) {
 		FileChooser fileChooser = new FileChooser(title, skin, path) {
 			@Override
@@ -199,6 +215,7 @@ public class FileChooser extends Dialog {
 
 	}
 
+	/** method to set a self designed result listener */
 	public FileChooser setResultListener(ResultListener result) {
 		this.resultListener = result;
 		return this;
