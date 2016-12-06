@@ -14,6 +14,9 @@ import com.badlogic.gdx.math.Vector2;
 import de.uniwuerzburg.battletanks.BattleTanks;
 import de.uniwuerzburg.battletanks.screens.GameScreen;
 
+/**
+ * Represents a Player/Tank in the game logic
+ */
 public class Player extends Entity {
 
 	private int key_up, key_down, key_left, key_right, key_shoot;
@@ -36,6 +39,22 @@ public class Player extends Entity {
 
 	private int deathCount;
 
+	/**
+	 * Creates a new Player based on a given Tank model
+	 * 
+	 * @param tank
+	 *            Tank model the Player is based on
+	 * @param key_up
+	 *            The players UP key
+	 * @param key_down
+	 *            The players DOWN key
+	 * @param key_left
+	 *            The players LEFT key
+	 * @param key_right
+	 *            The players RIGHT key
+	 * @param key_shoot
+	 *            The players SHOOT key
+	 */
 	public Player(Tanks tank, int key_up, int key_down, int key_left, int key_right, int key_shoot) {
 		super("tank" + tank.getName());
 
@@ -51,7 +70,7 @@ public class Player extends Entity {
 
 		width = BattleTanks.getPreferences().getInteger("player_width", 40);
 		height = BattleTanks.getPreferences().getInteger("player_height", 40);
-		
+
 		collisionRectangleWidth = width;
 		collisionRectangleHeight = height;
 
@@ -63,6 +82,9 @@ public class Player extends Entity {
 		gunSprite.setOrigin(gunSprite.getWidth() / 2, 0);
 	}
 
+	/**
+	 * Called each frame. Processes the user input, moves the Player
+	 */
 	@Override
 	public void update() {
 
@@ -150,12 +172,21 @@ public class Player extends Entity {
 		super.update();
 	}
 
+	/**
+	 * Resets the Players HP, Speed and Shottimer to default
+	 */
 	public void initForSpawn() {
 		currentHitpoints = tank.getMaxHitpoints();
 		speed.set(0, 0);
 		shootTimer = tank.getReloadTime();
 	}
 
+	/**
+	 * Calculates the respawn Point with the greatest Distance to the other
+	 * players
+	 * 
+	 * @return The respawn position
+	 */
 	public Vector2 getSpawnPoint() {
 		float gameWidth = BattleTanks.getGame().getWidth();
 		float gameHeight = BattleTanks.getGame().getHeight();
@@ -198,6 +229,9 @@ public class Player extends Entity {
 		return spawnPoints[max];
 	}
 
+	/**
+	 * Creates a new Bullet at the tip of the gun of the tank
+	 */
 	public void createBullet() {
 		Vector2 pos = position.cpy();
 
@@ -215,82 +249,150 @@ public class Player extends Entity {
 		tank.getShotSound().play();
 	}
 
+	/**
+	 * Draws the tank's gun
+	 * 
+	 * @param batch
+	 *            The SpriteBatch to be drawn to
+	 */
 	public void renderGun(SpriteBatch batch) {
 		gunSprite.setPosition(getX() + 0.5f * (getWidth() - gunSprite.getWidth()), getY() + getHeight() / 2);
 		gunSprite.setRotation(direction.getRotation());
 		gunSprite.draw(batch);
 	}
 
+	/**
+	 * @return The UP key
+	 */
 	public int getKey_up() {
 		return key_up;
 	}
 
+	/**
+	 * Sets the UP key
+	 */
 	public void setKey_up(int key_up) {
 		this.key_up = key_up;
 	}
 
+	/**
+	 * @return The DOWN key
+	 */
 	public int getKey_down() {
 		return key_down;
 	}
 
+	/**
+	 * Sets the DOWN key
+	 */
 	public void setKey_down(int key_down) {
 		this.key_down = key_down;
 	}
 
+	/**
+	 * @return The LEFT key
+	 */
 	public int getKey_left() {
 		return key_left;
 	}
 
+	/**
+	 * Sets the LEFT key
+	 */
 	public void setKey_left(int key_left) {
 		this.key_left = key_left;
 	}
 
+	/**
+	 * @return The RIGHT key
+	 */
 	public int getKey_right() {
 		return key_right;
 	}
 
+	/**
+	 * Sets the RIGHT key
+	 */
 	public void setKey_right(int key_right) {
 		this.key_right = key_right;
 	}
 
+	/**
+	 * @return The SHOOT key
+	 */
 	public int getKey_shoot() {
 		return key_shoot;
 	}
 
+	/**
+	 * Sets the SHOOT key
+	 */
 	public void setKey_shoot(int key_shoot) {
 		this.key_shoot = key_shoot;
 	}
 
+	/**
+	 * @return The length of the speed Vector
+	 */
 	public int getMovingSpeed() {
 		return movingSpeed;
 	}
 
+	/**
+	 * Sets the moving speed
+	 * 
+	 * @param movingSpeed
+	 *            The lenght of the speed vector
+	 */
 	public void setMovingSpeed(int movingSpeed) {
 		this.movingSpeed = movingSpeed;
 	}
 
+	/**
+	 * Sets the Player's number. 0 < Number <= 4
+	 * 
+	 * @param number
+	 */
 	public void setNumber(int number) {
 		if (number >= 1 && number <= 4) {
 			this.number = number;
 		}
 	}
 
+	/**
+	 * 
+	 * @return The Player's number
+	 */
 	public int getNumber() {
 		return number;
 	}
 
+	/**
+	 * 
+	 * @return The Tank the Player is based on
+	 */
 	public Tanks getTank() {
 		return tank;
 	}
 
+	/**
+	 * @return The Direction the Player is pointing
+	 */
 	public Direction getDirection() {
 		return direction;
 	}
 
+	/**
+	 * Sets the Direction the Player is pointing
+	 */
 	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}
 
+	/**
+	 * Draws the lifebar
+	 * @param r The ShapeRenderer used to draw the lifebar
+	 */
 	public void renderLifeBar(ShapeRenderer r) {
 
 		float percentage = currentHitpoints / tank.getMaxHitpoints();
@@ -308,10 +410,18 @@ public class Player extends Entity {
 		}
 	}
 
+	/**
+	 * 
+	 * @return The player's current hitpoints
+	 */
 	public float getCurrentHitpoints() {
 		return currentHitpoints;
 	}
 
+	/**
+	 * Processes the hit of a Bullet
+	 * @param bullet The Bullet the player was hit by
+	 */
 	public void hitPlayer(Bullet bullet) {
 		float realDamage = tank.calculateDamage(bullet.getDamage());
 
@@ -323,18 +433,33 @@ public class Player extends Entity {
 
 	}
 
+	/**
+	 * 
+	 * @return the number of kills the Player made in the current round
+	 */
 	public int getKills() {
 		return kills;
 	}
 
+	/**
+	 * Sets the amount of kills the player made in the current round
+	 * @param kills
+	 */
 	public void setKills(int kills) {
 		this.kills = kills;
 	}
 
+	/**
+	 * 
+	 * @return The number of times the Player died in this round
+	 */
 	public int getDeathCount() {
 		return deathCount;
 	}
 
+	/**
+	 * Called when Battletanks is closed
+	 */
 	@Override
 	public void dispose() {
 		tank.getShotSound().dispose();

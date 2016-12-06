@@ -28,10 +28,17 @@ public class BattleTanks extends Game {
 	private static GameScreen game;
 	private static EndScreen end;
 
+	/**
+	 * Creates a new instance and makes it the current instacne. Only one
+	 * instance at a time is possible
+	 */
 	public BattleTanks() {
 		instance = this;
 	}
 
+	/**
+	 * Called when the application is launched
+	 */
 	@Override
 	public void create() {
 
@@ -46,11 +53,17 @@ public class BattleTanks extends Game {
 		BattleTanks.showMenu();
 	}
 
+	/**
+	 * Called each frame
+	 */
 	@Override
 	public void render() {
 		super.render();
 	}
 
+	/**
+	 * Called when the application is closed
+	 */
 	@Override
 	public void dispose() {
 
@@ -68,14 +81,23 @@ public class BattleTanks extends Game {
 
 	}
 
+	/**
+	 * 
+	 * @return The currently loaded TextureAtlas
+	 */
 	public static TextureAtlas getTextureAtlas() {
 		return atlas;
 	}
 
+	/**
+	 * 
+	 * @return The games Preferences
+	 */
 	public static Preferences getPreferences() {
 		return prefs;
 	}
 
+	// Writes default values to the Preferences file. Should only be called on user request
 	private void setDefaultPrefs() {
 		prefs.putInteger("window_width", 1024);
 		prefs.putInteger("window_height", 768);
