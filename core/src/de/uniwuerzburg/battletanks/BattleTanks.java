@@ -29,7 +29,7 @@ public class BattleTanks extends Game {
 	private static EndScreen end;
 
 	/**
-	 * Creates a new instance and makes it the current instacne. Only one
+	 * Creates a new instance and makes it the current instance. Only one
 	 * instance at a time is possible
 	 */
 	public BattleTanks() {
