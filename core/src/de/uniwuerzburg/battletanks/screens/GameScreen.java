@@ -512,7 +512,7 @@ public class GameScreen implements Screen {
 	private float[] solveOverlap(float pSpeed, float oSpeed, float overlap) {
 		float[] translations = new float[2];
 
-		// if a entity isn't moving, then the other entity will be moved back
+		// if an entity isn't moving, then the other entity will be moved back
 		if (pSpeed == 0 || oSpeed == 0) {
 			if (pSpeed > 0) {
 				translations[0] = -overlap;
