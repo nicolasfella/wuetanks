@@ -286,6 +286,13 @@ public class GameScreen implements Screen {
 			}
 		}
 
+		// solve collisions between players and players
+		for (Player p : players) {
+			for (Player e : players) {
+				detectCollisionAndResponse(p, e);
+			}
+		}
+
 		// find bullets which can be deleted
 		List<Entity> bulletsToDelete = new LinkedList<Entity>();
 
@@ -308,13 +315,6 @@ public class GameScreen implements Screen {
 		// delete marked bullets
 		for (Entity b : bulletsToDelete) {
 			entities.remove(b);
-		}
-
-		// solve collisions between players and players
-		for (Player p : players) {
-			for (Player e : players) {
-				detectCollisionAndResponse(p, e);
-			}
 		}
 
 	}
@@ -512,7 +512,7 @@ public class GameScreen implements Screen {
 	private float[] solveOverlap(float pSpeed, float oSpeed, float overlap) {
 		float[] translations = new float[2];
 
-		// if a entity isn't moving, then the other entity will be moved back
+		// if an entity isn't moving, then the other entity will be moved back
 		if (pSpeed == 0 || oSpeed == 0) {
 			if (pSpeed > 0) {
 				translations[0] = -overlap;
@@ -665,13 +665,13 @@ public class GameScreen implements Screen {
 	public List<Entity> getEntities() {
 		return entities;
 	}
-	
+
 	/**
 	 * 
 	 * @return Return the list of players currently active in the game logic
 	 */
-	public List<Player> getPlayers(){
+	public List<Player> getPlayers() {
 		return players;
 	}
-	
+
 }

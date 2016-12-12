@@ -390,7 +390,7 @@ public class MenuScreen implements Screen {
 			break;
 		}
 		Label plus = new Label(" + ", skin);
-
+		keys.add(new Label("Player "+playerNumber+":", skin)).padLeft(5);
 		keys.add(move, plus, shoot);
 		keys.padTop(20);
 		keys.padBottom(20);
