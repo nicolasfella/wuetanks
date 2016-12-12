@@ -71,6 +71,10 @@ public class Entity implements Disposable {
 	 */
 	public Entity(String spriteName) {
 
+		if (spriteName == null) {
+			throw new NullPointerException("No Spritename given");
+		}
+
 		position = new Vector2();
 		oldPosition = new Vector2();
 		toCollisionRectangleVector = new Vector2();
@@ -83,6 +87,11 @@ public class Entity implements Disposable {
 		collisionRectangleHeight = 0;
 
 		sprite = BattleTanks.getTextureAtlas().createSprite(spriteName);
+
+		if (sprite == null) {
+			throw new IllegalArgumentException(spriteName + " was not found in TextureAtlas");
+		}
+
 		sprite.setPosition(position.x, position.y);
 	}
 
@@ -119,6 +128,11 @@ public class Entity implements Disposable {
 	}
 
 	public void setHeight(int height) {
+
+		if (height < 0) {
+			throw new IllegalArgumentException("Height cannot be less than zero");
+		}
+
 		this.height = height;
 		if (collisionRectangleHeight == 0) {
 			collisionRectangleHeight = height;
@@ -130,6 +144,11 @@ public class Entity implements Disposable {
 	}
 
 	public void setWidth(int width) {
+
+		if (width < 0) {
+			throw new IllegalArgumentException("Width cannot be less than zero");
+		}
+
 		this.width = width;
 		if (collisionRectangleWidth == 0) {
 			collisionRectangleWidth = width;

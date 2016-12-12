@@ -57,7 +57,7 @@ public class Player extends Entity {
 	 */
 	public Player(Tanks tank, int key_up, int key_down, int key_left, int key_right, int key_shoot) {
 		super("tank" + tank.getName());
-
+		
 		this.tank = tank;
 
 		this.key_up = key_up;
@@ -156,7 +156,7 @@ public class Player extends Entity {
 			// if the player would leave the playing field, then the speed is
 			// set to 0 and player's position is set to the border of the
 			// playing field
-			
+
 			if (position.x + speed.x * Gdx.graphics.getDeltaTime() < 0) {
 				position.x = 0;
 				speed.x = 0;
