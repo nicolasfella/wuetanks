@@ -94,6 +94,8 @@ public class MenuScreen implements Screen {
 	public void reset() {
 		stage.clear();
 		bgStage.clear();
+		
+		tiledMapFileHandle = null;
 		Gdx.input.setInputProcessor(stage);
 		create();
 	}

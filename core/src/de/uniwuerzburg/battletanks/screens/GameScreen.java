@@ -444,6 +444,11 @@ public class GameScreen implements Screen {
 
 		// if the collision rectangles overlap then there is a collision
 		if (pRect.overlaps(oRect)) {
+			
+			
+			if (Gdx.graphics.getDeltaTime() <= 1) {
+				BattleTanks.showError("There are obstacles at the player's spawn points!\nTry loading another map!");
+			}
 
 			// calculates the horizontal and vertical overlap
 			float overlapX;

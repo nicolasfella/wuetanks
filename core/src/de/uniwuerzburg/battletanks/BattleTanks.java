@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import de.uniwuerzburg.battletanks.entity.Player;
 import de.uniwuerzburg.battletanks.screens.EndScreen;
+import de.uniwuerzburg.battletanks.screens.ErrorScreen;
 import de.uniwuerzburg.battletanks.screens.GameScreen;
 import de.uniwuerzburg.battletanks.screens.MenuScreen;
 
@@ -27,6 +28,7 @@ public class BattleTanks extends Game {
 	private static MenuScreen menu;
 	private static GameScreen game;
 	private static EndScreen end;
+	private static ErrorScreen error;
 
 	/**
 	 * Creates a new instance and makes it the current instance. Only one
@@ -76,6 +78,9 @@ public class BattleTanks extends Game {
 		if (end != null) {
 			end.dispose();
 		}
+		if (error != null) {
+			error.dispose();
+		}
 		atlas.dispose();
 		super.dispose();
 
@@ -97,7 +102,8 @@ public class BattleTanks extends Game {
 		return prefs;
 	}
 
-	// Writes default values to the Preferences file. Should only be called on user request
+	// Writes default values to the Preferences file. Should only be called on
+	// user request
 	private void setDefaultPrefs() {
 		prefs.putInteger("window_width", 1024);
 		prefs.putInteger("window_height", 768);
@@ -170,6 +176,15 @@ public class BattleTanks extends Game {
 		instance.setScreen(end);
 	}
 
+	public static void showError(String message) {
+		if (error == null) {
+			error = new ErrorScreen(message);
+		} else {
+			error.reset(message);
+		}
+		instance.setScreen(error);
+	}
+
 	/**
 	 * Returns the current GameScreen instance
 	 */
@@ -189,6 +204,10 @@ public class BattleTanks extends Game {
 	 */
 	public static EndScreen getEndScreen() {
 		return end;
+	}
+
+	public static ErrorScreen getErrorScreen() {
+		return error;
 	}
 
 }
