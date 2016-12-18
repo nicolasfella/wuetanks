@@ -63,6 +63,7 @@ public class GameScreen implements Screen {
 	private Music music;
 
 	private float time;
+	private float startTime;
 
 	/**
 	 * Creates a new GameScreen instance
@@ -98,6 +99,7 @@ public class GameScreen implements Screen {
 			throw new NullPointerException("No List of Players given");
 		}
 
+		this.startTime = time;
 		this.time = time;
 		this.players = new ArrayList<>(players);
 		this.tiledMapFileHandle = tiledMapFileHandle;
@@ -444,10 +446,9 @@ public class GameScreen implements Screen {
 
 		// if the collision rectangles overlap then there is a collision
 		if (pRect.overlaps(oRect)) {
-			
-			
-			if (Gdx.graphics.getDeltaTime() <= 1) {
-				BattleTanks.showError("There are obstacles at the player's spawn points!\nTry loading another map!");
+
+			if ((startTime - Gdx.graphics.getDeltaTime()) <= time) {
+				BattleTanks.showError("There are obstacles at the players' spawn points!\nTry loading another map!");
 			}
 
 			// calculates the horizontal and vertical overlap
@@ -638,9 +639,6 @@ public class GameScreen implements Screen {
 		font.dispose();
 		batch.dispose();
 		tiledMap.dispose();
-		// if (tiledMapFileHandle != null) {
-		// tiledMapFileHandle.delete();
-		// }
 		shapeRenderer.dispose();
 		generator.dispose();
 		music.dispose();
