@@ -334,7 +334,7 @@ public class GameScreen implements Screen {
 			tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
 		} else {
 			tiledMap = new TmxMapLoader()
-					.load(BattleTanks.getPreferences().getString("default_map", "maps/TestMap.tmx"));
+					.load(BattleTanks.getPreferences().getString("default_map", "maps/default.tmx"));
 		}
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		MapProperties tiledMapProps = tiledMap.getProperties();

@@ -14,10 +14,10 @@
   <object id="45" x="224" y="384" width="32" height="32"/>
   <object id="49" x="480" y="192" width="64" height="32"/>
   <object id="50" x="512" y="224" width="32" height="128"/>
-  <object id="54" x="1" y="1" width="127" height="126"/>
-  <object id="55" x="0" y="449" width="127" height="126"/>
-  <object id="56" x="641" y="448" width="127" height="126"/>
-  <object id="57" x="641" y="1" width="127" height="126"/>
+  <object id="54" x="1" y="1" width="128" height="128"/>
+  <object id="55" x="0" y="448" width="128" height="128"/>
+  <object id="56" x="640" y="448" width="128" height="128"/>
+  <object id="57" x="640" y="1" width="128" height="128"/>
  </objectgroup>
  <layer name="obstacles" width="24" height="18">
   <data encoding="csv">
