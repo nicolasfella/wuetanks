@@ -63,6 +63,7 @@ public class GameScreen implements Screen {
 	private Music music;
 
 	private float time;
+	private float startTime;
 
 	/**
 	 * Creates a new GameScreen instance
@@ -98,6 +99,7 @@ public class GameScreen implements Screen {
 			throw new NullPointerException("No List of Players given");
 		}
 
+		this.startTime = time;
 		this.time = time;
 		this.players = new ArrayList<>(players);
 		this.tiledMapFileHandle = tiledMapFileHandle;
@@ -332,7 +334,7 @@ public class GameScreen implements Screen {
 			tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
 		} else {
 			tiledMap = new TmxMapLoader()
-					.load(BattleTanks.getPreferences().getString("default_map", "maps/TestMap.tmx"));
+					.load(BattleTanks.getPreferences().getString("default_map", "maps/default.tmx"));
 		}
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		MapProperties tiledMapProps = tiledMap.getProperties();
@@ -444,6 +446,10 @@ public class GameScreen implements Screen {
 
 		// if the collision rectangles overlap then there is a collision
 		if (pRect.overlaps(oRect)) {
+
+			if ((startTime - Gdx.graphics.getDeltaTime()) <= time) {
+				BattleTanks.showError("There are obstacles at the players' spawn points!\nTry loading another map!");
+			}
 
 			// calculates the horizontal and vertical overlap
 			float overlapX;
@@ -633,9 +639,6 @@ public class GameScreen implements Screen {
 		font.dispose();
 		batch.dispose();
 		tiledMap.dispose();
-		// if (tiledMapFileHandle != null) {
-		// tiledMapFileHandle.delete();
-		// }
 		shapeRenderer.dispose();
 		generator.dispose();
 		music.dispose();
