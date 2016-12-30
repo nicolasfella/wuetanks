@@ -33,7 +33,7 @@ public class ErrorScreen implements Screen {
 	private String message;
 
 	public ErrorScreen(String message) {
-		prefs = BattleTanks.getPreferences();
+		prefs = BattleTanks.getInstance().getPreferences();
 
 		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
 		this.stage = new Stage(
@@ -82,7 +82,7 @@ public class ErrorScreen implements Screen {
 		start.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				BattleTanks.showMenu();
+				BattleTanks.getInstance().showMenu();
 			}
 		});
 		return start;

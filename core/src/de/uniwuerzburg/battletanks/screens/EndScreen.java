@@ -44,7 +44,7 @@ public class EndScreen implements Screen {
 	 * @param players List of players for ranking
 	 */
 	public EndScreen(List<Player> players) {
-		prefs = BattleTanks.getPreferences();
+		prefs = BattleTanks.getInstance().getPreferences();
 
 		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
 		this.stage = new Stage(
@@ -100,7 +100,7 @@ public class EndScreen implements Screen {
 		start.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				BattleTanks.showMenu();
+				BattleTanks.getInstance().showMenu();
 			}
 		});
 		return start;

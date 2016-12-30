@@ -36,7 +36,7 @@ public enum Tanks {
 		this.armor = armor;
 		this.reloadTime = reloadTime;
 		shotSound = Gdx.audio
-				.newSound(Gdx.files.internal(BattleTanks.getPreferences().getString("shot_sound", "shot.wav")));
+				.newSound(Gdx.files.internal(BattleTanks.getInstance().getPreferences().getString("shot_sound", "shot.wav")));
 	}
 
 	/** 

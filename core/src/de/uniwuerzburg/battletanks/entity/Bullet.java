@@ -26,9 +26,9 @@ public class Bullet extends Entity {
 		direction = player.getDirection();
 		dmg = player.getTank().getDamage();
 
-		width = BattleTanks.getPreferences().getInteger("bullet_width", 12);
-		height = BattleTanks.getPreferences().getInteger("bullet_height", 26);
-		movingSpeed = BattleTanks.getPreferences().getInteger("bullet_speed", 450);
+		width = BattleTanks.getInstance().getPreferences().getInteger("bullet_width", 12);
+		height = BattleTanks.getInstance().getPreferences().getInteger("bullet_height", 26);
+		movingSpeed = BattleTanks.getInstance().getPreferences().getInteger("bullet_speed", 450);
 
 		this.position = position.cpy();
 		this.position.x -= width / 2.f;

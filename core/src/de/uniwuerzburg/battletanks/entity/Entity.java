@@ -86,7 +86,7 @@ public class Entity implements Disposable {
 		collisionRectangleWidth = 0;
 		collisionRectangleHeight = 0;
 
-		sprite = BattleTanks.getTextureAtlas().createSprite(spriteName);
+		sprite = BattleTanks.getInstance().getTextureAtlas().createSprite(spriteName);
 
 		if (sprite == null) {
 			throw new IllegalArgumentException(spriteName + " was not found in TextureAtlas");
@@ -204,7 +204,7 @@ public class Entity implements Disposable {
 	}
 
 	public void setSprite(String spriteName) {
-		sprite = BattleTanks.getTextureAtlas().createSprite(spriteName);
+		sprite = BattleTanks.getInstance().getTextureAtlas().createSprite(spriteName);
 	}
 
 	@Override

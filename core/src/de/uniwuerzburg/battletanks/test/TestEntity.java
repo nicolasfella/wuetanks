@@ -4,12 +4,17 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import de.uniwuerzburg.battletanks.BattleTanks;
 import de.uniwuerzburg.battletanks.entity.Entity;
+import de.uniwuerzburg.battletanks.test.mock.MockBattleTanks;
 
 public class TestEntity {
 
 	@Test
 	public void test() {
+		
+		MockBattleTanks mb = new MockBattleTanks();
+		
 		Entity e = new Entity();
 
 		boolean widthExceptionThrown = false;

@@ -76,10 +76,10 @@ public class MenuScreen implements Screen {
 	 * and creates the UI
 	 */
 	public MenuScreen() {
-		prefs = BattleTanks.getPreferences();
+		prefs = BattleTanks.getInstance().getPreferences();
 		tiledMapFileHandle = null;
 
-		this.atlas = BattleTanks.getTextureAtlas();
+		this.atlas = BattleTanks.getInstance().getTextureAtlas();
 
 		this.skin = new Skin(Gdx.files.internal(prefs.getString("uiskin", "data/uiskin.json")));
 		this.stage = new Stage(
@@ -125,7 +125,7 @@ public class MenuScreen implements Screen {
 	 */
 	private void startGame() {
 		if (time != 0 && !players.isEmpty()) {
-			BattleTanks.showGame(time, tiledMapFileHandle, players);
+			BattleTanks.getInstance().showGame(time, tiledMapFileHandle, players);
 		} else {
 			final Button close = new TextButton("close", skin);
 			Dialog error = new Dialog("Error", skin);

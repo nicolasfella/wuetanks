@@ -68,17 +68,17 @@ public class Player extends Entity {
 
 		initForSpawn();
 
-		width = BattleTanks.getPreferences().getInteger("player_width", 40);
-		height = BattleTanks.getPreferences().getInteger("player_height", 40);
+		width = BattleTanks.getInstance().getPreferences().getInteger("player_width", 40);
+		height = BattleTanks.getInstance().getPreferences().getInteger("player_height", 40);
 
 		collisionRectangleWidth = width;
 		collisionRectangleHeight = height;
 
-		movingSpeed = BattleTanks.getPreferences().getInteger("player_speed", 150);
+		movingSpeed = BattleTanks.getInstance().getPreferences().getInteger("player_speed", 150);
 
-		gunSprite = BattleTanks.getTextureAtlas().createSprite("barrel" + tank.getName());
-		gunSprite.setSize(BattleTanks.getPreferences().getInteger("gun_width", 10),
-				BattleTanks.getPreferences().getInteger("gun_height", 40));
+		gunSprite = BattleTanks.getInstance().getTextureAtlas().createSprite("barrel" + tank.getName());
+		gunSprite.setSize(BattleTanks.getInstance().getPreferences().getInteger("gun_width", 10),
+				BattleTanks.getInstance().getPreferences().getInteger("gun_height", 40));
 		gunSprite.setOrigin(gunSprite.getWidth() / 2, 0);
 	}
 
@@ -162,8 +162,8 @@ public class Player extends Entity {
 				speed.x = 0;
 			}
 
-			if (position.x + speed.x * Gdx.graphics.getDeltaTime() + width > BattleTanks.getGame().getWidth()) {
-				position.x = BattleTanks.getGame().getWidth() - width;
+			if (position.x + speed.x * Gdx.graphics.getDeltaTime() + width > BattleTanks.getInstance().getGame().getWidth()) {
+				position.x = BattleTanks.getInstance().getGame().getWidth() - width;
 				speed.x = 0;
 			}
 
@@ -172,8 +172,8 @@ public class Player extends Entity {
 				speed.y = 0;
 			}
 
-			if (position.y + speed.y * Gdx.graphics.getDeltaTime() + height > BattleTanks.getGame().getHeight()) {
-				position.y = BattleTanks.getGame().getHeight() - height;
+			if (position.y + speed.y * Gdx.graphics.getDeltaTime() + height > BattleTanks.getInstance().getGame().getHeight()) {
+				position.y = BattleTanks.getInstance().getGame().getHeight() - height;
 				speed.y = 0;
 			}
 
@@ -197,10 +197,10 @@ public class Player extends Entity {
 	 * @return The respawn position
 	 */
 	public Vector2 getSpawnPoint() {
-		float gameWidth = BattleTanks.getGame().getWidth();
-		float gameHeight = BattleTanks.getGame().getHeight();
+		float gameWidth = BattleTanks.getInstance().getGame().getWidth();
+		float gameHeight = BattleTanks.getInstance().getGame().getHeight();
 
-		int spawnOffset = BattleTanks.getPreferences().getInteger("spawn_offset", 20);
+		int spawnOffset = BattleTanks.getInstance().getPreferences().getInteger("spawn_offset", 20);
 
 		// possible spawn points are the corners of the game
 		Vector2[] spawnPoints = new Vector2[4];
@@ -211,7 +211,7 @@ public class Player extends Entity {
 
 		// creates list of all positions of the other players
 		List<Vector2> playerPositions = new LinkedList<Vector2>();
-		for (Player p : BattleTanks.getGame().getPlayers()) {
+		for (Player p : BattleTanks.getInstance().getGame().getPlayers()) {
 			if (p != this) {
 				playerPositions.add(p.getPosition().cpy());
 			}
@@ -257,7 +257,7 @@ public class Player extends Entity {
 		pos.y += Math.cos(Math.toRadians(direction.getRotation())) * gunSprite.getHeight();
 
 		Bullet bullet = new Bullet(this, pos);
-		BattleTanks.getGame().getEntities().add(bullet);
+		BattleTanks.getInstance().getGame().getEntities().add(bullet);
 
 		tank.getShotSound().play();
 	}

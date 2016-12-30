@@ -47,7 +47,7 @@ public class GameScreen implements Screen {
 	private ShapeRenderer shapeRenderer;
 
 	private BitmapFont font;
-	private int fontSize = BattleTanks.getPreferences().getInteger("game_font_size", 14);
+	private int fontSize = BattleTanks.getInstance().getPreferences().getInteger("game_font_size", 14);
 	private GlyphLayout layout;
 	private FreeTypeFontGenerator generator;
 
@@ -58,7 +58,7 @@ public class GameScreen implements Screen {
 	private List<Entity> entities;
 	private List<Player> players;
 
-	private int spawnOffset = BattleTanks.getPreferences().getInteger("spawn_offset", 20);
+	private int spawnOffset = BattleTanks.getInstance().getPreferences().getInteger("spawn_offset", 20);
 
 	private Music music;
 
@@ -160,7 +160,7 @@ public class GameScreen implements Screen {
 
 		// Loading font
 		generator = new FreeTypeFontGenerator(
-				Gdx.files.internal(BattleTanks.getPreferences().getString("game_font", "fonts/Vera.ttf")));
+				Gdx.files.internal(BattleTanks.getInstance().getPreferences().getString("game_font", "fonts/Vera.ttf")));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.size = fontSize;
 		parameter.color = Color.WHITE;
@@ -171,7 +171,7 @@ public class GameScreen implements Screen {
 
 	private void loadMusic() {
 		music = Gdx.audio
-				.newMusic(Gdx.files.internal(BattleTanks.getPreferences().getString("background_music", "music.mp3")));
+				.newMusic(Gdx.files.internal(BattleTanks.getInstance().getPreferences().getString("background_music", "music.mp3")));
 		// music.play();
 		// music.setLooping(true);
 	}
@@ -183,13 +183,13 @@ public class GameScreen implements Screen {
 	 */
 	@Override
 	public void render(float delta) {
-		Gdx.graphics.setTitle(BattleTanks.getPreferences().getString("title", "Battletanks"));
+		Gdx.graphics.setTitle(BattleTanks.getInstance().getPreferences().getString("title", "Battletanks"));
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		time -= delta;
 		if (time <= 0) {
-			BattleTanks.showEnd(players);
+			BattleTanks.getInstance().showEnd(players);
 		}
 
 		camera.update();
@@ -334,7 +334,7 @@ public class GameScreen implements Screen {
 			tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
 		} else {
 			tiledMap = new TmxMapLoader()
-					.load(BattleTanks.getPreferences().getString("default_map", "maps/default.tmx"));
+					.load(BattleTanks.getInstance().getPreferences().getString("default_map", "maps/default.tmx"));
 		}
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		MapProperties tiledMapProps = tiledMap.getProperties();
@@ -448,7 +448,7 @@ public class GameScreen implements Screen {
 		if (pRect.overlaps(oRect)) {
 
 			if ((startTime - Gdx.graphics.getDeltaTime()) <= time) {
-				BattleTanks.showError("There are obstacles at the players' spawn points!\nTry loading another map!");
+				BattleTanks.getInstance().showError("There are obstacles at the players' spawn points!\nTry loading another map!");
 			}
 
 			// calculates the horizontal and vertical overlap

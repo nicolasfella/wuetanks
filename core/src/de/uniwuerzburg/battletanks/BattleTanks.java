@@ -22,20 +22,20 @@ public class BattleTanks extends Game {
 
 	private static BattleTanks instance;
 
-	private static TextureAtlas atlas;
-	private static Preferences prefs;
+	private TextureAtlas atlas;
+	private Preferences prefs;
 
-	private static MenuScreen menu;
-	private static GameScreen game;
-	private static EndScreen end;
-	private static ErrorScreen error;
+	private MenuScreen menu;
+	private GameScreen game;
+	private EndScreen end;
+	private ErrorScreen error;
 
 	/**
 	 * Creates a new instance and makes it the current instance. Only one
 	 * instance at a time is possible
 	 */
 	public BattleTanks() {
-		instance = this;
+		BattleTanks.instance = this;
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class BattleTanks extends Game {
 
 		atlas = new TextureAtlas(Gdx.files.internal(prefs.getString("texture_atlas_path", "textures/textures.atlas")));
 
-		BattleTanks.showMenu();
+		showMenu();
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class BattleTanks extends Game {
 	 * 
 	 * @return The currently loaded TextureAtlas
 	 */
-	public static TextureAtlas getTextureAtlas() {
+	public TextureAtlas getTextureAtlas() {
 		return atlas;
 	}
 
@@ -98,7 +98,7 @@ public class BattleTanks extends Game {
 	 * 
 	 * @return The games Preferences
 	 */
-	public static Preferences getPreferences() {
+	public Preferences getPreferences() {
 		return prefs;
 	}
 
@@ -132,7 +132,7 @@ public class BattleTanks extends Game {
 	/**
 	 * Launches the menu screen
 	 */
-	public static void showMenu() {
+	public void showMenu() {
 		if (menu == null) {
 			menu = new MenuScreen();
 		} else {
@@ -151,7 +151,7 @@ public class BattleTanks extends Game {
 	 * @param players
 	 *            The games players
 	 */
-	public static void showGame(float time, FileHandle tiledMapFileHandle, List<Player> players) {
+	public void showGame(float time, FileHandle tiledMapFileHandle, List<Player> players) {
 
 		if (game == null) {
 			game = new GameScreen(time, tiledMapFileHandle, players);
@@ -167,7 +167,7 @@ public class BattleTanks extends Game {
 	 * @param players
 	 *            List of players for ranking
 	 */
-	public static void showEnd(List<Player> players) {
+	public void showEnd(List<Player> players) {
 		if (end == null) {
 			end = new EndScreen(players);
 		} else {
@@ -176,7 +176,7 @@ public class BattleTanks extends Game {
 		instance.setScreen(end);
 	}
 
-	public static void showError(String message) {
+	public void showError(String message) {
 		if (error == null) {
 			error = new ErrorScreen(message);
 		} else {
@@ -188,26 +188,30 @@ public class BattleTanks extends Game {
 	/**
 	 * Returns the current GameScreen instance
 	 */
-	public static GameScreen getGame() {
+	public GameScreen getGame() {
 		return game;
 	}
 
 	/**
 	 * Returns the current MenuScreen instance
 	 */
-	public static MenuScreen getMenu() {
+	public MenuScreen getMenu() {
 		return menu;
 	}
 
 	/**
 	 * Returns the current EndScreen instance
 	 */
-	public static EndScreen getEndScreen() {
+	public EndScreen getEndScreen() {
 		return end;
 	}
 
-	public static ErrorScreen getErrorScreen() {
+	public ErrorScreen getErrorScreen() {
 		return error;
 	}
 
+	public static BattleTanks getInstance(){
+		return instance;
+	}
+	
 }
