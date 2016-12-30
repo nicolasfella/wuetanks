@@ -13,7 +13,7 @@ public class TestTanks {
 		Tanks t = Tanks.GREEN;
 
 		assertEquals(100, t.getMaxHitpoints(), 0);
-		assertEquals(20, t.getDamage(), 0);
+		assertEquals(30, t.getDamage(), 0);
 		assertEquals(0.66f, t.getArmor(), 0);
 		assertEquals(0.5f, t.getReloadTime(), 0);
 
