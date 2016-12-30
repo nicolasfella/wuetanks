@@ -7,12 +7,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
-import de.uniwuerzburg.battletanks.screens.GameScreen;
 
 /**
  * Represents a Player/Tank in the game logic
@@ -80,6 +78,8 @@ public class Player extends Entity {
 		gunSprite.setSize(BattleTanks.getInstance().getPreferences().getInteger("gun_width", 10),
 				BattleTanks.getInstance().getPreferences().getInteger("gun_height", 40));
 		gunSprite.setOrigin(gunSprite.getWidth() / 2, 0);
+		
+		direction = Direction.UP;
 	}
 
 	/**

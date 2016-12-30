@@ -71,7 +71,7 @@ public class Entity implements Disposable {
 	 */
 	public Entity(String spriteName) {
 
-		if (spriteName == null) {
+		if (spriteName == null || spriteName.equals("")) {
 			throw new NullPointerException("No Spritename given");
 		}
 

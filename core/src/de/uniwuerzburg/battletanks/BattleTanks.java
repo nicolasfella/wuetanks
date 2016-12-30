@@ -2,6 +2,8 @@ package de.uniwuerzburg.battletanks;
 
 import java.util.List;
 
+import com.badlogic.gdx.Audio;
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -210,8 +212,16 @@ public class BattleTanks extends Game {
 		return error;
 	}
 
-	public static BattleTanks getInstance(){
+	public static BattleTanks getInstance() {
 		return instance;
 	}
-	
+
+	public Audio getAudio() {
+		return Gdx.audio;
+	}
+
+	public Files getFiles() {
+		return Gdx.files;
+	}
+
 }

@@ -12,13 +12,15 @@ public class Bullet extends Entity {
 
 	private Direction direction;
 
-	
 	/**
 	 * Creates a bullet flying in the direction of the player.
-	 * @param player who shot the bullet
-	 * @param position of the bottom center of the bullet
+	 * 
+	 * @param player
+	 *            who shot the bullet
+	 * @param position
+	 *            of the bottom center of the bullet
 	 */
-	
+
 	public Bullet(Player player, Vector2 position) {
 		super("bullet" + player.getTank().getName());
 
@@ -37,7 +39,8 @@ public class Bullet extends Entity {
 		speed.x = (float) -Math.sin(Math.toRadians(direction.getRotation()));
 		speed.y = (float) Math.cos(Math.toRadians(direction.getRotation()));
 
-		// sets the rotation center to the bottom center of the bullet and rotates it
+		// sets the rotation center to the bottom center of the bullet and
+		// rotates it
 		sprite.setOrigin(width / 2.f, 0);
 		sprite.setRotation(direction.getRotation());
 
@@ -49,7 +52,7 @@ public class Bullet extends Entity {
 	/**
 	 * Called each frame, moves the bullet.
 	 */
-	
+
 	public void update() {
 		speed.nor();
 		speed.scl(movingSpeed);
@@ -133,11 +136,11 @@ public class Bullet extends Entity {
 	 * 
 	 * @return damage of the bullet
 	 */
-	
+
 	public float getDamage() {
 		return dmg;
 	}
-	
+
 	/**
 	 * 
 	 * @return player who created the bullet
@@ -145,6 +148,14 @@ public class Bullet extends Entity {
 
 	public Player getPlayer() {
 		return player;
+	}
+
+	public void setMovingSpeed(int speed) {
+		this.movingSpeed = speed;
+	}
+
+	public int getMovingSpeed() {
+		return movingSpeed;
 	}
 
 }
