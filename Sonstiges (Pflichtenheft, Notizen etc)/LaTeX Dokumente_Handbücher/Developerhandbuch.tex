@@ -1,0 +1,211 @@
+%\documentclass[a4paper]{article}
+\documentclass[10pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{gensymb}
+\usepackage[hyphens]{url}
+
+\usepackage{graphicx}
+
+\usepackage{geometry}
+\geometry{verbose,a4paper,tmargin=25mm,
+bmargin=25mm,lmargin=25mm,rmargin=25mm}
+
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+
+\setlist{nosep} % or \setlist{noitemsep} to leave space around whole list
+\setlength\parindent{0pt}
+
+
+\def\code#1{\texttt{#1}}
+
+
+
+\title{Developerhandbuch - Battletanks}
+\author{Armin Bernstetter, Stefan Ernst, Nicolas Fella}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+\include{Pflichtenheft}
+
+
+\chapter{Dokumentation}
+\section{Projektaufbau}
+\subsection{LlbGDX}
+libGDX (\url{http://libgdx.badlogicgames.com/}) ist ein cross-platform Java-Framework für Spieleentwicklung. Es unterstützt Windows, Linux, Mac OS X, Android, Blackberry, iOS und HTML5.
+Es wurde von \href{https://twitter.com/badlogicgames}{\textbf{\textit{Mario Zechner}}} entwickelt.
+Es erlaubt dem Programmierer, seinen Code einmal zu schreiben und anschließend auf verschiedenen Plattformen anzuwenden.
+LibGDX bietet direkten Zugang zum Dateisystem, Eingabe- und Audiogeräten sowie OpenGL durch ein kombiniertes OpenGL ES 2.0 und 3.0 interface.
+Zusätzlich bietet LibGDX APIs für viele Aufgaben in der Spielentwicklung wie das Rendern von Sprites und Text, UI Erstellung, Soundeffekte und vieles Weiteres.
+
+libGDX benutzt Gradle, ein Build-Management-Automatisierungs-Tool
+
+
+\subsection{Einrichten des Projekts}
+Um ein libGDX Projekt zu erstellen wird die GDX-Setup App benötigt, die auf der Seite von libGDX zum Download zur Verfügung steht. Anschließend kann man festlegen, für welche Plattformen man entwickeln will und welche Extensions (wie z.B. um Freetype Fonts einlesen/benutzen zu können) man verwenden möchte. Diese können auch nachträglich noch geändert werden durch Änderungen an den build.gradle Dateien.
+Im Fall von Battletanks wurde sich auf eine Desktopanwendung beschränkt und die Extensions 'Tools' und 'Freetype' verwendet.
+
+Die Entwicklung geschah größtenteils mit der IDE Eclipse und Java 8, zur Version Control wurde ein Repository auf dem von der Universität Würzburg bereitgestellten Repository Manager \url{https://gitlab2.informatik.uni-wuerzburg.de/} benutzt.
+
+
+
+\subsection{Ordnerstruktur}
+\subparagraph{Battletanks\_SWP} Dieser Projektordner beinhaltet die von Gradle verwendeted Wrapper und Dateien, einen Ordner textures mit allen verwendeten Grafiken, runnable jar Dateien für das Programm Hiero \url{https://github.com/libgdx/libgdx/wiki/Hiero} und einen Texture Packer um die Grafiken in einem Texture Atlas zusammenzufassen.
+
+Zusätzlich befindet sich hier noch ein Ordner mit Benutzer- und Developerhandbuch.
+
+\subparagraph{Battletanks-desktop}
+Das  \code{desktop} Projekt beinhaltet nur eine Klasse \code{DesktopLauncher}, die das Spiel als 'Lightweight Java Game Library'-Applikation startet, die eine neue Instanz von \code{BattleTanks} übergeben bekommt.
+
+Damit der \code{DesktopLauncher} auf die richtigen Assets zugreifen kann musste vor der ersten Ausführung das Working Directory in den Run Configurations zum Ordner '\code{Battletanks-core/assets}' geändert werden.
+
+\subparagraph{Battletanks-core}
+Dieser Ordner beinhaltet den gesamten Code des Projekts (siehe 2.2 Code), Java Docs sowie alle verwendeten Assets. Darunter befinden sich Soundeffekte, Fonts, die verwendeten TiledMaps, ein UI Skin, Fonts für Menü und Game sowie die Grafiken der Panzer, der Hintergrund und weitere Dateien.
+
+
+
+\newpage
+\section{Code}
+\begin{figure}[H]
+  \textbf{Architekturdiagramm:}\par\medskip
+  \centering
+\includegraphics[width=15cm]{architekturdiagramm.png}
+\caption{Übersicht über die Klassenstruktur des Projekts}
+\end{figure}
+\begin{center}\end{center}
+
+\subsection{Klasse Battletanks}
+Die Klasse \code{BattleTanks} ist die Hauptklasse. Sie erbt von der LibGDX Klasse \code{Game} und verwaltet die Screens, den TextureAtlas sowie die Preferences.
+Die Methoden \code{showMenu}, \code{showGame} und \code{showEnd} setzen den von der \code{BattleTanks} Instanz angezeigten Screen.
+
+\newpage
+\subsection{Package Screens}
+Alle Klassen in diesem Package implementieren das LibGDX interface \code{Screen}. Jeder Screen besitzt eine Methode \code{reset}, um z.B. beim mehrmaligen Start neuer Spiele nicht jedes Mal neue Screen Instanzen erstellen zu müssen.
+\subsubsection{MenuScreen}
+\begin{figure}[H]
+  \textbf{Screenshot Menü:}\par\medskip
+  \centering
+\includegraphics[width=15cm]{screenshot_menu.png}
+\caption{1: Map Laden, 2: Zeit Eingeben, 3: Spielfigur auswählen, 4: Tastenbelegung des jew. Spielers,
+5: Spiel starten}
+\end{figure}
+
+
+Der \code{MenuScreen} besitzt zwei Stages, auf denen das Menü dargestellt wird. Die Hintergrundstage beinhaltet nur das Hintergrundbild, welches an die Fenstergröße angepasst und bei Bedarf gestreckt/gestaucht wird.
+Das gesamte Menü wird durch die zweite Stage dargestellt, die eine Table \code{mainTable} beinhaltet, auf der sich alle UI Elemente befinden. Diese werden jeweils von Methoden erstellt, die nach dem Schema '\code{createUIElement()}' benannt sind und werden anschließend von der Methode '\code{create()}' auf der mainTable angeordnet.
+
+
+Zur Darstellung aller UI Elemente wird der im Ordner \code{assets/data} befindliche Skin \code{uiskin.json} verwendet. (Siehe 2.4.3 Skin/Fonts)
+
+Wurden alle notwendigen Informationen vom Benutzer eingegeben, wird durch Aufruf der \code{showGame()} Methode der Klasse \code{BattleTanks} das Spiel gestartet indem zu einem \code{GameScreen} gewechselt wird.
+
+
+\newpage
+\subsubsection{GameScreen}
+\begin{figure}[H]
+  \textbf{Screenshot Game:}\par\medskip
+  \centering
+\includegraphics[width=15cm]{screenshot_game.png}    \caption{1: Anzeige von Abschüssen und Toden, 2: Verbleibende Spielzeit, 3: Panzer mit Kanone nach unten ausgerichtet, 4: Projektil des blauen Panzers}
+\end{figure}
+Im \code{GameScreen} befindet sich die gesamte Spiellogik. Der Konstruktor bekommt eine Liste von Spielern, die Spieldauer und den Dateipfad der ausgewählten Map übergeben.
+Letzterer wird in der Methode \code{loadMap} verwendet, um die Map aus der .tmx Datei einzulesen (Siehe 2.3.1 Die Maps).
+
+Die Methode \code{render} wird jeden Frame aufgerufen und aktualisiert das gesamte Spiel, also alle Entities, die sich auf dem Spielfeld befinden, alle Textanzeigen und die Map.
+\subparagraph{Kollisionserkennung} Grundsätzlich können sich die Player jeden Frame beliebig bewegen. Bevor die neuen Positionen allerdings gezeichnet werden, findet die Kollisionserkennung und -auflösung statt. Zur Erkennung besitzt jede Entity ein Kollisionsrechteck, welches verwendet wird, um zu überprüfen, ob sich zwei Entities überschneiden. Falls dies der Fall ist, wird die Überlappung in x und y Richtung berechnet. Je nachdem, welcher Wert kleiner ist, wird die Kollision in der entsprechenden Richtung wieder aufgelöst.
+Hierbei dient die Geschwindigkeit der beiden Entities, um den Typ der Kollision festzustellen. Falls eine der beiden Entities steht (Beispiel: Player-Obstacle-Kollisionen), wird die sich bewegende Entity ausgebremst und an den Rand der anderen zurückgesetzt. Ein weiterer Kollisionstyp findet statt, falls beide Entities aufeinander zufahren. Dies wird aufgelöst, indem die Entities jeweils zur Hälfte der Überlappung zurückgesetzt werden. Zuletzt könnte es noch sein, dass die eine Entity langsamer war als die andere, sodass letztere der anderen hinten auffährt. In diesem Fall wird die schnellere ausgebremst und an den Rand der anderen zurückgesetzt.
+Zusätzlich wird die Geschwindigkeit der versetzten Entities in der entsprechenden Richtung auf 0 gesetzt, sodass sie bei einer weiteren Kollision nicht als Kollisionsverursacher wieder entlang dieser Richtung verschoben werden können.
+
+Damit die Player zuerst von den Wänden weggeschoben werden, findet als Erstes die Kollisionserkennung zwischen Playern und Obstacles und anschließend die zwischen Playern und Playern statt. Die Kollisionen zwischen Bullets und Entities werden zuletzt überprüft und löschen die Bullets (mit Schaden bei Playern).
+\newpage
+\subsubsection{EndScreen}
+\begin{figure}[H]
+  \textbf{Screenshot Scoreboard:}\par\medskip
+  \centering
+\includegraphics[width=15cm]{screenshot_endscreen.png}    
+\caption{Spielende und Starten eines neuen Spiels}
+\end{figure}
+Der \code{EndScreen} erscheint sobald die eingegebene Zeit abgelaufen ist. Er ist ähnlich aufgebaut wie der \code{MenuScreen} mit main stage und background stage und bekommt eine Liste an Playern übergeben. Diese werden mithilfe des internen \code{PlayerComparator} zuerst absteigend nach Kills, aufsteigend nach Deaths und danach aufsteigend nach PlayerNumber sortiert und in Form eines Scoreboards dargestellt. Zudem besitzt EndScreen einen Button, mit dem ein neues Spiel gestartet werden kann.
+
+\newpage
+\subsection{Package Entity}
+\subparagraph{Entity}
+Die Klasse \code{Entity} implementiert das LibGDX Interface \code{Disposable}. Dies bedeutet, dass Instanzen dieser Klasse am Ende ihrer Lebenszeit manuell disposed werden müssen, da es sonst zu Memory Leaks kommen kann. 
+Jede Instanz einer Entity besitzt eine Position im Koordinatensystem, eine Höhe und Breite sowie eine 2D Sprite, die aus dem TextureAtlas ausgelesen wird.
+Zusätzlich hat jede Instanz ein '\code{collisionRectangle}' und eine Koordinate, die zur Kollisionsberechnung verwendet werden.
+
+
+\subparagraph{Player}
+Die Klasse Player erbt von Entity. Sie stellt eine Spielfigur mit einem Tank (siehe Enum Tanks), einer Tastenbelegung, einer Playernumber, einer Bewegungsgeschwindigkeit und einer 2D Sprite 'Gun' dar. Die Player eines Spiels werden bereits im MenuScreen erstellt wenn der 'Lock Tank Choice'-Button gedrückt wird und werden dann an den GameScreen übergeben.
+
+Die Methode \code{update()} verarbeitet u.a. mit Aufruf mehrerer Untermethoden die Benutzereingaben und bewegt die Spielfigur bzw erzeugt eine neues Projektil. Zudem kümmert sich diese Methode um den Respawn des Spielers.
+\subparagraph{Bullet}
+Die Klasse \code{Bullet} erbt von Entity. Bullets gehören zu einer Player Instanz. Dies wird benötigt um zu berechnen, welcher Player einen anderen abgeschossen hat.
+\subparagraph{Obstacle}
+Die Klasse \code{Obstacle} erbt ebenfalls von Entity. Sie stellt ein Hindernis auf der Map dar.
+\subparagraph{Enum Direction}
+Direction ist ein Enum, das die 8 möglichen Richtungen darstellt, in die sich eine Spielfigur bewegen kann.
+
+\subparagraph{Enum Tanks}
+Das Enum \code{Tanks} erstellt die fünf Spielfiguren. Jede davon besitzt einen Damage-, Armor- und HealthPoints-Wert sowie eine ReloadTime/Schussfrequenz. 
+
+\newpage
+\subsection{Package Utility}
+\subparagraph{FileChooser}
+\begin{figure}[H]
+  \textbf{Screenshot FileChooser:}\par\medskip
+  \centering
+\includegraphics[width=15cm]{screenshot_filechooser.png}  
+\caption{1: Anzeige des aktuellen Ordnerpfades, 2: Wechseln in den vorherigen Ordner, 3: Die zur Auswahl stehenden Maps, 4: Ausgewählte Map laden oder Abbrechen}
+\end{figure}
+
+Der \code{FileChooser} wurde benötigt, da LibGDX kein Fenster zur Auswahl einer Datei enthält und basiert grundlegend diesem Entwurf (\url{http://www.java-gaming.org/index.php?topic=35471.0}).
+Er erbt von der Klasse Dialog, welche bereits Methoden zum Hinzufügen von Buttons, Ausgeben eines Resultats und Anzeigen eines Dialogfensters bietet. Der FileChooser enthält Buttons zum Laden und zum Abbrechen der Mapauswahl. Des Weiteren wird dem Dialogfenster eine ScrollPane hinzugefügt, die wiederum aus einer Liste von FileListItems besteht. Die Elemente der Liste entsprechen den Ordnern und Dateien wobei letztere nach Dateiendung .tmx gefiltert werden und Ordner vor Dateien angezeigt werden. Beim Klick auf eines der Elemente wird entweder der Ordner gewechselt und dessen Inhalt angezeigt oder die Datei ausgewählt. Zum Erstellen eines \code{FileChoosers} wird eine statische Methode verwendet, in der die \code{result} Methode so überschrieben wird, dass das Ergebnis der \code{result} Methode eines selbst definierten \code{ResultListeners}, dessen Interface im \code{FileChooser} enthalten ist, übergeben wird. Dieser \code{ResultListener} kann außerdem mit einer weiteren Methode gesetzt werden um festzulegen, was beim schließen des Fensters passieren soll. Die ausgewählte Datei kann zum Schluss mit einer weiteren Methode abgefragt werden.
+
+\subparagraph{FileListItem}
+Diese Klasse wird benötigt um die Liste von Ordnern und Dateien im \code{FileChooser} zu realisieren. Ein \code{FileListItem} entspricht grundsätzlich einem Ordner bzw. einer Datei, enthält jedoch zusätzlich noch einen Namen, dem bei Ordnern noch ein '/' zur Unterscheidung angehängt wird. Die \code{toString} Methode wird außerdem so überschrieben, dass hierbei der Name zurückgegeben wird.
+
+\newpage
+\section{Dateien/Assets}
+\subsection{Die Maps}
+Zum Einlesen von Maps wird eine Datei im TMX Format (\url{http://doc.mapeditor.org/reference/tmx-map-format/}) benötigt. Diese enthält die erstellte Map mit Verweis auf Grafiken in Form eines Tilesets und kann aus mehreren Layers bestehen. Die Größe der Map ist egal, da das Spiel entsprechend skaliert wird. Zu beachten ist jedoch, dass die Tanks standardmäßig eine Größe von 40x40 Pixel haben und in den Ecken spawnen müssen. Der Rest der Map kann beliebig gestaltet werden. Damit die Obstacles jedoch eingelesen werden können, muss eine Objektebene namens 'objects' existieren, die alle Hindernisse als rechteckige Objekte enthält. Diese werden dann intern in Obstacles übersetzt, während die restlichen Layers nur als Hintergrund dienen.
+Es bietet sich außerdem an, die Tilemap mithilfe eines Editors, wie zum Beispiel dem Tiled Map Editor (\url{http://www.mapeditor.org/}) zu erstellen.
+
+
+\subsection{Textures/Grafiken}
+Der Großteil der verwendeten Grafiken wurde auf \url{http://opengameart.org/} gefunden.
+Das Hintergrundbild stammt von 
+\url{https://mobilegamegraphics.com/product/airplane-dogfight-assets-free-assets/}
+Sämtliche im Game verwendeten Textures wurden erstellt von \url{http://kenney.nl/assets/topdown-tanks}. Dies beinhaltet die Textures aus denen die Default-Map besteht, die Bullets sowie Panzer.
+
+\subsection{Skin/Fonts}
+Der verwendete Skin sowie alle zugehörigen Dateien befinden sich im Ordner \code{assets/data} im \code{core} Projekt. Ausgenommen des im Menü und EndScreen verwendeten Fonts \code{pixel.fnt} stammen die verwendeten Dateien aus dem LibGDX Tests Repository \url{https://github.com/libgdx/libgdx/tree/master/tests/gdx-tests-android/assets/data} und werden in der LibGDX Dokumentation als default Dateien empfohlen. Zur näheren Information über die Funktionsweise von Skins siehe \url{https://github.com/libgdx/libgdx/wiki/Skin}
+
+Der Font pixel.fnt stammt ebenfalls von \url{http://kenney.nl/assets/kenney-fonts} und wurde mithilfe des Programms Hiero von einem TrueTypeFont in einen BitMapFont umgewandelt.
+
+\subsection{Sounds}
+Sowohl der Schuss-Soundeffekt als auch die Hintergrundmusik wurden auf \url{http://www.freesound.org/} gefunden.
+
+Soundeffekt: \url{http://www.freesound.org/people/ShawnyBoy/sounds/166191/}
+
+Musik: \url{http://www.freesound.org/people/Airwolf89/sounds/346455/}
+
+\newpage
+\section{Tests}
+
+\end{document}
