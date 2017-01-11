@@ -325,9 +325,7 @@ public class GameScreen implements Screen {
 
 	private void loadMap() {
 
-		// if map isn't null and exists: load it
-		// else use the default map
-
+		// try to load the map. if it fails, load the default map
 		try {
 			tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
 		} catch (Exception e) {
