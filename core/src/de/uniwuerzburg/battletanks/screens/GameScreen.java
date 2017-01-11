@@ -159,8 +159,8 @@ public class GameScreen implements Screen {
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		// Loading font
-		generator = new FreeTypeFontGenerator(
-				Gdx.files.internal(BattleTanks.getInstance().getPreferences().getString("game_font", "fonts/Vera.ttf")));
+		generator = new FreeTypeFontGenerator(Gdx.files
+				.internal(BattleTanks.getInstance().getPreferences().getString("game_font", "fonts/Vera.ttf")));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.size = fontSize;
 		parameter.color = Color.WHITE;
@@ -170,8 +170,8 @@ public class GameScreen implements Screen {
 	}
 
 	private void loadMusic() {
-		music = Gdx.audio
-				.newMusic(Gdx.files.internal(BattleTanks.getInstance().getPreferences().getString("background_music", "music.mp3")));
+		music = Gdx.audio.newMusic(Gdx.files
+				.internal(BattleTanks.getInstance().getPreferences().getString("background_music", "music.mp3")));
 		// music.play();
 		// music.setLooping(true);
 	}
@@ -327,15 +327,14 @@ public class GameScreen implements Screen {
 
 		// if map isn't null and exists: load it
 		// else use the default map
-		if (tiledMapFileHandle != null) {
-			if (!tiledMapFileHandle.exists()) {
-				throw new IllegalArgumentException("This file does not exist");
-			}
+
+		try {
 			tiledMap = new TmxMapLoader(new AbsoluteFileHandleResolver()).load(tiledMapFileHandle.path());
-		} else {
+		} catch (Exception e) {
 			tiledMap = new TmxMapLoader()
 					.load(BattleTanks.getInstance().getPreferences().getString("default_map", "maps/default.tmx"));
 		}
+
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		MapProperties tiledMapProps = tiledMap.getProperties();
 
@@ -448,7 +447,8 @@ public class GameScreen implements Screen {
 		if (pRect.overlaps(oRect)) {
 
 			if ((startTime - Gdx.graphics.getDeltaTime()) <= time) {
-				BattleTanks.getInstance().showError("There are obstacles at the players' spawn points!\nTry loading another map!");
+				BattleTanks.getInstance()
+						.showError("There are obstacles at the players' spawn points!\nTry loading another map!");
 			}
 
 			// calculates the horizontal and vertical overlap

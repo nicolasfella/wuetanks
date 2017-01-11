@@ -183,7 +183,7 @@ public class MenuScreen implements Screen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				try {
-					time = Float.parseFloat(timeInput.getText());
+					time = Math.abs(Float.parseFloat(timeInput.getText()));
 				} catch (NumberFormatException e) {
 					time = 0;
 				}
