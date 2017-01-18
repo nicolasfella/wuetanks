@@ -1,5 +1,4 @@
-%\documentclass[a4paper]{article}
-\documentclass[10pt]{report}
+\documentclass[a4paper]{scrreprt}
 \usepackage[utf8]{inputenc}
 \usepackage[ngerman]{babel}
 \usepackage[T1]{fontenc}
@@ -7,6 +6,8 @@
 \usepackage{mathtools}
 \usepackage{gensymb}
 \usepackage[hyphens]{url}
+\usepackage{seqsplit}
+
 
 \usepackage{graphicx}
 
@@ -34,7 +35,8 @@ bmargin=25mm,lmargin=25mm,rmargin=25mm}
 
 
 
-\title{Developerhandbuch - Battletanks}
+\title{Battletanks - Developerhandbuch}
+\subtitle{Universität Würzburg Informatik Softwarepraktikum Wintersemester 2016/17}
 \author{Armin Bernstetter, Stefan Ernst, Nicolas Fella}
 
 \begin{document}
@@ -140,7 +142,12 @@ Damit die Player zuerst von den Wänden weggeschoben werden, findet als Erstes d
 \includegraphics[width=15cm]{screenshot_endscreen.png}    
 \caption{Spielende und Starten eines neuen Spiels}
 \end{figure}
-Der \code{EndScreen} erscheint sobald die eingegebene Zeit abgelaufen ist. Er ist ähnlich aufgebaut wie der \code{MenuScreen} mit main stage und background stage und bekommt eine Liste an Playern übergeben. Diese werden mithilfe des internen \code{PlayerComparator} zuerst absteigend nach Kills, aufsteigend nach Deaths und danach aufsteigend nach PlayerNumber sortiert und in Form eines Scoreboards dargestellt. Zudem besitzt EndScreen einen Button, mit dem ein neues Spiel gestartet werden kann.
+Der \code{EndScreen} erscheint sobald die eingegebene Zeit abgelaufen ist. Er ist ähnlich aufgebaut wie der \code{MenuScreen} mit main stage und background stage und bekommt eine Liste an Playern übergeben. Diese werden mithilfe des internen \code{PlayerComparator} zuerst absteigend nach Kills, aufsteigend nach Deaths und danach aufsteigend nach PlayerNumber sortiert und in Form eines Scoreboards dargestellt. Zudem besitzt \code{EndScreen} einen Button, mit dem ein neues Spiel gestartet werden kann.
+
+
+\subsubsection*{ErrorScreen}
+Der \code{ErrorScreen} erscheint zum aktuellen Stand des Programmes nur, wenn eine Map geladen wurde, auf der die Spielfiguren unmittelbar auf Hindernissen spawnen.
+Er ist an das Design des \code{EndScreen} angelehnt und zeigt nur eine Fehlermeldung, die beim Aufruf des Konstruktors übergeben werden kann sowie einen 'New Game' Button.
 
 \newpage
 \subsection{Package Entity}
@@ -207,5 +214,41 @@ Musik: \url{http://www.freesound.org/people/Airwolf89/sounds/346455/}
 
 \newpage
 \section{Tests}
+\subsection*{JUnit Tests}
+Das Package  \code{de.uniwuerzburg.battletanks.test} enthält Unit-Tests für die Klassen aus dem Package \code{Entity} (Siehe 2.2.3). Hierfür wird JUnit4 eingesetzt. Um die Unit-Tests zu ermöglichen werden einzelne Funktionen von libGDX von den Klassen in \seqsplit{\code{de.uniwuerzburg.battletanks.test.mock}} imitiert. Hierfür ist es wichtig, dass zu Beginn der Test eine Instanz von \code{MockBattleTanks} erstellt wird. Dies wird beim ausführen der Test-Suite \code{AllTests} getan. Beim Ausführen einzelner Tests muss dies manuell geschehen. Die anderen Komponenten von Battletanks lassen sich aufgrund der komplexen Zusammenhänge von graphischer Oberfläche, OpenGL, Spielmechanik, libGDX und Benutzereingaben nicht mit Unit-Tests testen. Hierfür existiert ein Test-Protokoll. 
+
+\subsection*{Testprotokoll}
+Da die JUnit Tests viele Bereiche der GUI nicht abdecken können, soll das folgende Protokoll die restlichen Tests enthalten. In diesem Testprotokoll werden verschiedene mögliche Fehlerquellen angegeben und deren Überprüfung beschrieben.
+
+\subparagraph*{	MenuScreen}
+Bei der Eingabe einer Spielzeit könnten Probleme entstehen, wenn der Nutzer zum Beispiel negative Zahlen oder Buchstaben eingibt. Im Test wurde die Zeit auf "ABC" gesetzt, Spieler ausgewählt und das Spiel gestartet. Daraufhin öffnete sich ein Fenster mit dem Hinweis "NO VALID TIME ENTERED!". Mit dem Zeitwert "-60" startete das Spiel jedoch und der Betrag der Zahl wurde als Spielzeit gewählt.
+		
+Beim Einlesen von Maps könnte häufiges Wechseln der Map die alte Map nicht überschreiben oder falsche Namen anzeigen. Im Test wurde eine Map geladen, deren Name anschließend neben dem "LOAD MAP" Button erschien. Als erneut eine Map ausgewählt wurde, änderte sich auch der Schriftzug und beim Spielstart wurde letztere auch richtig geladen. Eine fehlerhafte Map könnte das Spiel zum Absturz bringen, weswegen im Test eine leere Datei "map.tmx" erstellt und anschließend geladen wurde. Nach Auswahl der Spieler und Starten des Spiels traten keinerlei Fehler auf und die Standard-Map wurde geladen.
+		
+
+Bei der Auswahl der Tanks könnten die Buttons falsch zugewiesen worden sein oder Spielern nicht alle Tanks zur Verfügung stehen. Aus diesem Grund wurden im Test bei jedem Spieler alle Tanks rückwärts und vorwärts durchgeschaltet. Dies funktionierte ohne Probleme und bei jedem Spieler waren alle Tanks verfügbar. Ein weiteres Problem könnte das Tankwechseln nach dem betätigen des Lock-Buttons sein. Hierbei wurde für jeden Spieler ein Tank gelockt und dann versucht, den Tank in beide Richtungen zu ändern. Das Ergebnis zeigte, dass die Lock-Buttons richtig implementiert wurden. Außerdem könnte es beim Spielstart passieren, dass ein Spieler den falschen Tank erhält. Dies wurde getestet indem jeder Spieler einen anderen Tank erhielt und alle gelockt wurden. Beim Spielstart zeigte sich, dass jeder Spieler auch den richtigen Tank steuerte.
+		
+Des Weiteren musste getestet werden, was bei einem Spielstart mit zu wenig oder fehlerhaften Einstellungen passiert. Hierzu wurde versucht das Spiel ohne gelockten Tank zu starten. Das Ergebnis war ein Fenster mit dem Hinweis "NO TANK CHOSEN!". Versuchte man das Spiel z.B. mit '1F?' als Zeit zu starten, erschien hingegen der Hinweis "NO VALID TIME ENTERED!". 
+
+\subparagraph{FileChooser}
+Bei der Verwendung des FileChoosers könnte es passieren, dass der Nutzer beliebige Dateien einliest, weswegen versucht wurde eine falsche Datei einzulesen. Es zeigte sich allerdings, dass dies nicht möglich ist, da die Dateien von vornherein nach Dateiendung ".tmx" gefiltert wurden. Auch die Navigation durch Verzeichnisse könnte nicht ordentlich funktionieren. Im Test wurde hierbei versucht in diverse Verzeichnisse zu wechseln und diese auch wieder zu verlassen. Dies funktionierte ohne Probleme, da immer der richtige Ordner geöffnet wurde. Anschließend wurde das Auswählen und bestätigen einer Datei getestet. Hierbei wurde auf den Desktop navigiert und anschließend eine Datei "map.tmx" durch einen Klick ausgewählt. Beim bestätigen mit dem "LOAD" Button wurde der richtige Dateiname an das Menü übergeben und beim Spielstart auch geladen. Nun wurde noch die Funktion des "CANCEL" Buttons getestet. Es wurde zunächst eine Map eingelesen und dann ein weiteres Mal der FileChooser geöffnet. Die Verzeichnisse wurden gewechselt und zum Schluss eine andere Map ausgewählt, jedoch dann auf "CANCEL" gedrückt. Im Menü stand anschließend immer noch der alte Mapname und beim Spielstart wurde diese auch korrekt geladen.
+		
+\subparagraph{GameScreen}
+Im GameScreen musste sicher gestellt werden, dass die Tasten zur Steuerung der Tanks auch immer die richtige Spielfigur steuern und alle funktionierten. Im Test wurde hierzu ein Spiel mit vier Spielern erstellt und jeder Tank in alle Richtungen bewegt und geschossen. Es traten keinerlei Probleme auf und jeder Tank hatte die gleichen Funktionalitäten. In einem weiteren Test wurde geschaut, ob die Kugeln beim Schießen in eine beliebige Richtung auch immer am Ende des Panzerrohrs spawnen. Auch hierbei traten keine Fehler auf. Des Weiteren wurde getestet, ob sich sowohl Panzer als auch Kugeln mit konstanter Geschwindigkeit bewegen. Dieser Test erfolgte mit Augenmaß und durch den Vergleich paralleler Kugeln und Panzern.
+		
+
+Auch die Kollisionen von Kugeln mit anderen Objekten könnten nicht immer das erwünschte Ergebnis geben. Im Test wurden hierzu einige Kugeln aus unterschiedlichsten Richtungen auf ein Hindernis geschossen. Alle Kugeln wurden unverzüglich nach dem Aufprall gelöscht. Bei Kollisionen mit anderen Spielern musste zusätzlich überprüft werden, ob diese auch entsprechenden Schaden nehmen. Dabei wurden von jedem Tank Kugeln auf andere Tanks abgefeuert. Der Schaden wurde immer korrekt vom Leben abgezogen und beim Sinken der Lebensanzeige auf 0, wurden zusätzlich die Kill- und Death-Counter korrekt erhöht.
+		
+		
+Sehr wichtig sind auch die Kollisionen der Tanks mit anderen Objekten und dass diese auch realistisch sowie fehlerfrei aufgelöst werden. Beim ersten Test wurde versucht mit den Tanks das Spielfeld zu verlassen. Die Ränder verhielten sich hierbei wie Wände, durch die der Tank nicht durchfahren konnte. In einem weiteren Test erfolgten dann Kollisionen mit Hindernissen, indem von allen Richtungen auf diese zugefahren wurde. Diese Kollisionen verliefen größtenteils sehr gut, sodass die Tanks nie die Hindernisse durchdringen konnten. Lediglich in wenigen Fällen, in denen der Tank diagonal die Ecken von Hindernissen streifte, verlief die Kollision etwas unnatürlich. In einem letzten Test wurden die komplexeren Kollisionen zwischen zwei sich bewegenden Tanks getestet. Dies geschah indem alle vier Spieler auf engem Raum aufeinander zufuhren. Auch hierbei kam es zu fast keinen Problemen. Nur in seltenen Fällen verursachten die vielen Kollisionen kleine, unnatürliche Sprünge der Tanks.
+		
+		Auch der Ablauf der Spielzeit wurde getestet, indem die Spieldauer mit der aus dem Menü verglichen wurde und geprüft wurde ob sie sich im Sekundentakt verringert. Dies funktionierte ohne Probleme und nach Ablauf der Zeit wechselte das Spiel automatisch zum EndScreen.
+		
+\subparagraph{EndScreen}
+Im EndScreen könnten falsche oder unbeteiligte Spieler gezeigt werden oder die Sortierung nicht der Platzierung der Spieler entsprechen. 
+
+Deswegen wurden mehrmals die Ergebnisse und Spieler eines Spiels notiert und mit den Werten im EndScreen verglichen. Auch die Sortierung nach der Anzahl an Kills wurde überprüft. Hierbei zeigten sich keinerlei Fehler. Zuletzt wurde die Funktionalität des "NEW GAME" Buttons überprüft. Beim Betätigen wechselte das Spiel erfolgreich in den MenuScreen, in dem die Einstellungen für ein weiteres Spiel gemacht werden konnten.
+
+
 
 \end{document}
