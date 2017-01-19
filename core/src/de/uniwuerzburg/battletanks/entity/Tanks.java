@@ -6,19 +6,13 @@ import de.uniwuerzburg.battletanks.BattleTanks;
 
 public enum Tanks {
 
-	BEIGE("Beige", 100f, 72f, 0.25f, 0.85f),
-
-	BLACK("Black", 155f, 20f, 0.2f, 0.38f),
-
-	BLUE("Blue", 179f, 20f, 0.4f, 0.5f),
-
-	GREEN("Green", 100f, 30f, 0.66f, 0.5f),
-
-	RED("Red", 150f, 10f, 0.66f, 0.25f);
+	BEIGE("Beige", 100f, 72f, 0.25f, 0.85f), BLACK("Black", 155f, 20f, 0.2f, 0.38f), BLUE("Blue", 179f, 20f, 0.4f,
+			0.5f), GREEN("Green", 100f, 30f, 0.66f, 0.5f), RED("Red", 150f, 10f, 0.66f, 0.25f);
 
 	private float maxHitpoints;
 	private float damage;
 	private String name;
+	private Sound shotSound;
 
 	/** reloadTime is in seconds */
 	private float reloadTime;
@@ -26,16 +20,14 @@ public enum Tanks {
 	/** Reducing incoming dmg before hp subtraction */
 	private float armor;
 
-	private Sound shotSound;
-
 	private Tanks(String name, float maxHitpoints, float damage, float armor, float reloadTime) {
 		this.name = name;
 		this.maxHitpoints = maxHitpoints;
 		this.damage = damage;
 		this.armor = armor;
 		this.reloadTime = reloadTime;
-		shotSound = BattleTanks.getInstance().getAudio().newSound(
-				BattleTanks.getInstance().getFiles().internal(BattleTanks.getInstance().getPreferences().getString("shot_sound", "shot.wav")));
+		shotSound = BattleTanks.getInstance().getAudio().newSound(BattleTanks.getInstance().getFiles()
+				.internal(BattleTanks.getInstance().getPreferences().getString("shot_sound", "shot.wav")));
 	}
 
 	/**

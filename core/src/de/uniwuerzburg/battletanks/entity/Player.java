@@ -18,23 +18,14 @@ import de.uniwuerzburg.battletanks.BattleTanks;
 public class Player extends Entity {
 
 	private int key_up, key_down, key_left, key_right, key_shoot;
-
 	private int movingSpeed;
-
 	private int number;
-
 	private float shootTimer;
-
 	private Direction direction;
-
 	private Sprite gunSprite;
-
 	private Tanks tank;
-
 	private float currentHitpoints;
-
 	private int kills;
-
 	private int deathCount;
 
 	/**
@@ -55,7 +46,7 @@ public class Player extends Entity {
 	 */
 	public Player(Tanks tank, int key_up, int key_down, int key_left, int key_right, int key_shoot) {
 		super("tank" + tank.getName());
-		
+
 		this.tank = tank;
 
 		this.key_up = key_up;
@@ -78,7 +69,7 @@ public class Player extends Entity {
 		gunSprite.setSize(BattleTanks.getInstance().getPreferences().getInteger("gun_width", 10),
 				BattleTanks.getInstance().getPreferences().getInteger("gun_height", 40));
 		gunSprite.setOrigin(gunSprite.getWidth() / 2, 0);
-		
+
 		direction = Direction.UP;
 	}
 
@@ -162,7 +153,8 @@ public class Player extends Entity {
 				speed.x = 0;
 			}
 
-			if (position.x + speed.x * Gdx.graphics.getDeltaTime() + width > BattleTanks.getInstance().getGame().getWidth()) {
+			if (position.x + speed.x * Gdx.graphics.getDeltaTime() + width > BattleTanks.getInstance().getGame()
+					.getWidth()) {
 				position.x = BattleTanks.getInstance().getGame().getWidth() - width;
 				speed.x = 0;
 			}
@@ -172,7 +164,8 @@ public class Player extends Entity {
 				speed.y = 0;
 			}
 
-			if (position.y + speed.y * Gdx.graphics.getDeltaTime() + height > BattleTanks.getInstance().getGame().getHeight()) {
+			if (position.y + speed.y * Gdx.graphics.getDeltaTime() + height > BattleTanks.getInstance().getGame()
+					.getHeight()) {
 				position.y = BattleTanks.getInstance().getGame().getHeight() - height;
 				speed.y = 0;
 			}

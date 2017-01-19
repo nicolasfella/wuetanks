@@ -26,9 +26,7 @@ public class ErrorScreen implements Screen {
 	private Stage bgStage;
 	private Skin skin;
 	private Table mainTable;
-
 	private Preferences prefs;
-
 	private Image background;
 	private String message;
 

@@ -25,13 +25,13 @@ public class TestPlayer {
 		assertEquals(Keys.LEFT, p.getKey_left());
 		assertEquals(Keys.RIGHT, p.getKey_right());
 		assertEquals(Keys.CONTROL_RIGHT, p.getKey_shoot());
-		
+
 		p.setKey_down(Keys.S);
 		p.setKey_left(Keys.A);
 		p.setKey_right(Keys.D);
 		p.setKey_up(Keys.W);
 		p.setKey_shoot(Keys.SPACE);
-		
+
 		assertEquals(Keys.W, p.getKey_up());
 		assertEquals(Keys.S, p.getKey_down());
 		assertEquals(Keys.A, p.getKey_left());

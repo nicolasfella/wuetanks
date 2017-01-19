@@ -36,7 +36,7 @@ public class MockBattleTanks extends BattleTanks {
 	public Files getFiles() {
 		return mockFiles;
 	}
-	
+
 	@Override
 	public Preferences getPreferences() {
 		return mockPreferences;

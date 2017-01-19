@@ -27,7 +27,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
@@ -50,7 +49,7 @@ public class MenuScreen implements Screen {
 	/** The main Stage; Provides environment for the main Table */
 	private Stage stage;
 
-	/**The background Stage. Contains only the bg image	 */
+	/** The background Stage. Contains only the bg image */
 	private Stage bgStage;
 
 	/** The mainTable; Contains every UI element */
@@ -66,9 +65,7 @@ public class MenuScreen implements Screen {
 	private float time;
 
 	private FileHandle tiledMapFileHandle;
-
 	private Preferences prefs;
-
 	private Image background;
 
 	/**
@@ -94,7 +91,7 @@ public class MenuScreen implements Screen {
 	public void reset() {
 		stage.clear();
 		bgStage.clear();
-		
+
 		tiledMapFileHandle = null;
 		Gdx.input.setInputProcessor(stage);
 		create();
@@ -227,7 +224,7 @@ public class MenuScreen implements Screen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				FileChooser dialog = FileChooser.createDialog("Load TileMap ...", skin,
-						Gdx.files.absolute(Gdx.files.getLocalStoragePath()+"/maps"));
+						Gdx.files.absolute(Gdx.files.getLocalStoragePath() + "/maps"));
 				dialog.setResultListener(new ResultListener() {
 					@Override
 					public boolean result(boolean success, FileHandle result) {
@@ -392,7 +389,7 @@ public class MenuScreen implements Screen {
 			break;
 		}
 		Label plus = new Label(" + ", skin);
-		keys.add(new Label("Player "+playerNumber+":", skin)).padLeft(5);
+		keys.add(new Label("Player " + playerNumber + ":", skin)).padLeft(5);
 		keys.add(move, plus, shoot);
 		keys.padTop(20);
 		keys.padBottom(20);

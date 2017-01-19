@@ -8,7 +8,7 @@ public class TestObstacle {
 
 	@Test
 	public void test() {
-		
+
 	}
 
 }

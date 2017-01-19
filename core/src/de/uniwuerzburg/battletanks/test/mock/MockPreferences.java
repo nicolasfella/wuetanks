@@ -117,19 +117,19 @@ public class MockPreferences implements Preferences {
 	@Override
 	public void clear() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void remove(String key) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void flush() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

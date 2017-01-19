@@ -40,28 +40,21 @@ public class GameScreen implements Screen {
 
 	private int width;
 	private int height;
-
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	private Viewport viewPort;
 	private ShapeRenderer shapeRenderer;
-
 	private BitmapFont font;
 	private int fontSize = BattleTanks.getInstance().getPreferences().getInteger("game_font_size", 14);
 	private GlyphLayout layout;
 	private FreeTypeFontGenerator generator;
-
 	private TiledMap tiledMap;
 	private TiledMapRenderer tiledMapRenderer;
 	private FileHandle tiledMapFileHandle;
-
 	private List<Entity> entities;
 	private List<Player> players;
-
 	private int spawnOffset = BattleTanks.getInstance().getPreferences().getInteger("spawn_offset", 20);
-
 	private Music music;
-
 	private float time;
 	private float startTime;
 

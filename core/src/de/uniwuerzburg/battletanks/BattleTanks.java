@@ -23,10 +23,8 @@ import de.uniwuerzburg.battletanks.screens.MenuScreen;
 public class BattleTanks extends Game {
 
 	private static BattleTanks instance;
-
 	private TextureAtlas atlas;
 	private Preferences prefs;
-
 	private MenuScreen menu;
 	private GameScreen game;
 	private EndScreen end;

@@ -25,7 +25,8 @@ import com.badlogic.gdx.utils.Array;
 public class FileChooser extends Dialog {
 
 	/**
-	 *  Interface of a result listener which is used to get the result of the FileChooser.
+	 * Interface of a result listener which is used to get the result of the
+	 * FileChooser.
 	 *
 	 */
 	public interface ResultListener {
@@ -50,7 +51,7 @@ public class FileChooser extends Dialog {
 			return path.matches(".*\\.tmx");
 		}
 	};
-	
+
 	public ResultListener resultListener = null;
 
 	// comparator to sort files in a directory (directories first)
@@ -105,9 +106,8 @@ public class FileChooser extends Dialog {
 
 	}
 
-	
-	 //changes the current directory and updates the filelist
-	
+	// changes the current directory and updates the filelist
+
 	private void changeDirectory(FileHandle directory) {
 
 		currentDir = directory;
@@ -190,12 +190,15 @@ public class FileChooser extends Dialog {
 
 	/**
 	 * Creates a FileChooser dialog.
-	 * @param title for the window
-	 * @param skin used for the style of the window
-	 * @param path to the base directory
+	 * 
+	 * @param title
+	 *            for the window
+	 * @param skin
+	 *            used for the style of the window
+	 * @param path
+	 *            to the base directory
 	 * @return the created FileChooser
 	 */
-	 
 
 	public static FileChooser createDialog(String title, final Skin skin, final FileHandle path) {
 		FileChooser fileChooser = new FileChooser(title, skin, path) {

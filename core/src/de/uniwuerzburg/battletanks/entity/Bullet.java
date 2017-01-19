@@ -9,7 +9,6 @@ public class Bullet extends Entity {
 	private int movingSpeed;
 	private float dmg;
 	private Player player;
-
 	private Direction direction;
 
 	/**

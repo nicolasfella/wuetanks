@@ -20,7 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import de.uniwuerzburg.battletanks.BattleTanks;
@@ -29,19 +28,18 @@ import de.uniwuerzburg.battletanks.entity.Player;
 public class EndScreen implements Screen {
 
 	private List<Player> players;
-
 	private Stage stage;
 	private Stage bgStage;
 	private Skin skin;
 	private Table mainTable;
-
 	private Preferences prefs;
-
 	private Image background;
 
 	/**
 	 * Creates a new EndScreen
-	 * @param players List of players for ranking
+	 * 
+	 * @param players
+	 *            List of players for ranking
 	 */
 	public EndScreen(List<Player> players) {
 		prefs = BattleTanks.getInstance().getPreferences();
@@ -52,13 +50,15 @@ public class EndScreen implements Screen {
 		this.bgStage = new Stage(new StretchViewport(1920, 1080));
 
 		Gdx.input.setInputProcessor(stage);
-		
+
 		reset(players);
 	}
 
 	/**
 	 * Resets the EndScreen
-	 * @param players List of players for ranking
+	 * 
+	 * @param players
+	 *            List of players for ranking
 	 */
 	public void reset(List<Player> players) {
 		stage.clear();
@@ -73,7 +73,7 @@ public class EndScreen implements Screen {
 		Color c = background.getColor();
 		background.setColor(c.r, c.g, c.b, 0.6f);
 		bgStage.addActor(background);
-		
+
 		Label test = new Label("Scoreboard:", skin);
 		this.mainTable = new Table();
 		mainTable.setFillParent(true);
