@@ -1,1 +1,0 @@
-Diese Klasse wird benötigt um die Liste von Ordnern und Dateien im FileChooser zu realisieren. Ein FileListItem entspricht grundsätzlich einem Ordner bzw. einer Datei, enthält jedoch zusätzlich noch einen Namen, dem bei Ordnern noch ein "/" zur Unterscheidung angehängt wird. Die toString Methode wird außerdem so überschrieben, dass hierbei der Name zurückgegeben wird.
